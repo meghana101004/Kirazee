@@ -1,0 +1,1185 @@
+/* ============================================
+   MOBILE RESPONSIVE STYLES FOR SUPERADMIN DASHBOARD
+   Optimized for Android Mobile Devices (320px+)
+   ============================================ */
+
+/* ============================================
+   GLOBAL MOBILE STYLES
+   ============================================ */
+
+/* Small Mobile Devices (320px - 480px) */
+@media (max-width: 480px) {
+  /* Global Container Adjustments */
+  .admin-container,
+  .dashboard-container,
+  .business-management,
+  .order-management,
+  .analytics,
+  .delivery-fleet,
+  .notification-management {
+    padding: 8px !important;
+    margin: 0 !important;
+  }
+
+  /* Headers */
+  .admin-header,
+  .dashboard-header,
+  .section-header,
+  .page-header {
+    padding: 10px 12px !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .admin-header h1,
+  .dashboard-header h1,
+  .section-header h1,
+  .page-header h1 {
+    font-size: 18px !important;
+    line-height: 1.3 !important;
+  }
+
+  .admin-header h2,
+  .dashboard-header h2,
+  .section-header h2,
+  .page-header h2 {
+    font-size: 16px !important;
+  }
+
+  /* Buttons */
+  button,
+  .btn,
+  .button,
+  .action-btn {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    min-width: auto !important;
+  }
+
+  .btn-icon {
+    padding: 8px !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  /* Cards */
+  .card,
+  .dashboard-card,
+  .stat-card,
+  .info-card {
+    padding: 12px !important;
+    margin-bottom: 10px !important;
+    border-radius: 8px !important;
+  }
+
+  /* Tables */
+  .table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  table {
+    font-size: 12px !important;
+    min-width: 600px !important;
+  }
+
+  table th,
+  table td {
+    padding: 8px 6px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Forms */
+  input,
+  select,
+  textarea,
+  .ant-input,
+  .ant-select {
+    font-size: 14px !important;
+    padding: 8px 10px !important;
+    height: auto !important;
+    min-height: 38px !important;
+  }
+
+  .form-group,
+  .ant-form-item {
+    margin-bottom: 12px !important;
+  }
+
+  label {
+    font-size: 13px !important;
+    margin-bottom: 6px !important;
+  }
+
+  /* Modals */
+  .modal,
+  .ant-modal {
+    width: 95% !important;
+    max-width: 95% !important;
+    margin: 10px auto !important;
+  }
+
+  .modal-content,
+  .ant-modal-content {
+    padding: 16px !important;
+  }
+
+  .modal-header,
+  .ant-modal-header {
+    padding: 12px 16px !important;
+  }
+
+  .modal-body,
+  .ant-modal-body {
+    padding: 16px !important;
+    max-height: calc(100vh - 200px) !important;
+    overflow-y: auto !important;
+  }
+
+  /* Grids */
+  .grid,
+  .grid-container,
+  .stats-grid,
+  .metrics-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Flex Containers */
+  .flex-row,
+  .flex-container {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  /* Filters */
+  .filters,
+  .filter-container,
+  .search-filters {
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 12px !important;
+  }
+
+  .filter-group {
+    width: 100% !important;
+  }
+
+  /* Charts */
+  .chart-container,
+  .recharts-wrapper {
+    width: 100% !important;
+    height: 250px !important;
+  }
+
+  /* Hide on Mobile */
+  .hide-mobile {
+    display: none !important;
+  }
+
+  /* Show only on Mobile */
+  .show-mobile {
+    display: block !important;
+  }
+}
+
+/* ============================================
+   DASHBOARD OVERVIEW - MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .dashboard-overview {
+    padding: 8px !important;
+  }
+
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .stat-card {
+    padding: 12px !important;
+  }
+
+  .stat-card-value {
+    font-size: 20px !important;
+  }
+
+  .stat-card-label {
+    font-size: 12px !important;
+  }
+
+  .dashboard-charts {
+    grid-template-columns: 1fr !important;
+  }
+
+  .chart-card {
+    padding: 12px !important;
+  }
+
+  .chart-title {
+    font-size: 14px !important;
+  }
+}
+
+/* ============================================
+   BUSINESS MANAGEMENT - MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .business-management-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .business-filters {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .business-filter-group {
+    width: 100% !important;
+  }
+
+  .business-table-container {
+    overflow-x: auto !important;
+  }
+
+  .business-table {
+    min-width: 700px !important;
+  }
+
+  .business-actions {
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+
+  .business-action-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Business Details Modal */
+  .business-details-modal {
+    width: 95% !important;
+  }
+
+  .business-details-tabs {
+    font-size: 12px !important;
+  }
+
+  .business-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .business-info-item {
+    padding: 10px !important;
+  }
+}
+
+/* ============================================
+   ORDER MANAGEMENT - MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .order-management {
+    padding: 8px !important;
+  }
+
+  .order-header {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .order-filters {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .order-filter-item {
+    width: 100% !important;
+  }
+
+  .order-table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .order-table {
+    min-width: 800px !important;
+    font-size: 11px !important;
+  }
+
+  .order-table th,
+  .order-table td {
+    padding: 6px 4px !important;
+  }
+
+  /* Order Details Modal */
+  .order-details-modal {
+    width: 95% !important;
+    max-width: 95% !important;
+  }
+
+  .order-details-section {
+    padding: 12px !important;
+  }
+
+  .order-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .order-items-list {
+    gap: 10px !important;
+  }
+
+  .order-item-card {
+    padding: 10px !important;
+  }
+
+  .order-item-details {
+    font-size: 12px !important;
+  }
+
+  .order-total-section {
+    padding: 12px !important;
+  }
+}
+
+/* ============================================
+   ANALYTICS - MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .analytics-container {
+    padding: 8px !important;
+  }
+
+  .analytics-header {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .analytics-filters {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .date-filter-group {
+    width: 100% !important;
+  }
+
+  .kpi-grid,
+  .kpi-grid-primary,
+  .kpi-grid-secondary {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .kpi-card {
+    padding: 12px !important;
+  }
+
+  .kpi-value {
+    font-size: 20px !important;
+  }
+
+  .kpi-label {
+    font-size: 11px !important;
+  }
+
+  .analytics-charts-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .chart-card {
+    padding: 12px !important;
+  }
+
+  .chart-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .chart-title {
+    font-size: 13px !important;
+  }
+
+  /* Make charts scrollable horizontally if needed */
+  .recharts-responsive-container {
+    min-width: 300px !important;
+  }
+}
+
+/* ============================================
+   BUSINESS DETAILS TABBED - MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .business-details-tabbed {
+    padding: 8px !important;
+  }
+
+  .business-header-section {
+    padding: 12px !important;
+  }
+
+  .business-title {
+    font-size: 16px !important;
+  }
+
+  .business-tabs {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .ant-tabs-nav {
+    margin-bottom: 12px !important;
+  }
+
+  .ant-tabs-tab {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+
+  /* Overview Tab */
+  .overview-metrics-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .overview-metric-card {
+    padding: 12px !important;
+  }
+
+  /* Menu Management Tab */
+  .menu-view-toggle {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .menu-items-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .menu-item-card {
+    padding: 12px !important;
+  }
+
+  .menu-item-image {
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  .menu-item-details {
+    font-size: 12px !important;
+  }
+
+  /* Orders Tab */
+  .orders-table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .orders-table {
+    min-width: 700px !important;
+  }
+
+  /* Delivery Tab */
+  .delivery-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .delivery-map-container {
+    height: 250px !important;
+  }
+
+  /* Reviews Tab */
+  .reviews-summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .review-card {
+    padding: 12px !important;
+  }
+
+  .review-text {
+    font-size: 12px !important;
+  }
+}
+
+/* ============================================
+   DELIVERY FLEET - MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .delivery-fleet {
+    padding: 8px !important;
+  }
+
+  .fleet-header {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .fleet-stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .fleet-stat-card {
+    padding: 12px !important;
+  }
+
+  .fleet-filters {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .fleet-table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .fleet-table {
+    min-width: 650px !important;
+  }
+
+  /* Partner Details Modal */
+  .partner-details-modal {
+    width: 95% !important;
+  }
+
+  .partner-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .partner-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .partner-map {
+    height: 200px !important;
+  }
+}
+
+/* ============================================
+   NOTIFICATION MANAGEMENT - MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .notification-management {
+    padding: 8px !important;
+  }
+
+  .notification-header {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .notification-tabs {
+    overflow-x: auto !important;
+  }
+
+  .notification-form {
+    padding: 12px !important;
+  }
+
+  .form-row {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .form-col {
+    width: 100% !important;
+  }
+
+  .notification-table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .notification-table {
+    min-width: 600px !important;
+  }
+
+  .notification-preview {
+    padding: 12px !important;
+  }
+}
+
+/* ============================================
+   BUSINESS REVIEW MODAL - MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .business-review-modal {
+    width: 95% !important;
+    max-width: 95% !important;
+  }
+
+  .review-modal-header {
+    padding: 12px !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .review-filters {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .review-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .review-table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .review-table {
+    min-width: 650px !important;
+  }
+
+  .review-actions {
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+
+  .review-action-btn {
+    width: 100% !important;
+  }
+}
+
+/* ============================================
+   SNAPSHOT MANAGER - MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .snapshot-manager {
+    padding: 8px !important;
+  }
+
+  .snapshot-header {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .snapshot-status-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .snapshot-actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .snapshot-action-btn {
+    width: 100% !important;
+  }
+
+  .snapshot-history-table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .snapshot-history-table {
+    min-width: 600px !important;
+  }
+
+  .snapshot-schedule-form {
+    padding: 12px !important;
+  }
+}
+
+/* ============================================
+   PLATFORM BLUEPRINT - MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .platform-blueprint {
+    padding: 8px !important;
+  }
+
+  .blueprint-section {
+    padding: 12px !important;
+  }
+
+  .blueprint-diagram {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .blueprint-card {
+    padding: 10px !important;
+    font-size: 11px !important;
+  }
+
+  .database-table {
+    min-width: 300px !important;
+  }
+}
+
+/* ============================================
+   MEDIUM MOBILE DEVICES (481px - 768px)
+   ============================================ */
+@media (min-width: 481px) and (max-width: 768px) {
+  /* Containers */
+  .admin-container,
+  .dashboard-container {
+    padding: 12px !important;
+  }
+
+  /* Headers */
+  .admin-header h1,
+  .dashboard-header h1 {
+    font-size: 22px !important;
+  }
+
+  /* Grids - 2 columns for medium mobile */
+  .stats-grid,
+  .metrics-grid,
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* Cards */
+  .card,
+  .stat-card {
+    padding: 14px !important;
+  }
+
+  /* Tables */
+  table {
+    font-size: 13px !important;
+  }
+
+  table th,
+  table td {
+    padding: 10px 8px !important;
+  }
+
+  /* Modals */
+  .modal,
+  .ant-modal {
+    width: 90% !important;
+    max-width: 600px !important;
+  }
+
+  /* Charts */
+  .chart-container {
+    height: 300px !important;
+  }
+}
+
+/* ============================================
+   LANDSCAPE ORIENTATION ADJUSTMENTS
+   ============================================ */
+@media (max-width: 768px) and (orientation: landscape) {
+  .modal,
+  .ant-modal {
+    max-height: 90vh !important;
+  }
+
+  .modal-body,
+  .ant-modal-body {
+    max-height: calc(90vh - 120px) !important;
+  }
+
+  .chart-container {
+    height: 200px !important;
+  }
+
+  /* Make better use of horizontal space */
+  .stats-grid,
+  .metrics-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* ============================================
+   TOUCH-FRIENDLY ENHANCEMENTS
+   ============================================ */
+@media (max-width: 768px) {
+  /* Larger touch targets */
+  button,
+  .btn,
+  a,
+  .clickable {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  /* Better spacing for touch */
+  .action-buttons {
+    gap: 12px !important;
+  }
+
+  /* Prevent text selection on buttons */
+  button,
+  .btn {
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* Smooth scrolling */
+  * {
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Better input focus */
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 2px solid #F55D00 !important;
+    outline-offset: 2px !important;
+  }
+}
+
+/* ============================================
+   ANDROID-SPECIFIC OPTIMIZATIONS
+   ============================================ */
+@media (max-width: 768px) {
+  /* Fix for Android Chrome address bar */
+  .full-height {
+    min-height: 100vh !important;
+    min-height: -webkit-fill-available !important;
+  }
+
+  /* Better font rendering on Android */
+  body,
+  input,
+  button,
+  select,
+  textarea {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+  }
+
+  /* Prevent zoom on input focus (Android) */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  /* Better tap highlighting */
+  a,
+  button,
+  .clickable {
+    -webkit-tap-highlight-color: rgba(245, 93, 0, 0.2) !important;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES FOR MOBILE
+   ============================================ */
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  .mobile-visible {
+    display: block !important;
+  }
+
+  .mobile-flex {
+    display: flex !important;
+  }
+
+  .mobile-grid {
+    display: grid !important;
+  }
+
+  .mobile-full-width {
+    width: 100% !important;
+  }
+
+  .mobile-text-center {
+    text-align: center !important;
+  }
+
+  .mobile-text-left {
+    text-align: left !important;
+  }
+
+  .mobile-no-padding {
+    padding: 0 !important;
+  }
+
+  .mobile-no-margin {
+    margin: 0 !important;
+  }
+}
+
+
+/* ============================================
+   CHARTS MOBILE RESPONSIVENESS (FIXED)
+   ============================================ */
+
+/* Small Mobile (320px - 480px) */
+@media (max-width: 480px) {
+  /* Ensure all chart parent containers have height */
+  div[style*="textAlign: 'center'"],
+  .chart-container,
+  .chart-wrapper,
+  .chart-card {
+    min-height: 280px !important;
+    width: 100% !important;
+  }
+
+  /* Chart titles */
+  .chart-title,
+  .chart-header h3 {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  /* Force ResponsiveContainer to have dimensions */
+  div[class*="recharts-responsive-container"] {
+    width: 100% !important;
+    height: 280px !important;
+    min-height: 280px !important;
+  }
+
+  /* Recharts wrapper */
+  .recharts-wrapper {
+    width: 100% !important;
+    height: 280px !important;
+  }
+
+  /* Recharts surface */
+  .recharts-surface {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Reduce text size in charts */
+  .recharts-text {
+    font-size: 9px !important;
+  }
+
+  .recharts-cartesian-axis-tick-value {
+    font-size: 9px !important;
+  }
+
+  /* Legend adjustments */
+  .recharts-legend-wrapper {
+    font-size: 9px !important;
+  }
+
+  .recharts-legend-item {
+    font-size: 9px !important;
+    margin: 0 6px !important;
+  }
+
+  .recharts-legend-item-text {
+    font-size: 9px !important;
+  }
+
+  /* Tooltip adjustments */
+  .recharts-default-tooltip {
+    padding: 6px 8px !important;
+    font-size: 10px !important;
+  }
+
+  /* Dashboard specific */
+  .dashboard-overview {
+    padding: 8px !important;
+  }
+
+  /* KPI Cards Grid */
+  .dashboard-kpi-grid,
+  .kpi-grid,
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* KPI Cards */
+  .dashboard-kpi-card,
+  .kpi-card,
+  .stat-card {
+    padding: 12px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .kpi-value {
+    font-size: 20px !important;
+  }
+
+  .kpi-label {
+    font-size: 11px !important;
+  }
+
+  /* Charts Section */
+  .dashboard-charts-section {
+    margin-top: 12px !important;
+  }
+
+  /* Chart Cards */
+  .dashboard-chart-card,
+  .analytics-chart-card,
+  .chart-card {
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+    min-height: 320px !important;
+  }
+
+  /* Chart Headers */
+  .chart-header {
+    margin-bottom: 10px !important;
+  }
+
+  .chart-header h3,
+  .chart-title {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+
+  /* Ant Design Tabs for charts */
+  .ant-tabs-nav {
+    margin-bottom: 10px !important;
+  }
+
+  .ant-tabs-tab {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+
+  .ant-tabs-content {
+    min-height: 280px !important;
+  }
+
+  /* Specific chart types */
+  .orders-breakdown-chart,
+  .customer-metrics-chart,
+  .top-businesses-chart,
+  .delivery-partners-chart {
+    min-height: 280px !important;
+    width: 100% !important;
+  }
+
+  /* Analytics charts */
+  .analytics-charts-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Business details charts */
+  .business-analytics-chart {
+    min-height: 280px !important;
+    width: 100% !important;
+  }
+
+  /* Chart export buttons */
+  .chart-export-btn,
+  .chart-download-btn {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+
+  /* Tables in mobile */
+  .ant-table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .ant-table {
+    min-width: 600px !important;
+    font-size: 11px !important;
+  }
+
+  .ant-table-thead > tr > th {
+    padding: 8px 6px !important;
+    font-size: 11px !important;
+  }
+
+  .ant-table-tbody > tr > td {
+    padding: 8px 6px !important;
+    font-size: 11px !important;
+  }
+
+  /* Progress bars */
+  .ant-progress {
+    font-size: 11px !important;
+  }
+
+  /* Tags */
+  .ant-tag {
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+  }
+
+  /* Empty states */
+  .ant-empty {
+    padding: 20px 10px !important;
+  }
+
+  .ant-empty-description {
+    font-size: 12px !important;
+  }
+}
+
+/* Medium Mobile (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  /* Chart containers */
+  .chart-container,
+  .chart-wrapper {
+    height: 280px;
+  }
+
+  /* Chart grid - 2 columns */
+  .dashboard-charts-grid,
+  .analytics-charts-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  /* Text sizes */
+  .recharts-text {
+    font-size: 11px;
+  }
+
+  /* Legend */
+  .recharts-legend-item {
+    font-size: 11px;
+  }
+}
+
+/* Landscape Orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+  /* Reduce chart heights in landscape */
+  .chart-container,
+  .chart-wrapper {
+    height: 180px;
+  }
+
+  /* Use horizontal space better */
+  .dashboard-charts-grid,
+  .analytics-charts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Touch Enhancements for Charts */
+@media (max-width: 768px) {
+  /* Prevent zoom on double tap */
+  .recharts-wrapper,
+  .recharts-surface {
+    touch-action: pan-y;
+  }
+
+  /* Smooth scrolling for chart containers */
+  .chart-container {
+    scroll-behavior: smooth;
+  }
+
+  /* Scrollbar styling */
+  .chart-container::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .chart-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 2px;
+  }
+
+  .chart-container::-webkit-scrollbar-thumb {
+    background: rgba(245, 93, 0, 0.3);
+    border-radius: 2px;
+  }
+
+  .chart-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 93, 0, 0.5);
+  }
+}

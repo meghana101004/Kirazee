@@ -1,0 +1,119 @@
+/* Additional CSS for "Send to All Users" functionality */
+
+.target-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.target-selection .ant-checkbox-wrapper {
+    padding: 12px;
+    background: #fff;
+    border: 2px solid #1890ff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.target-selection .ant-checkbox-wrapper:hover {
+    background: #f0f8ff;
+    border-color: #40a9ff;
+}
+
+.target-selection .ant-checkbox-wrapper .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #1890ff;
+    border-color: #1890ff;
+}
+
+.target-button {
+    margin: 0 8px 8px 0;
+    flex: 1;
+    min-width: 150px;
+}
+
+.target-button:first-child {
+    margin-left: 0;
+}
+
+.send-to-all-highlight {
+    background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
+    border-color: #1890ff;
+}
+
+.send-to-all-highlight .ant-checkbox-wrapper {
+    border-color: #1890ff;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .target-selection {
+        padding: 12px;
+    }
+    
+    .target-button {
+        min-width: 100%;
+        margin: 0 0 8px 0;
+    }
+    
+    .target-button:first-child {
+        margin-left: 0;
+    }
+}
+
+/* Animation for checkbox selection */
+.target-selection .ant-checkbox-wrapper {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* User count display */
+.user-count-badge {
+    background: #52c41a;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+/* Target selection validation styles */
+.target-selection.error {
+    border-color: #ff4d4f;
+    background: #fff2f0;
+}
+
+.target-selection.error .ant-checkbox-wrapper {
+    border-color: #ff4d4f;
+}
+
+/* Loading state */
+.target-selection.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Success state */
+.target-selection.success {
+    border-color: #52c41a;
+    background: #f6ffed;
+}
+
+.target-selection.success .ant-checkbox-wrapper {
+    border-color: #52c41a;
+}

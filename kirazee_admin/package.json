@@ -1,0 +1,39 @@
+{
+  "name": "kirazee_admin",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "vite"
+  },
+  "dependencies": {
+    "@react-google-maps/api": "^2.20.7",
+    "antd": "^5.27.4",
+    "axios": "^1.6.0",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.18",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "react-router-dom": "^6.8.0",
+    "react-scripts": "^5.0.1",
+    "recharts": "^3.5.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "baseline-browser-mapping": "^2.10.8",
+    "vite": "^7.1.9"
+  },
+  "keywords": [
+    "admin",
+    "dashboard",
+    "kirazee"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "Kirazee Admin Dashboard - A modern React-based admin interface"
+}
