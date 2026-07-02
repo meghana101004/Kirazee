@@ -199,20 +199,6 @@ MIGRATION_MODULES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-]
 
 # Email Configuration
 # TEMPORARY: Use console backend for testing due to Gmail limit
@@ -239,14 +225,6 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 # EMAIL_HOST_PASSWORD = 'zqyg usim lisw fvbm' 
 # RKsupermarket Account 
 
-# RKsupermarket Account
-RKSUPERMARKET_RAZORPAY_KEY_ID = os.environ.get('RKSUPERMARKET_RAZORPAY_KEY_ID', '')
-RKSUPERMARKET_RAZORPAY_KEY_SECRET = os.environ.get('RKSUPERMARKET_RAZORPAY_KEY_SECRET', '')
-
-#Razory Pay Keys
-RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', '')
-RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', '')
-RAZORPAY_WEBHOOK_SECRET = os.environ.get('RAZORPAY_WEBHOOK_SECRET', '')
 
 # Interakt WhatsApp API configuration
 INTERAKT_API_KEY = os.environ.get('INTERAKT_API_KEY', '')
@@ -261,8 +239,6 @@ USE_I18N = True
 USE_TZ = False
 
 
-# Google Maps API Settings
-GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
 
 
 STATIC_URL = "/kirazee/static/"
