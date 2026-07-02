@@ -1,0 +1,2505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Complete Your Payment - Kirazee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe0b3 25%, #ffcc80 50%, #f55d00 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .payment-container {
+            background: #ffffff;
+            border-radius: 16px;
+            border-top: 4px solid #f55d00;
+            max-width: 400px;
+            width: 100%;
+            padding: 40px 32px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+
+        .payment-container.error-state {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: #f55d00;
+            letter-spacing: -0.8px;
+            margin-bottom: 40px;
+        }
+
+        .payment-status {
+            margin-bottom: 40px;
+        }
+
+        .status-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            box-shadow:
+                0 8px 24px rgba(245, 93, 0, 0.3),
+                0 4px 12px rgba(245, 93, 0, 0.2);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .status-icon::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, rgba(245, 93, 0, 0.1), rgba(255, 138, 0, 0.1));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-icon:hover::before {
+            opacity: 1;
+        }
+
+        .status-icon.loading {
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            box-shadow:
+                0 12px 32px rgba(245, 93, 0, 0.3),
+                0 4px 16px rgba(245, 93, 0, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-icon.loading svg {
+            fill: white;
+        }
+
+        .status-icon.success {
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            box-shadow:
+                0 12px 32px rgba(245, 93, 0, 0.3),
+                0 4px 16px rgba(245, 93, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            animation: successPulse 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes successPulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .status-icon.success svg {
+            fill: #1e293b;
+        }
+
+        .status-icon.error {
+            background: #ef4444;
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            box-shadow:
+                0 12px 32px rgba(239, 68, 68, 0.3),
+                0 4px 16px rgba(239, 68, 68, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .status-icon.error svg {
+            fill: white;
+        }
+
+        .status-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+            animation: fadeInDown 0.6s ease-out 0.2s both;
+        }
+
+        .status-message {
+            font-size: 16px;
+            color: #334155;
+            line-height: 1.5;
+            font-weight: 400;
+            margin-bottom: 32px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+
+        .progress-bar {
+            width: 100%;
+            max-width: 280px;
+            height: 4px;
+            background: #F4F4F8;
+            border-radius: 2px;
+            margin: 24px auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 60%;
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            border-radius: 2px;
+            animation: progressMove 2s ease-in-out infinite;
+        }
+
+        @keyframes progressMove {
+            0% {
+                width: 0%;
+            }
+
+            50% {
+                width: 70%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .progress-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(74, 144, 226, 0.3);
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        .progress-dots .dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .progress-dots .dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                background: rgba(74, 144, 226, 0.3);
+                transform: scale(1);
+            }
+
+            50% {
+                background: #f55d00;
+                transform: scale(1.2);
+            }
+        }
+
+        .warning-message {
+            background: transparent;
+            color: #475569;
+            padding: 0;
+            border: none;
+            margin: 16px auto 0;
+            font-size: 14px;
+            font-weight: 400;
+            text-align: center;
+        }
+
+
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn {
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 8px 4px;
+            min-width: 160px;
+            box-shadow:
+                0 8px 24px rgba(245, 93, 0, 0.3),
+                0 2px 8px rgba(245, 93, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn:hover {
+            background: linear-gradient(90deg, #ff8a00, #f55d00);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow:
+                0 12px 32px rgba(245, 93, 0, 0.4),
+                0 4px 16px rgba(245, 93, 0, 0.3);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-container {
+            text-align: center;
+            max-width: 100%;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(239, 68, 68, 0.1);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Removed orange line from error container */
+        .error-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+            border-radius: 28px 28px 0 0;
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                background-position: 200% 0;
+            }
+
+            50% {
+                background-position: -200% 0;
+            }
+        }
+
+        .error-container .status-icon {
+            width: 88px;
+            height: 88px;
+            margin: 0 auto 28px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 3px solid rgba(239, 68, 68, 0.2);
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+            }
+        }
+
+        .error-container .status-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ef4444, #f55d00, #ff8a00);
+            background-size: 200% 200%;
+            z-index: -1;
+            opacity: 0.2;
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                transform: rotate(360deg);
+                background-position: 0% 50%;
+            }
+        }
+
+        .error-container .status-icon svg {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-2px);
+            }
+
+            75% {
+                transform: translateX(2px);
+            }
+        }
+
+        .error-container .status-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            animation: fadeInDown 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-container .status-message {
+            font-size: 16px;
+            color: #334155;
+            opacity: 0.85;
+            line-height: 1.6;
+            margin-bottom: 36px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .button-container {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 36px;
+            flex-wrap: wrap;
+            text-transform: none;
+            animation: fadeInUp 0.6s ease-out 0.6s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow:
+                0 8px 24px rgba(245, 93, 0, 0.35),
+                0 2px 8px rgba(245, 93, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 160px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            transition: width 0.4s ease;
+            z-index: -1;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(245, 93, 0, 0.4);
+            background: linear-gradient(90deg, #ff8a00, #f55d00);
+        }
+
+        .btn-secondary {
+            background: rgba(248, 250, 252, 0.9);
+            color: #1e293b;
+            border: 2px solid rgba(30, 41, 59, 0.3);
+            padding: 16px 36px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 160px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            transition: width 0.4s ease;
+            z-index: -1;
+        }
+
+        .btn-secondary:hover::before {
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            color: white;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(245, 93, 0, 0.3);
+            border-color: #f55d00;
+        }
+
+        .footer-text {
+            font-size: 11px;
+            color: #475569;
+            opacity: 0.6;
+            margin-top: 44px;
+            text-align: center;
+            font-weight: 400;
+            animation: fadeIn 0.6s ease-out 1s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 0.6;
+            }
+        }
+
+        .security-info-error {
+            font-size: 12px;
+            color: #475569;
+            opacity: 0.7;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(148, 163, 184, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            animation: fadeInUp 0.6s ease-out 0.8s both;
+        }
+
+        .security-info-error svg {
+            width: 16px;
+            height: 16px;
+            fill: #f55d00;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 2px rgba(245, 93, 0, 0.3));
+            }
+
+            to {
+                filter: drop-shadow(0 0 6px rgba(245, 93, 0, 0.6));
+            }
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.05);
+            color: #dc2626;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            border-left: 4px solid #ef4444;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: rgba(245, 93, 0, 0.1);
+            color: #1e293b;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            border-left: 4px solid #f55d00;
+            font-size: 14px;
+        }
+
+        /* Success State Styles */
+        .success-icon-large {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f55d00, #ff8a00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 32px;
+            box-shadow:
+                0 8px 32px rgba(245, 93, 0, 0.3),
+                0 4px 16px rgba(245, 93, 0, 0.2);
+            animation: successBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .success-icon-large svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        @keyframes successBounce {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        .success-message {
+            font-size: 14px;
+            color: #334155;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .success-btn {
+            background: linear-gradient(135deg, #f55d00, #ff8a00);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 200px;
+            box-shadow:
+                0 4px 16px rgba(245, 93, 0, 0.3),
+                0 2px 8px rgba(245, 93, 0, 0.2);
+            animation: fadeInUp 0.6s ease-out 0.6s both;
+        }
+
+        .success-btn:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 8px 24px rgba(245, 93, 0, 0.4),
+                0 4px 12px rgba(245, 93, 0, 0.3);
+            background: linear-gradient(135deg, #ff8a00, #f55d00);
+        }
+
+        .success-btn:active {
+            transform: translateY(0);
+        }
+
+        .security-info {
+            font-size: 14px;
+            color: #f55d00;
+            margin-top: 24px;
+            padding: 12px 16px;
+            background: rgba(245, 93, 0, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(245, 93, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            animation: fadeIn 0.6s ease-out 1s both;
+        }
+
+        .security-icon {
+            width: 16px;
+            height: 16px;
+            fill: #f55d00;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: rgba(251, 191, 36, 0.1);
+            color: #d97706;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .status-confirmed {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        /* Enhanced Animations */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(245, 93, 0, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 30px rgba(245, 93, 0, 0.6);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        /* Interactive Elements */
+        .interactive-element {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .interactive-element:hover {
+            transform: translateY(-2px);
+        }
+
+        .interactive-element:active {
+            transform: translateY(0);
+        }
+
+        /* Mobile First Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .payment-container {
+                padding: 32px 24px;
+                margin: 0 auto;
+                border-radius: 20px;
+                max-width: 100%;
+                width: 100%;
+                backdrop-filter: blur(15px);
+            }
+
+            .logo-container {
+                margin-bottom: 28px;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            .status-title {
+                font-size: 26px;
+                margin-bottom: 12px;
+            }
+
+            .status-message {
+                font-size: 16px;
+                margin-bottom: 24px;
+            }
+
+            .status-icon {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 24px;
+            }
+
+            .status-icon svg {
+                width: 40px;
+                height: 40px;
+            }
+
+            .progress-bar {
+                max-width: 250px;
+                height: 5px;
+                margin: 20px auto;
+            }
+
+
+
+            .success-icon-large {
+                width: 64px;
+                height: 64px;
+                margin-bottom: 24px;
+            }
+
+            .success-icon-large svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .success-title {
+                font-size: 22px;
+                margin-bottom: 12px;
+            }
+
+            .success-message {
+                font-size: 14px;
+                margin-bottom: 32px;
+                max-width: 280px;
+            }
+
+            .success-btn {
+                width: 100%;
+                padding: 14px 24px;
+                font-size: 15px;
+                min-width: auto;
+            }
+
+            .btn:active {
+                transform: scale(0.98);
+            }
+
+            .button-container {
+                flex-direction: row;
+                gap: 12px;
+                margin-top: 24px;
+            }
+
+            .error-container {
+                padding: 24px 20px;
+                margin: 16px auto;
+                border-radius: 16px;
+            }
+
+            .error-container .status-icon {
+                width: 64px;
+                height: 64px;
+                margin-bottom: 16px;
+            }
+
+            .error-container .status-title {
+                font-size: 22px;
+                margin-bottom: 8px;
+            }
+
+            .error-container .status-message {
+                font-size: 14px;
+                margin-bottom: 24px;
+                max-width: 100%;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                padding: 14px 24px;
+                font-size: 15px;
+                min-width: auto;
+            }
+
+            .security-info-error {
+                font-size: 11px;
+                margin-top: 20px;
+                padding-top: 16px;
+            }
+
+            .footer-text {
+                margin-top: 32px;
+                font-size: 10px;
+            }
+
+            .security-info {
+                font-size: 11px;
+                padding: 12px 8px;
+                margin-top: 20px;
+                padding-top: 12px;
+            }
+
+            .security-icon {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        /* Touch-friendly interactions */
+        @media (hover: none) and (pointer: coarse) {
+            .btn:hover {
+                transform: none;
+                background: linear-gradient(135deg, #f55d00, #ff8a00);
+            }
+
+            .btn:active {
+                transform: scale(0.96);
+                background: linear-gradient(135deg, #e54d00, #f55d00);
+            }
+
+            .status-icon:hover::before {
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 20px;
+            }
+
+            .logo {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+
+            .payment-container {
+                padding: 20px 16px;
+                margin: 0 16px;
+            }
+
+            .status-title {
+                font-size: 18px;
+            }
+
+            .status-message {
+                font-size: 13px;
+                line-height: 1.4;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 13px;
+                min-width: 120px;
+                padding: 14px 20px;
+                font-size: 15px;
+            }
+
+            .security-info {
+                font-size: 11px;
+                padding: 12px 8px;
+            }
+        }
+
+        /* Razorpay Mobile Modal Override */
+        @media (max-width: 768px) {
+            .razorpay-payment-button {
+                width: 100% !important;
+                font-size: 16px !important;
+                padding: 12px !important;
+            }
+
+            /* Force Razorpay modal to be mobile-friendly */
+            .razorpay-modal {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+            }
+
+            /* Make text responsive in Razorpay modal - focused approach */
+            .razorpay-modal .text-base,
+            .razorpay-modal [class*="text-base"] {
+                font-size: 16px !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Make payment method names readable */
+            .razorpay-modal .payment-method-name,
+            .razorpay-modal [class*="method-name"] {
+                font-size: 16px !important;
+                font-weight: 500 !important;
+            }
+
+            /* Improve form input readability */
+            .razorpay-modal input[type="text"],
+            .razorpay-modal input[type="email"],
+            .razorpay-modal input[type="tel"],
+            .razorpay-modal select {
+                font-size: 16px !important;
+                padding: 12px !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Make labels readable */
+            .razorpay-modal label,
+            .razorpay-modal .form-label {
+                font-size: 15px !important;
+                font-weight: 500 !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Override Razorpay Tailwind classes for better mobile readability */
+            .razorpay-modal .font-normal {
+                font-weight: 500 !important;
+                /* Slightly bolder for better visibility */
+            }
+
+            .razorpay-modal .text-base {
+                font-size: 18px !important;
+                /* Increased from 14px (.875rem) */
+                line-height: 1.6 !important;
+                /* Reduced from 52px (3.25rem) to normal ratio */
+            }
+
+            .razorpay-modal .bg-primary {
+                background-color: #ff8a00 !important;
+                /* Ensure primary color is visible */
+            }
+
+            /* Additional mobile text improvements */
+            .razorpay-modal .text-sm {
+                font-size: 16px !important;
+                /* More reasonable size */
+                line-height: 1.4 !important;
+            }
+
+            .razorpay-modal .text-xs {
+                font-size: 14px !important;
+                /* More reasonable size */
+                line-height: 1.3 !important;
+            }
+        }
+    </style>
+
+    <div class="payment-container">
+
+        <div id="payment-status" class="payment-status">
+            <h2 class="status-title">Almost there...</h2>
+            <p class="status-message">Finalizing connection to payment gateway</p>
+
+            <div class="progress-bar"></div>
+
+            <div class="progress-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+
+            <div class="warning-message">
+                Do not close this window or refresh the page
+            </div>
+        </div>
+
+
+        <div class="security-info">
+            Your payment is secured with 256-bit SSL encryption
+        </div>
+    </div>
+
+    <!-- Razorpay Checkout Script loaded dynamically -->
+
+    <script>
+        // Platform Detection
+        function detectPlatform() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const platformParam = urlParams.get('platform');
+
+            // Check URL parameter first
+            if (platformParam === 'android' || platformParam === 'webview') {
+                return 'android';
+            }
+
+            // Check User Agent for WebView indicators
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isAndroidWebView = userAgent.includes('wv') ||
+                userAgent.includes('version') && userAgent.includes('chrome') && userAgent.includes('mobile') ||
+                window.AndroidInterface !== undefined ||
+                window.webkit?.messageHandlers !== undefined;
+
+            return isAndroidWebView ? 'android' : 'web';
+        }
+
+        // Configuration
+        const BASE_URL = window.location.protocol + '//' + window.location.host;
+        const PLATFORM = detectPlatform();
+
+        const CONFIG = {
+            PAYMENT_INITIATE_URL: BASE_URL + '/kirazee/consumer/payment/initiate/',
+            PAYMENT_VERIFY_URL: BASE_URL + '/kirazee/consumer/payment/callback/',
+            PAYMENT_SUCCESS_URL: BASE_URL + '/kirazee/consumer/payment/success/',
+            PAYMENT_FAILURE_URL: BASE_URL + '/kirazee/consumer/payment/failure/',
+            ORDERS_URL: BASE_URL + '/kirazee/consumer/orders/',
+            PLATFORM: PLATFORM
+        };
+
+        // DOM Elements
+        const paymentStatus = document.getElementById('payment-status');
+        const orderDetails = document.getElementById('order-details');
+
+        // SVG Icons
+        const SVG_ICONS = {};
+
+        // Utility Functions
+        function updateStatus(iconType, title, message, type = 'loading') {
+            const statusTitle = paymentStatus.querySelector('.status-title');
+            const statusMessage = paymentStatus.querySelector('.status-message');
+            statusTitle.textContent = title;
+            statusMessage.textContent = message;
+
+            // Add progress elements for loading state
+            if (type === 'loading') {
+                // Add progress bar if it doesn't exist
+                if (!paymentStatus.querySelector('.progress-bar')) {
+                    const progressBar = document.createElement('div');
+                    progressBar.className = 'progress-bar';
+                    paymentStatus.appendChild(progressBar);
+                }
+
+
+            }
+        }
+
+        function showError(message) {
+            // Clear the payment status container and apply error state
+            paymentStatus.innerHTML = '';
+            document.querySelector('.payment-container').classList.add('error-state');
+
+            // Hide the original security info
+            const originalSecurityInfo = document.querySelector('.security-info');
+            if (originalSecurityInfo) {
+                originalSecurityInfo.style.display = 'none';
+            }
+
+            // Create the error UI structure matching the provided design
+            const errorContainer = document.createElement('div');
+            errorContainer.className = 'error-container';
+
+            // Error title
+            const errorTitle = document.createElement('h2');
+            errorTitle.className = 'status-title';
+            errorTitle.textContent = 'Payment Failed';
+
+            // Error message
+            const errorMessage = document.createElement('p');
+            errorMessage.className = 'status-message';
+            errorMessage.textContent = message || 'Payment was cancelled. You can try again or contact support if you need help.';
+
+            // Button container - side by side layout for error buttons
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'button-container';
+            buttonContainer.style.cssText = 'display: flex; gap: 10px; justify-content: center; margin-top: 36px; flex-wrap: wrap;';
+
+            // Try Again button - smaller size
+            const retryBtn = document.createElement('button');
+            retryBtn.className = 'btn btn-primary';
+            retryBtn.textContent = 'TRY AGAIN';
+            retryBtn.style.cssText = 'flex: 1; max-width: 150px; padding: 12px 16px; font-size: 13px; min-width: 120px;';
+            retryBtn.onclick = () => location.reload();
+
+            // Back to Orders button - smaller size
+            const backBtn = document.createElement('button');
+            backBtn.className = 'btn btn-secondary';
+            backBtn.id = 'backToCartBtn';
+            backBtn.textContent = 'Back to cart';
+            backBtn.style.cssText = 'flex: 1; max-width: 150px; padding: 12px 16px; font-size: 13px; min-width: 120px;';
+            backBtn.onclick = () => handleRedirection('orders');
+
+            // Assemble the error UI
+            buttonContainer.appendChild(retryBtn);
+            buttonContainer.appendChild(backBtn);
+
+            // Footer text
+            const footerText = document.createElement('div');
+            footerText.className = 'footer-text';
+            footerText.textContent = '© 2023 Kirazee. All rights reserved.';
+
+            // Security info (below footer text)
+            const securityInfo = document.createElement('div');
+            securityInfo.className = 'security-info-error';
+            securityInfo.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22S8 18 8 12V7L12 5L16 7V12C16 18 12 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Your payment is secured with 256-bit SSL encryption
+        `;
+
+            errorContainer.appendChild(errorTitle);
+            errorContainer.appendChild(errorMessage);
+            errorContainer.appendChild(buttonContainer);
+            errorContainer.appendChild(footerText);
+            errorContainer.appendChild(securityInfo);
+
+            paymentStatus.appendChild(errorContainer);
+        }
+
+        function showSuccess(message) {
+            // Clear the payment status container
+            paymentStatus.innerHTML = '';
+
+            // Create success title with blast icons
+            const successTitle = document.createElement('h2');
+            successTitle.className = 'success-title';
+            successTitle.innerHTML = '🎉 Payment Successful! 🎉';
+
+            // Create success message
+            const successMessage = document.createElement('p');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'Your payment has been successfully processed. Your order is now Placed!';
+
+            // Create countdown message
+            const countdownMessage = document.createElement('p');
+            countdownMessage.className = 'success-message';
+            countdownMessage.style.fontSize = '14px';
+            countdownMessage.style.color = '#64748b';
+            countdownMessage.style.marginTop = '10px';
+
+            // Append all elements
+            paymentStatus.appendChild(successTitle);
+            paymentStatus.appendChild(successMessage);
+            paymentStatus.appendChild(countdownMessage);
+
+            // Start countdown and auto-load order details after 3 seconds
+            let countdown = 3;
+            countdownMessage.textContent = `Loading order details in ${countdown} seconds...`;
+
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    countdownMessage.textContent = `Loading order details in ${countdown} seconds...`;
+                } else {
+                    clearInterval(countdownInterval);
+                    loadOrderDetails();
+                }
+            }, 1000);
+        }
+
+        async function loadOrderDetails() {
+            const orderId = getOrderIdFromUrl();
+            const userId = 14774; // This should ideally come from user session
+
+            // Clear the payment status and show loading
+            paymentStatus.innerHTML = '';
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'status-message';
+            loadingDiv.textContent = 'Loading order details...';
+            loadingDiv.style.textAlign = 'center';
+            loadingDiv.style.padding = '40px';
+            paymentStatus.appendChild(loadingDiv);
+
+            try {
+                const response = await fetch(`${CONFIG.ORDERS_URL}${orderId}/?user_id=${userId}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayOrderDetails(data.data);
+                } else {
+                    throw new Error('API returned success: false');
+                }
+            } catch (error) {
+                console.error('Error fetching order details:', error);
+                paymentStatus.innerHTML = `
+                <div class="error-message">
+                    <strong>Error:</strong> Failed to load order details. 
+                    <button class="btn" onclick="handleRedirection('orders')" style="margin-top: 15px;">
+                        Go to Orders
+                    </button>
+                </div>
+            `;
+            }
+        }
+
+        function displayOrderDetails(order) {
+            const formatCurrency = (amount) => `₹${parseFloat(amount || 0).toFixed(2)}`;
+            const formatDate = (dateString) => {
+                if (!dateString) return '—';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
+            };
+
+            const hasValue = (v) => v !== null && v !== undefined && v !== '' && v !== 'undefined' && v !== 'null';
+
+            // Keep latest order in memory for receipt download
+            window.__LAST_ORDER_DETAILS__ = order;
+
+            const renderKeyValueRows = (rows) => {
+                const html = (rows || [])
+                    .filter(r => r && hasValue(r.value))
+                    .map(r => `<div class="ack-row"><span>${r.label}</span><span>${r.value}</span></div>`)
+                    .join('');
+                return html ? `<div class="ack-kv">${html}</div>` : '';
+            };
+
+            const renderTagList = (items) => {
+                const safe = (items || []).filter(x => hasValue(x));
+                if (!safe.length) return '';
+                return `<div class="ack-tags">${safe.map(x => `<span class="ack-tag">${x}</span>`).join('')}</div>`;
+            };
+
+            // Hide payment container
+            const paymentContainer = document.querySelector('.payment-container');
+            if (paymentContainer) paymentContainer.style.display = 'none';
+
+            // Create clean full-page overlay
+            const container = document.createElement('div');
+            container.className = 'order-acknowledgement';
+
+            const isDelivery = order.order_type?.toLowerCase() === 'delivery';
+            const items = order.items || [];
+
+            // Build data for new layout
+            const user = order.user_details || {};
+            const business = order.business_details || {};
+            const paymentInfo = order.payment_info || order.payment_details || {};
+            const orderDate = order.created_at ? formatDate(order.created_at) : formatDate(new Date().toISOString());
+            const orderTime = order.created_at ? new Date(order.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '';
+
+            const addr = order.delivery_address_details || {};
+            const addrSnap = order.delivery_address_snapshot || {};
+            const addrParts = [
+                addr.door_no || addrSnap.door_no || addr.address_line_1,
+                addr.street || addrSnap.street || addr.address_line_2,
+                addr.city || addrSnap.city,
+                addr.state || addrSnap.state,
+                addr.pincode || addrSnap.pincode,
+                'India'
+            ].filter(v => hasValue(v));
+
+            const deliveryInst = order.delivery_instruction || {};
+            const orderInst = order.order_instruction || {};
+            const instrLines = [
+                deliveryInst.text ? `Instruction: ${deliveryInst.text}` : null,
+                deliveryInst.special_notes ? `Notes: ${deliveryInst.special_notes}` : null,
+                deliveryInst.contact_preference ? `Contact: ${deliveryInst.contact_preference}` : null,
+                orderInst.special_request ? `Special Request: ${orderInst.special_request}` : null,
+            ].filter(Boolean);
+
+            container.innerHTML = `
+                <div class="ack-wrap">
+                    <div class="ack-box">
+
+                        <div class="ack-box-header">
+                            <h2 class="ack-box-title">Order Confirmation${business.business_name ? ' - ' + business.business_name : ''}</h2>
+                        </div>
+
+                        <div class="ack-confirmed-banner">
+                            <span class="ack-check">✓</span> Your order has been confirmed!
+                        </div>
+
+                        <!-- Acknowledgement section -->
+                        <div class="ack-section-header">
+                            <span class="ack-check-sm">✓</span> Acknowledgement
+                        </div>
+                        <div class="ack-info-grid">
+                            <div class="ack-info-box">
+                                <div class="ack-info-box-title">Bill To</div>
+                                <div class="ack-info-line">Date : ${orderDate}</div>
+                                ${hasValue(user.first_name || user.last_name) ? `<div class="ack-info-line">${[user.first_name, user.last_name].filter(Boolean).join(' ')}</div>` : ''}
+                                ${hasValue(user.mobile_number) ? `<div class="ack-info-line">${user.mobile_number}</div>` : ''}
+                                ${hasValue(user.email) ? `<div class="ack-info-line">${user.email}</div>` : ''}
+                            </div>
+                            <div class="ack-info-box">
+                                <div class="ack-info-box-title">Delivery Address</div>
+                                <div class="ack-info-line">Order Id : ${order.order_id || '—'}</div>
+                                ${addrParts.length ? `<div class="ack-info-line">${addrParts.join(', ')}</div>` : '<div class="ack-info-line">—</div>'}
+                            </div>
+                            <div class="ack-info-box">
+                                <div class="ack-info-box-title">Payment Info</div>
+                                ${hasValue(paymentInfo.method || paymentInfo.payment_method) ? `<div class="ack-info-line">Payment Type : ${(paymentInfo.method || paymentInfo.payment_method || 'RAZORPAY').toUpperCase()}</div>` : '<div class="ack-info-line">Payment Type : RAZORPAY</div>'}
+                                <div class="ack-info-line">Status: ${order.payment_status || 'Completed'}</div>
+                                ${orderTime ? `<div class="ack-info-line">Time: ${orderTime}</div>` : ''}
+                            </div>
+                        </div>
+
+                        ${instrLines.length ? `
+                        <div class="ack-info-grid" style="margin-top:12px;">
+                            <div class="ack-info-box">
+                                <div class="ack-info-box-title">Delivery Instructions</div>
+                                ${instrLines.map(l => `<div class="ack-info-line">${l}</div>`).join('')}
+                            </div>
+                        </div>` : ''}
+
+                        <!-- Order Items section -->
+                        <div class="ack-section-header" style="margin-top:28px;">
+                            <span class="ack-check-sm">✓</span> Order Items
+                        </div>
+
+                        <!-- Desktop table -->
+                        <div class="ack-table-wrap">
+                        <table class="ack-table ack-items-desktop">
+                            <thead>
+                                <tr>
+                                    <th class="tbl-left">PRODUCT</th>
+                                    <th class="tbl-center">QUANTITY</th>
+                                    <th class="tbl-right">PRICE</th>
+                                    <th class="tbl-right">TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${items.map(item => {
+                                    const sellingPrice = item.unit_price_snapshot || item.unit_price || 0;
+                                    return `
+                                    <tr>
+                                        <td class="tbl-left">${item.item_name_snapshot || 'Item'}</td>
+                                        <td class="tbl-center">${item.quantity || 1}</td>
+                                        <td class="tbl-right">${formatCurrency(sellingPrice)}</td>
+                                        <td class="tbl-right tbl-amt">${formatCurrency(item.total_price)}</td>
+                                    </tr>`;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                        </div>
+
+                        <!-- Mobile cards -->
+                        <div class="ack-items-mobile">
+                            ${items.map(item => {
+                                const sellingPrice = item.unit_price_snapshot || item.unit_price || 0;
+                                return `
+                                <div class="ack-item-card">
+                                    <div class="ack-item-card-name">${item.item_name_snapshot || 'Item'}</div>
+                                    <div class="ack-item-card-row">
+                                        <span class="ack-item-card-label">Qty</span>
+                                        <span>${item.quantity || 1}</span>
+                                    </div>
+                                    <div class="ack-item-card-row">
+                                        <span class="ack-item-card-label">Price</span>
+                                        <span>${formatCurrency(sellingPrice)}</span>
+                                    </div>
+                                    <div class="ack-item-card-row ack-item-card-total">
+                                        <span>Total</span>
+                                        <span>${formatCurrency(item.total_price)}</span>
+                                    </div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+
+                        <div class="ack-section-header" style="margin-top:28px;">
+                            <span class="ack-check-sm">✓</span> Order Summary
+                        </div>
+                        <div class="ack-summary-lines">
+                            <div class="ack-sum-row"><span>Delivery Charges</span><span>${formatCurrency(order.delivery_charges)}</span></div>
+                            <div class="ack-sum-row"><span>Parcel Charges</span><span>${formatCurrency(order.parcel_charges)}</span></div>
+                            <div class="ack-sum-row"><span>Subtotal (${items.length} items)</span><span>${formatCurrency(order.items_total)}</span></div>
+                            ${parseFloat(order.total_gst || 0) > 0 ? `<div class="ack-sum-row"><span>GST</span><span>${formatCurrency(order.total_gst)}</span></div>` : ''}
+                            ${parseFloat(order.discount_amount || 0) > 0 ? `<div class="ack-sum-row"><span>Discount</span><span>-${formatCurrency(order.discount_amount)}</span></div>` : ''}
+                        </div>
+                        <div class="ack-total-row">
+                            <span>Total</span><span>${formatCurrency(order.final_amount)}</span>
+                        </div>
+
+                        <!-- Thank you -->
+                        <div class="ack-thankyou">
+                            🎉 <strong>Thank you for Ordering!</strong> 🎉
+                            ${hasValue(business.business_number) ? `<div style="margin-top:6px;font-size:13px;color:#64748b;">For any queries, please contact: ${business.business_number}</div>` : ''}
+                        </div>
+
+                        <div class="ack-actions">
+                            <button class="ack-btn-dl" onclick="downloadOrderReceipt()">Download Receipt</button>
+                            <button class="ack-btn-back" onclick="handleRedirection('orders')">Back to Orders</button>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+
+            // Add styles
+            const styles = document.createElement('style');
+            styles.textContent = `
+                * { box-sizing: border-box; }
+                .order-acknowledgement {
+                    position: fixed;
+                    top: 0; left: 0; right: 0; bottom: 0;
+                    overflow-y: auto;
+                    z-index: 9999;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    padding: 30px 16px 60px;
+                }
+                .ack-wrap {
+                    max-width: 800px;
+                    margin: 0 auto;
+                }
+                .ack-box {
+                    background: #fff;
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+                .ack-box-header {
+                    padding: 20px 24px 16px;
+                    border-bottom: 1px solid #f55d00;
+                    text-align: center;
+                }
+                .ack-box-title {
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: #1e293b;
+                    margin: 0;
+                }
+                .ack-confirmed-banner {
+                    margin: 16px 24px;
+                    border-radius: 6px;
+                    padding: 10px 16px;
+                    color: #f55d00;
+                    font-weight: 600;
+                    font-size: 14px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                }
+                .ack-check {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20px; height: 20px;
+                    background: #f55d00;
+                    color: white;
+                    border-radius: 50%;
+                    font-size: 11px;
+                    font-weight: 700;
+                    flex-shrink: 0;
+                }
+                .ack-section-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 0 24px;
+                    margin: 20px 0 12px;
+                    font-size: 15px;
+                    font-weight: 700;
+                    color: #1e293b;
+                }
+                .ack-check-sm {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20px; height: 20px;
+                    background: #f55d00;
+                    color: white;
+                    border-radius: 50%;
+                    font-size: 11px;
+                    font-weight: 700;
+                    flex-shrink: 0;
+                }
+                .ack-info-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 12px;
+                    padding: 0 24px;
+                }
+                .ack-info-box {
+                    border: 1px solid #f55d00;
+                    border-radius: 6px;
+                    padding: 14px;
+                }
+                .ack-info-box-title {
+                    font-size: 13px;
+                    font-weight: 700;
+                    color: #f55d00;
+                    margin-bottom: 10px;
+                }
+                .ack-info-line {
+                    font-size: 13px;
+                    color: #334155;
+                    line-height: 1.6;
+                }
+                /* Table */
+                .ack-table-wrap {
+                    padding: 0 24px;
+                }
+                .ack-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 0 0 0 0;
+                    font-size: 13px;
+                }
+                .ack-table thead tr {
+                    background: #f55d00;
+                }
+                .ack-table th {
+                    padding: 10px 16px;
+                    font-size: 12px;
+                    font-weight: 700;
+                    color: #ffffff;
+                    text-align: left;
+                    letter-spacing: 0.3px;
+                }
+                .tbl-center { text-align: center; }
+                .tbl-right  { text-align: right; }
+                .tbl-left   { text-align: left; }
+                .ack-table td {
+                    padding: 12px 16px;
+                    color: #334155;
+                    border-bottom: 1px solid #f1f5f9;
+                    font-size: 13px;
+                }
+                .ack-table tbody tr:last-child td { border-bottom: none; }
+                .tbl-amt { font-weight: 600; color: #f55d00; }
+                /* Summary lines */
+                .ack-summary-lines {
+                    padding: 12px 24px 0;
+                    border-top: 1px solid #e8f0ea;
+                    margin-top: 4px;
+                }
+                .ack-sum-row {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 13px;
+                    color: #475569;
+                    padding: 4px 0;
+                }
+                .ack-total-row {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin: 12px 24px;
+                    padding: 14px 16px;
+                    border: 1px solid #f55d00;
+                    border-radius: 6px;
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: #1e293b;
+                }
+                .ack-total-row span:last-child { color: #f55d00; }
+                /* Thank you */
+                .ack-thankyou {
+                    margin: 16px 24px;
+                    padding: 20px;
+                    border: 1px solid #f55d00;
+                    border-radius: 6px;
+                    text-align: center;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #f55d00;
+                }
+                /* Actions */
+                .ack-actions {
+                    display: flex;
+                    gap: 12px;
+                    justify-content: center;
+                    padding: 0 24px 24px;
+                    flex-wrap: wrap;
+                }
+                .ack-btn-dl {
+                    background: #f55d00;
+                    color: white;
+                    border: none;
+                    padding: 12px 10px;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background 0.2s;
+                }
+                .ack-btn-dl:hover { background: #e04e00; }
+                .ack-btn-back {
+                    background: white;
+                    color: #f55d00;
+                    border: 2px solid #f55d00;
+                    padding: 12px 10px;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .ack-btn-back:hover { background: #f55d00; color: white; }
+                /* Desktop: hide mobile cards, show table */
+                .ack-items-mobile { display: none; }
+                .ack-items-desktop { display: table; }
+                /* Mobile item cards */
+                .ack-item-card {
+                    border: 1px solid #f55d00;
+                    border-radius: 8px;
+                    padding: 14px;
+                }
+                .ack-item-card-name {
+                    font-size: 14px;
+                    font-weight: 700;
+                    color: #1e293b;
+                    margin-bottom: 7px;
+                }
+                .ack-item-card-row {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 13px;
+                    color: #475569;
+                    padding: 4px 0;
+                }
+                .ack-item-card-label { color: #94a3b8; }
+                .ack-item-card-total {
+                    font-weight: 700;
+                    color: #f55d00;
+                    margin-top: 6px;
+                    padding-top: 8px;
+                    border-top: 1px solid #f55d00;
+                    font-size: 14px;
+                }
+                @media (max-width: 640px) {
+                    .ack-info-grid { grid-template-columns: 1fr; }
+                    .ack-box-title { font-size: 16px; }
+                    .ack-total-row, .ack-summary-lines,
+                    .ack-confirmed-banner, .ack-thankyou, .ack-actions { margin-left: 12px; margin-right: 12px; padding-left: 12px; padding-right: 12px; }
+                    .ack-items-desktop { display: none !important; }
+                    .ack-items-mobile  { display: flex !important; flex-direction: column; gap: 10px; padding: 0 12px; }
+                    .ack-actions { flex-direction: row !important; }
+                    .ack-btn-dl, .ack-btn-back { flex: 1; }
+                }
+            `;
+
+            document.head.appendChild(styles);
+
+            document.body.appendChild(container);
+        }
+
+        function getOrderIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('order_id') || 'N/A';
+        }
+
+        function getOrderIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('order_id') || 'N/A';
+        }
+
+        // Function to download order receipt as HTML file
+        function downloadOrderReceipt() {
+            try {
+                const order = window.__LAST_ORDER_DETAILS__;
+                if (!order) {
+                    alert('Receipt is not ready yet. Please wait for order details to load.');
+                    return;
+                }
+
+                const escapeHtml = (val) => {
+                    if (val === null || val === undefined) return '';
+                    return String(val)
+                        .replaceAll('&', '&amp;')
+                        .replaceAll('<', '&lt;')
+                        .replaceAll('>', '&gt;')
+                        .replaceAll('"', '&quot;')
+                        .replaceAll("'", '&#039;');
+                };
+
+                const formatCurrency = (amount) => `₹${parseFloat(amount || 0).toFixed(2)}`;
+
+                const hasValue = (v) => v !== null && v !== undefined && v !== '' && v !== 'undefined' && v !== 'null';
+
+                const items = Array.isArray(order.items) ? order.items : [];
+                const business = order.business_details || {};
+                const user = order.user_details || {};
+
+                const addr = order.delivery_address_snapshot || order.delivery_address_details || {};
+                const addressLines = [
+                    addr.door_no,
+                    addr.street,
+                    [addr.city, addr.state].filter(Boolean).join(', '),
+                    addr.pincode ? `PIN: ${addr.pincode}` : null,
+                ].filter(hasValue);
+
+                const itemsHtml = items.map((item) => {
+                    const name = escapeHtml(item.item_name_snapshot || item.name || 'Item');
+                    const qty = parseFloat(item.quantity || 1);
+                    const unit = formatCurrency(item.unit_price_snapshot || item.unit_price || 0);
+                    const total = formatCurrency(item.total_price || 0);
+                    const productLine = hasValue(item.product_id) ? `<div class="muted">Product: #${escapeHtml(item.product_id)}</div>` : '';
+
+                    const details = item.item_details || item.enhanced_product_details || {};
+                    const desc = details.description || item.description;
+                    const descLine = hasValue(desc) ? `<div class="muted">${escapeHtml(desc)}</div>` : '';
+
+                    const customizations = Array.isArray(details.customizations) ? details.customizations : (Array.isArray(item.customizations) ? item.customizations : []);
+                    const custLine = customizations.length
+                        ? `<div class="muted">Add-ons: ${escapeHtml(customizations.map(c => {
+                            if (!c) return '';
+                            const option = c.option || '';
+                            const price = hasValue(c.price) ? `(+${formatCurrency(c.price)})` : '';
+                            return `${option} ${price}`.trim();
+                        }).filter(Boolean).join(', '))}</div>`
+                        : '';
+
+                    const netWeightLine = (hasValue(details.net_weight) || hasValue(details.net_weight_unit))
+                        ? `<div class="muted">Net: ${escapeHtml(`${details.net_weight || ''}${details.net_weight_unit ? ` ${details.net_weight_unit}` : ''}`.trim())}</div>`
+                        : '';
+                    const sizeLine = hasValue(details.size)
+                        ? `<div class="muted">Size: ${escapeHtml((typeof details.size === 'object' && details.size !== null) ? (details.size.value || JSON.stringify(details.size)) : details.size)}</div>`
+                        : '';
+                    const colorLine = hasValue(details.color) ? `<div class="muted">Color: ${escapeHtml(details.color)}</div>` : '';
+                    const genderLine = hasValue(details.gender) ? `<div class="muted">Gender: ${escapeHtml(details.gender)}</div>` : '';
+                    const ageLine = hasValue(details.age) ? `<div class="muted">Age: ${escapeHtml(details.age)}</div>` : '';
+                    const minAgeLine = hasValue(details.min_age) ? `<div class="muted">Min Age: ${escapeHtml(details.min_age)}</div>` : '';
+                    const maxAgeLine = hasValue(details.max_age) ? `<div class="muted">Max Age: ${escapeHtml(details.max_age)}</div>` : '';
+                    const materialLine = hasValue(details.material) ? `<div class="muted">Material: ${escapeHtml(details.material)}</div>` : '';
+                    const packLine = hasValue(details.pack) ? `<div class="muted">Pack: ${escapeHtml(details.pack)}</div>` : '';
+                    const attributesLine = (details.attributes && typeof details.attributes === 'object' && hasValue(details.attributes.raw))
+                        ? `<div class="muted">Attributes: ${escapeHtml(details.attributes.raw)}</div>`
+                        : '';
+
+                    return `
+                        <div class="item">
+                            <div class="item-row">
+                                <div class="item-name">${name}</div>
+                                <div class="item-total">${total}</div>
+                            </div>
+                            <div class="muted">Qty: ${qty} × ${unit}</div>
+                            ${productLine}
+                            ${netWeightLine}
+                            ${sizeLine}
+                            ${colorLine}
+                            ${genderLine}
+                            ${ageLine}
+                            ${minAgeLine}
+                            ${maxAgeLine}
+                            ${materialLine}
+                            ${packLine}
+                            ${attributesLine}
+                            ${descLine}
+                            ${custLine}
+                        </div>
+                    `;
+                }).join('');
+
+                const instruction = order.delivery_instruction || {};
+                const orderInst = order.order_instruction || {};
+
+                const maybeRow = (label, value) => hasValue(value)
+                    ? `<div class="kv"><span>${escapeHtml(label)}</span><span>${escapeHtml(value)}</span></div>`
+                    : '';
+
+                const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kirazee Receipt - ${escapeHtml(order.order_id || '')}</title>
+  <style>
+    :root { --text:#0f172a; --muted:#64748b; --line:#e2e8f0; --brand:#f55d00; }
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; margin: 0; background: #fff; color: var(--text); }
+    .page { max-width: 720px; margin: 0 auto; padding: 24px; }
+    .top { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; border-bottom:1px solid var(--line); padding-bottom:12px; }
+    .brand { font-size: 20px; font-weight: 800; color: var(--brand); }
+    .muted { color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .section { margin-top: 14px; }
+    .title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .3px; margin: 0 0 8px; }
+    .card { border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+    .kv { display:flex; justify-content:space-between; gap:12px; padding: 6px 0; border-bottom: 1px dashed #f1f5f9; font-size: 13px; }
+    .kv:last-child { border-bottom: none; }
+    .items { display:flex; flex-direction:column; gap:10px; }
+    .item { border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+    .item:last-child { border-bottom: none; padding-bottom: 0; }
+    .item-row { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+    .item-name { font-size: 14px; font-weight: 700; }
+    .item-total { font-size: 14px; font-weight: 800; }
+    .total { font-weight: 900; }
+    @media print {
+      .page { padding: 0; }
+      .card { border: none; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top">
+      <div>
+        <div class="brand">Kirazee</div>
+        <div class="muted">${escapeHtml(business.business_name || '')}</div>
+        ${hasValue(business.address) ? `<div class="muted">${escapeHtml(business.address)}</div>` : ''}
+        ${hasValue(business.business_number) ? `<div class="muted">Phone: ${escapeHtml(business.business_number)}</div>` : ''}
+      </div>
+      <div style="text-align:right">
+        <div class="muted">Order ID</div>
+        <div style="font-size:16px;font-weight:900">#${escapeHtml(order.order_id)}</div>
+        ${hasValue(order.order_number) ? `<div class="muted">Ref: ${escapeHtml(order.order_number)}</div>` : ''}
+        ${hasValue(order.created_at) ? `<div class="muted">Placed: ${escapeHtml(order.created_at)}</div>` : ''}
+        ${hasValue(order.payment_status) ? `<div class="muted">Payment: ${escapeHtml(order.payment_status)}</div>` : ''}
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="title">Customer</div>
+      <div class="card">
+        ${maybeRow('Name', [user.first_name, user.last_name].filter(Boolean).join(' '))}
+        ${maybeRow('Mobile', user.mobile_number)}
+        ${maybeRow('Email', user.email)}
+      </div>
+    </div>
+
+    ${addressLines.length ? `
+    <div class="section">
+      <div class="title">Delivery Address</div>
+      <div class="card">
+        <div class="muted">${addressLines.map(l => escapeHtml(l)).join('<br/>')}</div>
+      </div>
+    </div>` : ''}
+
+    ${(hasValue(instruction.text) || hasValue(instruction.special_notes) || hasValue(instruction.contact_preference) || hasValue(orderInst.customizations) || hasValue(orderInst.special_request)) ? `
+    <div class="section">
+      <div class="title">Instructions</div>
+      <div class="card">
+        ${maybeRow('Delivery', instruction.text)}
+        ${maybeRow('Notes', instruction.special_notes)}
+        ${maybeRow('Contact', instruction.contact_preference)}
+        ${maybeRow('Customizations', orderInst.customizations)}
+        ${maybeRow('Special Request', orderInst.special_request)}
+      </div>
+    </div>` : ''}
+
+    <div class="section">
+      <div class="title">Items (${items.length})</div>
+      <div class="card">
+        <div class="items">
+          ${itemsHtml || '<div class="muted">No items</div>'}
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="title">Payment Summary</div>
+      <div class="card">
+        ${maybeRow('Items Total', formatCurrency(order.items_total))}
+        ${parseFloat(order.delivery_charges || 0) > 0 ? maybeRow('Delivery', formatCurrency(order.delivery_charges)) : ''}
+        ${parseFloat(order.parcel_charges || 0) > 0 ? maybeRow('Parcel', formatCurrency(order.parcel_charges)) : ''}
+        ${parseFloat(order.total_gst || 0) > 0 ? maybeRow('GST', formatCurrency(order.total_gst)) : ''}
+        ${parseFloat(order.discount_amount || 0) > 0 ? maybeRow('Discount', `-${formatCurrency(order.discount_amount)}`) : ''}
+        <div class="kv total"><span>Total</span><span>${formatCurrency(order.final_amount)}</span></div>
+      </div>
+    </div>
+
+    <div class="section" style="text-align:center; margin-top:18px">
+      <div class="muted">Thank you for ordering with Kirazee.</div>
+    </div>
+  </div>
+</body>
+</html>`;
+
+                // Create blob and download
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = window.URL.createObjectURL(blob);
+
+                // Create download link
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'Kirazee_Order_Receipt_' + getOrderIdFromUrl() + '.html';
+                downloadLink.style.display = 'none';
+
+                // Trigger download
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+
+                // Clean up
+                window.URL.revokeObjectURL(url);
+
+            } catch (error) {
+                console.error('Download failed:', error);
+                alert('Download failed. Please try again.');
+            }
+        }
+
+        // Platform-specific redirection handler
+        function handleRedirection(type, data = {}) {
+            if (CONFIG.PLATFORM === 'android') {
+                // For Android WebView - use custom schemes or postMessage
+                try {
+                    // Try Android Interface first
+                    if (window.AndroidInterface && window.AndroidInterface.handleRedirection) {
+                        window.AndroidInterface.handleRedirection(type, JSON.stringify(data));
+                        return;
+                    }
+
+                    // Try WebKit message handler (for hybrid apps)
+                    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.redirection) {
+                        window.webkit.messageHandlers.redirection.postMessage({
+                            type: type,
+                            data: data
+                        });
+                        return;
+                    }
+
+                    // Fallback to custom URL scheme
+                    const customUrl = `kirazee://payment/${type}?${new URLSearchParams(data).toString()}`;
+                    window.location.href = customUrl;
+
+                } catch (error) {
+                    console.error('Android redirection failed:', error);
+                    // Fallback to web redirection
+                    handleWebRedirection(type);
+                }
+            } else {
+                // For web browser
+                handleWebRedirection(type);
+            }
+        }
+
+        function handleWebRedirection(type) {
+            switch (type) {
+                case 'orders':
+                    window.location.href = CONFIG.ORDERS_URL;
+                    break;
+                case 'success':
+                    window.location.href = CONFIG.PAYMENT_SUCCESS_URL;
+                    break;
+                case 'failure':
+                    window.location.href = CONFIG.PAYMENT_FAILURE_URL;
+                    break;
+                default:
+                    window.location.href = CONFIG.ORDERS_URL;
+            }
+        }
+
+        // Payment verification function
+        async function verifyPayment(razorpay_payment_id, razorpay_order_id, razorpay_signature) {
+            try {
+                updateStatus('verify', 'Verifying Payment', 'Please wait while we confirm your payment...');
+
+                const response = await fetch(CONFIG.PAYMENT_VERIFY_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken') || 'dummy-token'
+                    },
+                    body: JSON.stringify({
+                        razorpay_payment_id: razorpay_payment_id,
+                        razorpay_order_id: razorpay_order_id,
+                        razorpay_signature: razorpay_signature
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.status === 'success') {
+                    const orderId = getOrderIdFromUrl();
+                    const confirmed = await pollForConfirmation(orderId);
+                    if (confirmed) {
+                        showSuccess('Payment verified and order Placed successfully!');
+                    } else {
+                        showSuccess('Payment received. Order confirmation will reflect shortly in your Orders.');
+                    }
+                } else {
+                    showError(result.message || 'Payment verification failed');
+                }
+            } catch (error) {
+                console.error('Payment verification error:', error);
+                showError('Failed to verify payment. Please contact support.');
+            }
+        }
+
+        async function pollForConfirmation(orderId, maxWaitMs = 1000, initialIntervalMs = 500) {
+            try {
+                const start = Date.now();
+                let currentInterval = initialIntervalMs;
+                let attempts = 0;
+
+                while (Date.now() - start < maxWaitMs) {
+                    try {
+                        const res = await fetch(`${CONFIG.ORDERS_URL}${orderId}/?include_items=false`);
+                        if (res.ok) {
+                            const json = await res.json();
+                            const status = ((json && json.data && json.data.status) || '').toLowerCase();
+                            if ([
+                                'confirmed', 'preparing', 'ready', 'assigned', 'picked_up', 'dispatched', 'travelling', 'out_for_delivery', 'delivered'
+                            ].includes(status)) {
+                                return true;
+                            }
+                        }
+                    } catch (e) { }
+
+                    // Exponential backoff: start fast, then slow down
+                    // First 3 attempts: 500ms, then gradually increase to max 2000ms
+                    attempts++;
+                    if (attempts <= 3) {
+                        currentInterval = initialIntervalMs;
+                    } else {
+                        currentInterval = Math.min(currentInterval * 1.3, 2000);
+                    }
+
+                    await new Promise(r => setTimeout(r, currentInterval));
+                }
+            } catch (e) { }
+            return false;
+        }
+
+        // Helper to load Razorpay Script dynamically and ensure it's ready
+        function loadRazorpayScript() {
+            return new Promise((resolve) => {
+                if (window.Razorpay) {
+                    resolve(true);
+                    return;
+                }
+                const script = document.createElement('script');
+                script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+                script.onload = () => {
+                    console.log('Razorpay Script Loaded Successfully');
+                    resolve(true);
+                };
+                script.onerror = () => {
+                    console.error('Failed to load Razorpay Script');
+                    resolve(false);
+                };
+                document.body.appendChild(script);
+            });
+        }
+
+        async function initiatePaymentOnServer(orderId) {
+            try {
+                updateStatus('payment', 'Connecting to Payment Gateway', 'Setting up your secure payment...');
+
+                // 1. Fetch Order Data First
+                console.log('Step 1: Fetching Order Data...');
+                const response = await fetch(CONFIG.PAYMENT_INITIATE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken') || 'dummy-token'
+                    },
+                    body: JSON.stringify({ order_id: parseInt(orderId), platform: CONFIG.PLATFORM })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    console.log('Step 2: Order Data Received:', result.data);
+
+                    // Show order details
+                    if (typeof orderDetails !== 'undefined' && orderDetails) {
+                        orderDetails.style.display = 'block';
+                    }
+
+                    updateStatus('payment', 'Opening Payment Gateway', 'Redirecting to secure payment...');
+
+                    // 2. Load Razorpay Script
+                    console.log('Step 3: Loading Razorpay SDK...');
+                    const scriptLoaded = await loadRazorpayScript();
+
+                    if (!scriptLoaded) {
+                        throw new Error('Razorpay SDK failed to load. Check internet connection.');
+                    }
+
+                    // 3. Open Checkout with Guaranteed Data
+                    console.log('Step 4: Opening Checkout...');
+                    openRazorpayCheckout(result.data, result.payment_id);
+
+                } else {
+                    showError(result.message || 'Failed to initialize payment');
+                }
+            } catch (error) {
+                console.error('Payment initiation error:', error);
+                showError('Unable to connect to payment server. Please check your internet connection and try again.');
+            }
+        }
+
+        function openRazorpayCheckout(paymentData, paymentId) {
+            // Round amount to whole number (Razorpay expects amount in paise, already converted on backend)
+            const roundedAmount = Math.round(paymentData.amount);
+
+            // Detect mobile devices and app environment
+            const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // Detect if running inside native app (WebView)
+            const isApp = !!window.AndroidInterface || !!window.ReactNativeWebView || 
+                         (window.webkit && window.webkit.messageHandlers) ||
+                         window.location.search.includes('webview=true') ||
+                         window.location.search.includes('platform=android');
+
+            const options = {
+                key: paymentData.key,
+                amount: roundedAmount,
+                currency: "INR",
+                name: "Kirazee",
+                description: paymentData.description,
+                image: "{{ BASE_URL }}/kirazee/media/default_images/k1.png",
+                order_id: paymentData.order_id,
+                redirect: true,
+                webview_intent: true,
+                // Explicitly Enable Payment Methods (Vital for First Load)
+                method: {
+                    upi: true,
+                    card: true,
+                    netbanking: true,
+                    wallet: true
+                },
+
+                handler: function (response) {
+                    handlePaymentSuccess(response, paymentId);
+                },
+                prefill: paymentData.prefill,
+                theme: paymentData.theme,
+                modal: {
+                    ondismiss: function () {
+                        handlePaymentDismiss();
+                    },
+                    confirm_close: true,
+                    animation: true
+                },
+                retry: {
+                    enabled: true,
+                    max_count: 3
+                },
+                timeout: 300, // 5 minutes timeout
+                remember_customer: false
+            };
+
+            // Force mobile view for mobile devices
+            if (isMobile) {
+                // GENERIC UPI INTENT CONFIG - Forces upi:// instead of gpay://, phonepe://
+                options.config = {
+                    display: {
+                        language: 'en',
+                        blocks: {
+                            upi: {
+                                name: "Pay via UPI",
+                                instruments: [
+                                    {
+                                        method: "upi",
+                                        // This forces the generic 'upi://' intent 
+                                        // instead of app-specific ones like 'gpay://'
+                                        apps: ["google_pay", "phonepe", "paytm", "bhim", "all"]
+                                    }
+                                ]
+                            },
+                            other: {
+                                name: "Other Payment Methods",
+                                instruments: [
+                                    { method: "card" },
+                                    { method: "netbanking" },
+                                    { method: "wallet" }
+                                ]
+                            }
+                        },
+                        sequence: ["block.upi", "block.other"],
+                        preferences: {
+                            show_default_blocks: true
+                        }
+                    }
+                };
+
+                // Enhanced external apps configuration for WebView
+                options.external = {
+                    wallets: true,
+                    upi: true,
+                    card: true,
+                    netbanking: true
+                };
+
+                // Additional WebView-specific settings
+                if (isApp) {
+                    console.log(' Detected App Environment - Using Generic UPI Intent');
+                    
+                    // Force generic UPI intent for apps
+                    options.config.display.blocks.upi.instruments[0].flow = "intent";
+                    options.config.display.blocks.upi.instruments[0].intent_type = "generic";
+                    
+                    // Ensure UPI is the primary payment method in apps
+                    options.config.display.sequence = ["block.upi", "block.other"];
+                    options.config.display.preferences.show_default_blocks = true;
+                }
+
+                options.modal = {
+                    confirm_close: true,
+                    ondismiss: function () {
+                        handlePaymentDismiss();
+                    },
+                    escape: false,
+                    backdropclose: false
+                };
+            }
+
+            try {
+                console.log('Initializing Razorpay with amount:', options.amount, 'order_id:', options.order_id);
+
+                // Script is now guaranteed to be loaded
+                const rzp = new Razorpay(options);
+
+                rzp.on('payment.failed', function (response) {
+                    handlePaymentFailure(response);
+                });
+
+                // No delay needed - Data is ready
+                rzp.open();
+
+            } catch (error) {
+                console.error('Razorpay initialization error:', error);
+                showError('Payment gateway initialization failed. Please try again.');
+            }
+        }
+
+        async function handlePaymentSuccess(response, paymentId) {
+            // Use the verify payment endpoint instead of success callback
+            await verifyPayment(response.razorpay_payment_id, response.razorpay_order_id, response.razorpay_signature);
+        }
+
+        async function handlePaymentFailure(response) {
+            console.error('Payment failed:', response);
+
+            const errorMsg = response.error?.description || 'Payment failed. Please try again.';
+
+            try {
+                await fetch(CONFIG.PAYMENT_FAILURE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        razorpay_order_id: response.error?.metadata?.order_id,
+                        error_description: errorMsg
+                    })
+                });
+            } catch (error) {
+                console.error('Error reporting payment failure:', error);
+            }
+
+            showError(errorMsg);
+        }
+
+        async function handlePaymentDismiss() {
+            // Update order status to cancelled when payment is dismissed
+            const orderId = getOrderIdFromUrl();
+            if (orderId && orderId !== 'N/A') {
+                try {
+                    await fetch(`${CONFIG.ORDERS_URL}${orderId}/status/`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken') || 'dummy-token'
+                        },
+                        body: JSON.stringify({
+                            user_id: 14774, // This should ideally come from user session
+                            action: "cancelled"
+                        })
+                    });
+                } catch (error) {
+                    console.error('Failed to update order status to cancelled:', error);
+                }
+            }
+
+            showError('Payment was cancelled. You can try again or contact support if you need help.');
+        }
+
+        // Utility function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Initialize payment flow when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get order ID from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('order_id');
+
+            // Optimized flow guarantees fresh context without hard reload
+
+            if (!orderId) {
+                showError('Order ID is missing. Please try again from your orders page.');
+                return;
+            }
+
+            // Check if there's an error from server (passed from Django template)
+            const serverError = document.querySelector('.error-message');
+            if (serverError) {
+                const errorText = serverError.textContent.replace('Error: ', '');
+                showError(errorText);
+                return;
+            }
+
+            // Start payment flow
+            initiatePaymentOnServer(orderId);
+        });
+
+        // Handle browser back button
+        window.addEventListener('beforeunload', function (e) {
+            // Only show warning if payment is in progress
+            if (paymentStatus.querySelector('.status-icon').classList.contains('loading')) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        // WebView specific handling
+        if (window.ReactNativeWebView) {
+            // Handle messages from React Native
+            window.addEventListener('message', function (event) {
+                if (event.data.type === 'PAYMENT_SUCCESS') {
+                    handlePaymentSuccess(event.data.response, event.data.paymentId);
+                } else if (event.data.type === 'PAYMENT_FAILURE') {
+                    handlePaymentFailure(event.data.response);
+                }
+            });
+        }
+    </script>
+    </body>
+
+</html>

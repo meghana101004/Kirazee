@@ -1,0 +1,3340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Complete Business Setup Payment - Kirazee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe0b3 25%, #ffcc80 50%, #f55d00 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .payment-container {
+            background: #ffffff;
+            border-radius: 16px;
+            border-top: 4px solid #f55d00;
+            max-width: 400px;
+            width: 100%;
+            padding: 40px 32px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .payment-container.error-state {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: #f55d00;
+            letter-spacing: -0.8px;
+            margin-bottom: 40px;
+        }
+
+        .payment-status {
+            margin-bottom: 40px;
+        }
+
+        .status-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            box-shadow:
+                0 8px 24px rgba(245, 93, 0, 0.3),
+                0 4px 12px rgba(245, 93, 0, 0.2);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .status-icon::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, rgba(245, 93, 0, 0.1), rgba(255, 138, 0, 0.1));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-icon:hover::before {
+            opacity: 1;
+        }
+
+        .status-icon.loading {
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            box-shadow:
+                0 12px 32px rgba(245, 93, 0, 0.3),
+                0 4px 16px rgba(245, 93, 0, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-icon.loading svg {
+            fill: white;
+        }
+
+        .status-icon.success {
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            box-shadow:
+                0 12px 32px rgba(245, 93, 0, 0.3),
+                0 4px 16px rgba(245, 93, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            animation: successPulse 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes successPulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .status-icon.success svg {
+            fill: #1e293b;
+        }
+
+        .status-icon.error {
+            background: #ef4444;
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            box-shadow:
+                0 12px 32px rgba(239, 68, 68, 0.3),
+                0 4px 16px rgba(239, 68, 68, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .status-icon.error svg {
+            fill: white;
+        }
+
+        .status-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+            animation: fadeInDown 0.6s ease-out 0.2s both;
+        }
+
+        .status-message {
+            font-size: 16px;
+            color: #334155;
+            line-height: 1.5;
+            font-weight: 400;
+            margin-bottom: 32px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+        .progress-bar {
+            width: 100%;
+            max-width: 280px;
+            height: 4px;
+            background: #F4F4F8;
+            border-radius: 2px;
+            margin: 24px auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 60%;
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            border-radius: 2px;
+            animation: progressMove 2s ease-in-out infinite;
+        }
+
+        @keyframes progressMove {
+            0% {
+                width: 0%;
+            }
+
+            50% {
+                width: 70%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .progress-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(74, 144, 226, 0.3);
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        .progress-dots .dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .progress-dots .dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                background: rgba(74, 144, 226, 0.3);
+                transform: scale(1);
+            }
+
+            50% {
+                background: #f55d00;
+                transform: scale(1.2);
+            }
+        }
+
+        .warning-message {
+            background: transparent;
+            color: #475569;
+            padding: 0;
+            border: none;
+            margin: 16px auto 0;
+            font-size: 14px;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn {
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 8px 4px;
+            min-width: 160px;
+            box-shadow:
+                0 8px 24px rgba(245, 93, 0, 0.3),
+                0 2px 8px rgba(245, 93, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn:hover {
+            background: linear-gradient(90deg, #ff8a00, #f55d00);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow:
+                0 12px 32px rgba(245, 93, 0, 0.4),
+                0 4px 16px rgba(245, 93, 0, 0.3);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+            border-radius: 28px 28px 0 0;
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                background-position: 200% 0;
+            }
+
+            50% {
+                background-position: -200% 0;
+            }
+        }
+
+        .error-container .status-icon {
+            width: 88px;
+            height: 88px;
+            margin: 0 auto 28px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 3px solid rgba(239, 68, 68, 0.2);
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+            }
+        }
+
+        .error-container .status-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ef4444, #f55d00, #ff8a00);
+            background-size: 200% 200%;
+            z-index: -1;
+            opacity: 0.2;
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+                background-position: 0% 50%;
+            }
+
+            50% {
+                transform: rotate(180deg);
+                background-position: 100% 50%;
+            }
+
+            100% {
+                transform: rotate(360deg);
+                background-position: 0% 50%;
+            }
+        }
+
+        .error-container .status-icon svg {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .button-container {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 36px;
+            flex-wrap: wrap;
+            text-transform: none;
+            animation: fadeInUp 0.6s ease-out 0.6s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow:
+                0 8px 24px rgba(245, 93, 0, 0.35),
+                0 2px 8px rgba(245, 93, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 160px;
+            position: relative;
+            overflow: hidden;
+            text-transform: capitalize;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(245, 93, 0, 0.4);
+            background: linear-gradient(90deg, #ff8a00, #f55d00);
+        }
+
+        .btn-secondary {
+            background: rgba(248, 250, 252, 0.9);
+            color: #1e293b;
+            border: 2px solid rgba(30, 41, 59, 0.3);
+            padding: 16px 36px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 160px;
+            position: relative;
+            overflow: hidden;
+            text-transform: capitalize;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-secondary:hover {
+            color: rgb(255, 0, 0);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(245, 93, 0, 0.3);
+            border-color: #f55d00;
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+        }
+
+        .footer-text {
+            font-size: 11px;
+            color: #475569;
+            opacity: 0.6;
+            margin-top: 44px;
+            text-align: center;
+            font-weight: 400;
+            animation: fadeIn 0.6s ease-out 1s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 0.6;
+            }
+        }
+
+        .security-info-error {
+            font-size: 12px;
+            color: #475569;
+            opacity: 0.7;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(148, 163, 184, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            animation: fadeInUp 0.6s ease-out 0.8s both;
+        }
+
+        .security-info-error svg {
+            width: 16px;
+            height: 16px;
+            fill: #f55d00;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 2px rgba(245, 93, 0, 0.3));
+            }
+
+            to {
+                filter: drop-shadow(0 0 6px rgba(245, 93, 0, 0.6));
+            }
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.05);
+            color: #dc2626;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            border-left: 4px solid #ef4444;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: rgba(245, 93, 0, 0.1);
+            color: #1e293b;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            border-left: 4px solid #f55d00;
+            font-size: 14px;
+        }
+
+        /* Success State Styles */
+        .success-icon-large {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f55d00, #ff8a00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 32px;
+            box-shadow:
+                0 8px 32px rgba(245, 93, 0, 0.3),
+                0 4px 16px rgba(245, 93, 0, 0.2);
+            animation: successBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .success-icon-large svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        @keyframes successBounce {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        .success-message {
+            font-size: 14px;
+            color: #334155;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .success-btn {
+            background: linear-gradient(135deg, #f55d00, #ff8a00);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 200px;
+            box-shadow:
+                0 4px 16px rgba(245, 93, 0, 0.3),
+                0 2px 8px rgba(245, 93, 0, 0.2);
+            animation: fadeInUp 0.6s ease-out 0.6s both;
+        }
+
+        /* New Professional Success Page Styles */
+        .success-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .success-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(245, 93, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .success-header {
+            text-align: center;
+            margin-bottom: 40px;
+            z-index: 1;
+        }
+
+        .brand-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .success-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.08),
+                0 8px 24px rgba(0, 0, 0, 0.04);
+            max-width: 520px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .success-icon-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .success-icon {
+            position: relative;
+            z-index: 2;
+            animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+        }
+
+        .success-icon-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border: 3px solid #10b981;
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: pulseRing 2s ease-in-out infinite;
+        }
+
+        .success-content {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .success-subtitle {
+            font-size: 16px;
+            color: #64748b;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+            animation: fadeInUp 0.6s ease-out 0.5s both;
+        }
+
+        .business-details-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease-out 0.6s both;
+        }
+
+        .detail-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .detail-icon {
+            width: 48px;
+            height: 48px;
+            background: #ffffff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .detail-content {
+            flex: 1;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 10px;
+            color: #0062ff;
+            font-weight: 700;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .next-steps {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease-out 0.7s both;
+        }
+
+        .next-steps-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: #f55d00;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        .action-container {
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out 0.8s both;
+        }
+
+        .primary-action-btn {
+            background: linear-gradient(135deg, #f55d00 0%, #ff8a00 100%);
+            color: white;
+            border: none;
+            padding: 18px 32px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow:
+                0 8px 24px rgba(245, 93, 0, 0.3),
+                0 4px 12px rgba(245, 93, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .primary-action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .primary-action-btn:hover::before {
+            left: 100%;
+        }
+
+        .primary-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 12px 32px rgba(245, 93, 0, 0.4),
+                0 6px 16px rgba(245, 93, 0, 0.3);
+        }
+
+        .success-footer {
+            margin-top: 40px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        /* Animations */
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .success-container {
+                padding: 20px 16px;
+            }
+
+            .success-card {
+                padding: 24px 20px;
+                border-radius: 20px;
+            }
+
+            .success-icon-ring {
+                width: 80px;
+                height: 80px;
+            }
+
+            .detail-card {
+                padding: 16px;
+                border-radius: 12px;
+            }
+
+            .step-number {
+                width: 24px;
+                height: 24px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .success-container {
+                padding: 16px 12px;
+            }
+
+            .success-card {
+                padding: 20px 16px;
+            }
+
+            .success-title {
+                font-size: 18px;
+            }
+
+            .success-subtitle {
+                font-size: 13px;
+            }
+
+            .detail-card {
+                padding: 12px;
+                gap: 10px;
+            }
+
+            .detail-icon {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        .success-btn:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 8px 24px rgba(245, 93, 0, 0.4),
+                0 4px 12px rgba(245, 93, 0, 0.3);
+            background: linear-gradient(135deg, #ff8a00, #f55d00);
+        }
+
+        .success-btn:active {
+            transform: translateY(0);
+        }
+
+        .security-info {
+            font-size: 14px;
+            color: #f55d00;
+            margin-top: 24px;
+            padding: 12px 16px;
+            background: rgba(245, 93, 0, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(245, 93, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            animation: fadeIn 0.6s ease-out 1s both;
+        }
+
+        .security-icon {
+            width: 16px;
+            height: 16px;
+            fill: #f55d00;
+        }
+
+        /* Mobile First Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .payment-container {
+                padding: 32px 24px;
+                margin: 0 auto;
+                border-radius: 20px;
+                max-width: 100%;
+                width: 100%;
+                backdrop-filter: blur(15px);
+            }
+
+            .logo-container {
+                margin-bottom: 18px;
+                font-size: 14px;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            .status-title {
+                font-size: 26px;
+                margin-bottom: 12px;
+            }
+
+            .status-message {
+                font-size: 16px;
+                margin-bottom: 24px;
+            }
+
+            .status-icon {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 24px;
+            }
+
+            .status-icon svg {
+                width: 40px;
+                height: 40px;
+            }
+
+            .progress-bar {
+                max-width: 250px;
+                height: 5px;
+                margin: 20px auto;
+            }
+
+            .success-icon-large {
+                width: 64px;
+                height: 64px;
+                margin-bottom: 24px;
+            }
+
+            .success-icon-large svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .success-title {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+
+            .success-message {
+                font-size: 14px;
+                margin-bottom: 32px;
+                max-width: 280px;
+            }
+
+            .success-btn {
+                width: 100%;
+                padding: 14px 24px;
+                font-size: 15px;
+                min-width: auto;
+            }
+
+            .btn:active {
+                transform: scale(0.98);
+            }
+
+            .button-container {
+                flex-direction: row;
+                gap: 12px;
+                margin-top: 24px;
+            }
+
+            .error-container {
+                padding: 24px 20px;
+                margin: 16px auto;
+                border-radius: 16px;
+            }
+
+            .error-container .status-icon {
+                width: 64px;
+                height: 64px;
+                margin-bottom: 16px;
+            }
+
+            .error-container .status-title {
+                font-size: 22px;
+                margin-bottom: 8px;
+            }
+
+            .error-container .status-message {
+                font-size: 14px;
+                margin-bottom: 24px;
+                max-width: 100%;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                padding: 14px 24px;
+                font-size: 15px;
+                min-width: auto;
+            }
+
+            .security-info-error {
+                font-size: 11px;
+                margin-top: 20px;
+                padding-top: 16px;
+            }
+
+            .footer-text {
+                margin-top: 32px;
+                font-size: 10px;
+            }
+
+            .security-info {
+                font-size: 11px;
+                padding: 12px 8px;
+                margin-top: 20px;
+                padding-top: 12px;
+            }
+
+            .security-icon {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        /* Touch-friendly interactions */
+        @media (hover: none) and (pointer: coarse) {
+            .btn:hover {
+                transform: none;
+                background: linear-gradient(135deg, #f55d00, #ff8a00);
+            }
+
+            .btn:active {
+                transform: scale(0.96);
+                background: linear-gradient(135deg, #e54d00, #f55d00);
+            }
+
+            .status-icon:hover::before {
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 20px;
+            }
+
+            .logo {
+                font-size: 28px;
+                margin-bottom: 5px;
+            }
+
+            .payment-container {
+                padding: 20px 16px;
+                margin: 0 16px;
+            }
+
+            .status-title {
+                font-size: 18px;
+            }
+
+            .status-message {
+                font-size: 13px;
+                line-height: 1.4;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 13px;
+                min-width: 120px;
+                padding: 14px 20px;
+                font-size: 15px;
+            }
+
+            .security-info {
+                font-size: 11px;
+                padding: 12px 8px;
+            }
+        }
+
+        /* Razorpay Mobile Modal Override */
+        @media (max-width: 768px) {
+            .razorpay-payment-button {
+                width: 100% !important;
+                font-size: 16px !important;
+                padding: 12px !important;
+            }
+
+            /* Force Razorpay modal to be mobile-friendly */
+            .razorpay-modal {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+            }
+
+            /* Make text responsive in Razorpay modal - focused approach */
+            .razorpay-modal .text-base,
+            .razorpay-modal [class*="text-base"] {
+                font-size: 16px !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Make payment method names readable */
+            .razorpay-modal .payment-method-name,
+            .razorpay-modal [class*="method-name"] {
+                font-size: 16px !important;
+                font-weight: 500 !important;
+            }
+
+            /* Improve form input readability */
+            .razorpay-modal input[type="text"],
+            .razorpay-modal input[type="email"],
+            .razorpay-modal input[type="tel"],
+            .razorpay-modal select {
+                font-size: 16px !important;
+                padding: 12px !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Make labels readable */
+            .razorpay-modal label,
+            .razorpay-modal .form-label {
+                font-size: 15px !important;
+                font-weight: 500 !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Override Razorpay Tailwind classes for better mobile readability */
+            .razorpay-modal .font-normal {
+                font-weight: 500 !important;
+                /* Slightly bolder for better visibility */
+            }
+
+            .razorpay-modal .text-base {
+                font-size: 18px !important;
+                /* Increased from 14px (.875rem) */
+                line-height: 1.6 !important;
+                /* Reduced from 52px (3.25rem) to normal ratio */
+            }
+
+            .razorpay-modal .bg-primary {
+                background-color: #ff8a00 !important;
+                /* Ensure primary color is visible */
+            }
+
+            /* Additional mobile text improvements */
+            .razorpay-modal .text-sm {
+                font-size: 16px !important;
+                /* More reasonable size */
+                line-height: 1.4 !important;
+            }
+
+            .razorpay-modal .text-xs {
+                font-size: 14px !important;
+                /* More reasonable size */
+                line-height: 1.3 !important;
+            }
+        }
+
+        /* User Status Display Styles */
+        .user-status-display {
+            margin-top: 24px;
+            padding: 24px;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 2px solid rgba(245, 93, 0, 0.2);
+            box-shadow: 0 8px 32px rgba(245, 93, 0, 0.1);
+            animation: slideInUp 0.5s ease-out;
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .user-status-display h4 {
+            margin: 0 0 20px 0;
+            color: #1e293b;
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .status-details {
+            background: rgba(245, 93, 0, 0.05);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .status-details p {
+            margin: 10px 0;
+            font-size: 15px;
+            color: #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            word-wrap: break-word;
+        }
+
+        .status-details strong {
+            color: #1e293b;
+            font-weight: 600;
+            min-width: 100px;
+        }
+
+        .status-value {
+            font-weight: 700;
+            color: #f55d00;
+            text-align: right;
+            word-break: break-all;
+            flex: 1;
+        }
+
+        .status-indicator {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 0.3px;
+        }
+
+        .status-indicator.complete {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.2));
+            color: #28a745;
+            border: 2px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .status-indicator.payment,
+        .status-indicator.business_setup {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.2));
+            color: #f59e0b;
+            border: 2px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .status-indicator.onboarding {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.2));
+            color: #dc3545;
+            border: 2px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .user-status-error {
+            margin-top: 24px;
+            padding: 20px;
+            background: rgba(220, 53, 69, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .user-status-error h4 {
+            margin: 0 0 12px 0;
+            color: #ff6b6b;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-weight: 500;
+            margin: 8px 0;
+            text-align: center;
+        }
+
+        .error-details {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            font-style: italic;
+            text-align: center;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Button Container Styles */
+        .button-container {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease-out 0.6s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 140px;
+            position: relative;
+            overflow: hidden;
+            text-transform: capitalize;
+            letter-spacing: 0.5px;
+            box-shadow:
+                0 8px 24px rgba(245, 93, 0, 0.3),
+                0 2px 8px rgba(245, 93, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #ff8a00, #f55d00);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow:
+                0 12px 32px rgba(245, 93, 0, 0.4),
+                0 4px 16px rgba(245, 93, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgb(0, 0, 0);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 14px 32px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 140px;
+            position: relative;
+            overflow: hidden;
+            text-transform: capitalize;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffcc00;
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow:
+                0 8px 24px rgba(255, 255, 255, 0.2),
+                0 4px 16px rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Error Container Styles (matching order_payment.html) */
+        .error-container {
+            text-align: center;
+            max-width: 100%;
+            padding: 30px 10px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(239, 68, 68, 0.1);
+        }
+
+        .error-container .status-icon {
+            width: 88px;
+            height: 88px;
+            margin: 0 auto 28px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 3px solid rgba(239, 68, 68, 0.2);
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+            }
+        }
+
+        .error-container .status-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            animation: fadeInDown 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-container .status-message {
+            font-size: 14px;
+            color: #334155;
+            opacity: 0.85;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+        .footer-text {
+            font-size: 11px;
+            color: #475569;
+            opacity: 0.6;
+            margin-top: 44px;
+            text-align: center;
+            font-weight: 400;
+            animation: fadeIn 0.6s ease-out 1s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 0.6;
+            }
+        }
+
+        .security-info-error {
+            font-size: 12px;
+            color: #475569;
+            opacity: 0.7;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(148, 163, 184, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            animation: fadeInUp 0.6s ease-out 0.8s both;
+        }
+
+        .security-info-error svg {
+            width: 16px;
+            height: 16px;
+            fill: #f55d00;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 2px rgba(245, 93, 0, 0.3));
+            }
+
+            to {
+                filter: drop-shadow(0 0 6px rgba(245, 93, 0, 0.6));
+            }
+        }
+
+        /* Print Styles for PDF Download */
+        @media print {
+            body {
+                background: white !important;
+                padding: 0 !important;
+            }
+
+            .payment-container {
+                display: none !important;
+            }
+
+            /* Hide buttons in print */
+            button {
+                display: none !important;
+            }
+
+            /* Ensure content fits on page */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Remove page breaks inside elements */
+            div,
+            section {
+                page-break-inside: avoid;
+            }
+
+            /* Set page margins */
+            @page {
+                margin: 1cm;
+                size: A4;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="payment-container">
+        <div class="logo-container">
+            <div class="logo"> Kirazee</div>
+        </div>
+
+        <div id="payment-status" class="payment-status">
+            <h2 class="status-title">Almost there...</h2>
+            <p class="status-message">Finalizing connection to payment gateway</p>
+
+            <div class="progress-bar"></div>
+
+            <div class="progress-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+
+            <div class="warning-message">
+                Do not close this window or refresh the page
+            </div>
+        </div>
+
+        <div class="security-info">
+            Your payment is secured with 256-bit SSL encryption
+        </div>
+    </div>
+
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <!-- jsPDF Library for Direct PDF Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        // Enhanced Platform Detection
+        function detectPlatform() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const platformParam = urlParams.get('platform');
+
+            // Check URL parameter first
+            if (platformParam === 'android' || platformParam === 'webview') {
+                return 'android';
+            }
+            if (platformParam === 'ios') {
+                return 'ios';
+            }
+
+            // Check User Agent for WebView indicators
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isAndroidWebView = userAgent.includes('wv') ||
+                userAgent.includes('version') && userAgent.includes('chrome') && userAgent.includes('mobile') ||
+                window.AndroidInterface !== undefined ||
+                window.androidInterface !== undefined;
+
+            const isIOSWebView = /iPhone|iPad|iPod/.test(navigator.userAgent) &&
+                (window.webkit?.messageHandlers !== undefined ||
+                    window.iOSInterface !== undefined);
+
+            if (isAndroidWebView) {
+                return 'android';
+            } else if (isIOSWebView) {
+                return 'ios';
+            }
+
+            return 'web';
+        }
+
+        // Configuration
+        const BASE_URL = window.location.protocol + '//' + window.location.host;
+        const PLATFORM = detectPlatform();
+
+        const CONFIG = {
+            PAYMENT_SAVE_URL: BASE_URL + '/kirazee/business/save-business-payment-data/',
+            PAYMENT_SUCCESS_URL: BASE_URL + '/kirazee/business/payment/success/',
+            PAYMENT_CANCEL_URL: BASE_URL + '/kirazee/business/payment/cancel/',
+            PLATFORM: PLATFORM
+        };
+
+        // DOM Elements
+        const paymentStatus = document.getElementById('payment-status');
+
+        // Utility Functions
+        function updateStatus(iconType, title, message, type = 'loading') {
+            const statusTitle = paymentStatus.querySelector('.status-title');
+            const statusMessage = paymentStatus.querySelector('.status-message');
+            statusTitle.textContent = title;
+            statusMessage.textContent = message;
+
+            // Add progress elements for loading state
+            if (type === 'loading') {
+                // Add progress bar if it doesn't exist
+                if (!paymentStatus.querySelector('.progress-bar')) {
+                    const progressBar = document.createElement('div');
+                    progressBar.className = 'progress-bar';
+                    paymentStatus.appendChild(progressBar);
+                }
+            }
+        }
+
+        function showError(message) {
+            // Clear the payment status container and apply error state
+            paymentStatus.innerHTML = '';
+            document.querySelector('.payment-container').classList.add('error-state');
+
+            // Hide the original security info
+            const originalSecurityInfo = document.querySelector('.security-info');
+            if (originalSecurityInfo) {
+                originalSecurityInfo.style.display = 'none';
+            }
+
+            // Create the error UI structure matching order_payment.html exactly
+            const errorContainer = document.createElement('div');
+            errorContainer.className = 'error-container';
+
+            // Error title
+            const errorTitle = document.createElement('h2');
+            errorTitle.className = 'status-title';
+            errorTitle.textContent = 'Payment Failed';
+
+            // Error message
+            const errorMessage = document.createElement('p');
+            errorMessage.className = 'status-message';
+            errorMessage.textContent = message || 'Payment was cancelled. You can try again or contact support if you need help.';
+
+            // Button container - side by side layout for error buttons
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'button-container';
+            buttonContainer.style.cssText = 'display: flex; gap: 8px; justify-content: center; margin-top: 16px; width: 100%;';
+
+            // Try Again button - responsive sizing
+            const retryBtn = document.createElement('button');
+            retryBtn.className = 'btn btn-primary';
+            retryBtn.textContent = 'Try Again';
+            retryBtn.style.cssText = 'flex: 1 1 0; max-width: 48%; padding: 12px 10px; font-size: 13px; min-width: 0 !important;';
+            retryBtn.onclick = () => location.reload();
+
+            // Back to Profile button - responsive sizing
+            const backBtn = document.createElement('button');
+            backBtn.className = 'btn btn-secondary';
+            backBtn.id = 'backtoProfile';
+            backBtn.textContent = 'Back To Profile';
+            backBtn.style.cssText = 'flex: 1 1 0; max-width: 48%; padding: 12px 10px; font-size: 13px; min-width: 0 !important;';
+            backBtn.onclick = () => handleRedirection('profile');
+
+            // Assemble the error UI
+            buttonContainer.appendChild(retryBtn);
+            buttonContainer.appendChild(backBtn);
+
+            // Footer text
+            const footerText = document.createElement('div');
+            footerText.className = 'footer-text';
+            footerText.textContent = '© 2023 Kirazee. All rights reserved.';
+
+            // Security info (below footer text)
+            const securityInfo = document.createElement('div');
+            securityInfo.className = 'security-info-error';
+            securityInfo.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22S8 18 8 12V7L12 5L16 7V12C16 18 12 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Your payment is secured with 256-bit SSL encryption
+            `;
+
+            errorContainer.appendChild(errorTitle);
+            errorContainer.appendChild(errorMessage);
+            errorContainer.appendChild(buttonContainer);
+            errorContainer.appendChild(footerText);
+            errorContainer.appendChild(securityInfo);
+
+            paymentStatus.appendChild(errorContainer);
+
+            // Set global payment status for failure
+            window.paymentSuccessStatus = {
+                status: 'cancelled',
+                timestamp: Date.now(),
+                message: 'Payment Failed',
+                business_id: getUrlParams().business_id
+            };
+
+            // Trigger Android JavaScript interface for failure detection
+            setTimeout(() => {
+                console.log('🚀 Attempting Android interface calls for failure...');
+
+                // Try all possible interface names for failure
+                if (window.androidInterface && typeof window.androidInterface.onPaymentResult === 'function') {
+                    console.log('✅ Calling androidInterface.onPaymentResult (cancelled)');
+                    window.androidInterface.onPaymentResult('cancelled', 'profile');
+                } else if (window.AndroidInterface && typeof window.AndroidInterface.onPaymentResult === 'function') {
+                    console.log('✅ Calling AndroidInterface.onPaymentResult (cancelled)');
+                    window.AndroidInterface.onPaymentResult('cancelled', 'profile');
+                } else if (window.PaymentBridge && typeof window.PaymentBridge.onPaymentResult === 'function') {
+                    console.log('✅ Calling PaymentBridge.onPaymentResult (cancelled)');
+                    window.PaymentBridge.onPaymentResult('cancelled', 'profile');
+                } else {
+                    console.log('❌ No Android interface found for failure - user will see error screen');
+                }
+
+                console.log('📊 Final payment status:', window.paymentSuccessStatus);
+            }, 500); // Reduced delay for faster response
+        }
+
+        function showSuccess(message) {
+            // Clear the payment status container
+            paymentStatus.innerHTML = '';
+
+            // Create success title with blast icons (same format as order_payment)
+            const successTitle = document.createElement('h2');
+            successTitle.className = 'success-title';
+            successTitle.innerHTML = '🎉 Payment Successful! 🎉';
+
+            // Create success message
+            const successMessage = document.createElement('p');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'Your payment has been successfully processed. Your business is now ready!';
+
+            // Create countdown message
+            const countdownMessage = document.createElement('p');
+            countdownMessage.className = 'success-message';
+            countdownMessage.style.fontSize = '14px';
+            countdownMessage.style.color = '#64748b';
+            countdownMessage.style.marginTop = '10px';
+
+            // Append all elements
+            paymentStatus.appendChild(successTitle);
+            paymentStatus.appendChild(successMessage);
+            paymentStatus.appendChild(countdownMessage);
+
+            // Set global payment status for Android app detection
+            window.paymentSuccessStatus = {
+                status: 'success',
+                timestamp: Date.now(),
+                message: '🎉 Payment Successful! 🎉',
+                business_id: getUrlParams().business_id
+            };
+
+            // Add success marker HTML for Android content detection
+            const successMarker = document.createElement('div');
+            successMarker.id = 'payment-success-marker';
+            successMarker.style.display = 'none';
+            successMarker.textContent = '🎉 Payment Successful! 🎉';
+            document.body.appendChild(successMarker);
+
+            // Start countdown and load business details after 3 seconds (same as order_payment)
+            let countdown = 3;
+            countdownMessage.textContent = `Loading business details in ${countdown} seconds...`;
+
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    countdownMessage.textContent = `Loading business details in ${countdown} seconds...`;
+                } else {
+                    clearInterval(countdownInterval);
+                    loadBusinessDetails();
+                }
+            }, 1000);
+
+            // Trigger Android JavaScript interface for WebView detection (faster response)
+            setTimeout(() => {
+                console.log('🚀 Attempting Android interface calls...');
+
+                // Try all possible interface names
+                if (window.androidInterface && typeof window.androidInterface.onPaymentResult === 'function') {
+                    console.log('✅ Calling androidInterface.onPaymentResult');
+                    window.androidInterface.onPaymentResult('success', 'dashboard');
+                } else if (window.AndroidInterface && typeof window.AndroidInterface.onPaymentResult === 'function') {
+                    console.log('✅ Calling AndroidInterface.onPaymentResult');
+                    window.AndroidInterface.onPaymentResult('success', 'dashboard');
+                } else if (window.PaymentBridge && typeof window.PaymentBridge.onPaymentResult === 'function') {
+                    console.log('✅ Calling PaymentBridge.onPaymentResult');
+                    window.PaymentBridge.onPaymentResult('success', 'dashboard');
+                } else {
+                    console.log('❌ No Android interface found - relying on content detection');
+                }
+
+                // Also trigger success callback for compatibility
+                if (window.androidInterface && typeof window.androidInterface.onPaymentSuccess === 'function') {
+                    window.androidInterface.onPaymentSuccess('business_payment_success');
+                } else if (window.AndroidInterface && typeof window.AndroidInterface.onPaymentSuccess === 'function') {
+                    window.AndroidInterface.onPaymentSuccess('business_payment_success');
+                }
+
+                console.log('📊 Final payment status:', window.paymentSuccessStatus);
+            }, 500); // Faster response for Android detection
+        }
+
+        async function loadBusinessDetails() {
+            const params = getUrlParams();
+            const userId = params.user_id;
+
+            // Clear the payment status and show loading
+            paymentStatus.innerHTML = '';
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'status-message';
+            loadingDiv.textContent = 'Loading business details...';
+            loadingDiv.style.textAlign = 'center';
+            loadingDiv.style.padding = '40px';
+            paymentStatus.appendChild(loadingDiv);
+
+            try {
+                const response = await fetch(`/kirazee/business/user-status/?userID=${userId}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.stage === 'COMPLETE' && data.status === 'ACTIVE') {
+                    displayBusinessDetails(data);
+                } else {
+                    throw new Error('Business not ready yet');
+                }
+            } catch (error) {
+                console.error('Error fetching business details:', error);
+                paymentStatus.innerHTML = `
+                    <div class="error-message">
+                        <strong>Error:</strong> Failed to load business details. 
+                        <button class="btn" onclick="handleRedirection('profile')" style="margin-top: 15px;">
+                            Go to Profile
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Function to download order receipt as HTML file
+        function downloadOrderReceipt() {
+            try {
+                // Get the order content
+                const orderContent = document.querySelector('.payment-container').style.display === 'none'
+                    ? document.body.innerHTML
+                    : document.querySelector('.payment-container').outerHTML;
+
+                // Create clean HTML content for download
+                const htmlContent = '<!DOCTYPE html>' +
+                    '<html>' +
+                    '<head>' +
+                    '<meta charset="UTF-8">' +
+                    '<title>Order Receipt - Kirazee</title>' +
+                    '<style>' +
+                    'body { font-family: Arial, sans-serif; margin: 20px; background: #fff; }' +
+                    '.success-btn, button { display: none !important; }' +
+                    '.payment-container { max-width: 800px; margin: 0 auto; }' +
+                    'h1, h2, h3 { color: #f55d00; }' +
+                    '.logo { color: #f55d00; font-size: 32px; font-weight: bold; text-align: center; margin-bottom: 30px; }' +
+                    '</style>' +
+                    '</head>' +
+                    '<body>' +
+                    orderContent +
+                    '</body>' +
+                    '</html>';
+
+                // Create blob and download
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = window.URL.createObjectURL(blob);
+
+                // Create download link
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'Kirazee_Order_Receipt_' + getOrderIdFromUrl() + '.html';
+                downloadLink.style.display = 'none';
+
+                // Trigger download
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+
+                // Clean up
+                window.URL.revokeObjectURL(url);
+
+            } catch (error) {
+                console.error('Download failed:', error);
+                alert('Download failed. Please try again.');
+            }
+        }
+
+        // Function to download business details as PDF (Direct Download - No Print Dialog)
+        function downloadBusinessPDF() {
+            try {
+                // Get URL parameters
+                const params = getUrlParams();
+
+                // Get business data from global variable (set by displayBusinessDetails)
+                const businessData = window.currentBusinessData || {};
+
+                // Extract data with proper fallbacks
+                const businessId = businessData.context?.business_id || params.business_id || 'N/A';
+                const amount = businessData.context?.amount || params.amount || '0.00';
+                const userId = businessData.context?.user_id || params.user_id || 'N/A';
+                const status = businessData.status || 'ACTIVE';
+                const stage = businessData.stage || 'COMPLETE';
+
+                console.log('PDF Generation Data:', {
+                    businessId,
+                    amount,
+                    userId,
+                    status,
+                    stage,
+                    fullBusinessData: businessData,
+                    urlParams: params
+                });
+
+                // Initialize jsPDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                // Set colors
+                const primaryColor = [245, 93, 0]; // #f55d00
+                const textColor = [45, 55, 72]; // #2d3748
+                const lightGray = [113, 128, 150]; // #718096
+
+                // Add header with logo
+                doc.setFillColor(...primaryColor);
+                doc.rect(0, 0, 210, 25, 'F');
+
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(28);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Kirazee', 105, 16, { align: 'center' });
+
+                // Add title
+                doc.setTextColor(...textColor);
+                doc.setFontSize(20);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Business Setup Complete!', 105, 40, { align: 'center' });
+
+                // Add subtitle
+                doc.setTextColor(...lightGray);
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'normal');
+                doc.text('Thank you for setting up your business with Kirazee', 105, 48, { align: 'center' });
+
+                // Add horizontal line
+                doc.setDrawColor(...primaryColor);
+                doc.setLineWidth(0.5);
+                doc.line(20, 55, 190, 55);
+
+                let yPos = 70;
+
+                // Business Information Section
+                doc.setFillColor(248, 249, 250);
+                doc.roundedRect(20, yPos, 170, 45, 3, 3, 'F');
+
+                doc.setTextColor(...textColor);
+                doc.setFontSize(13);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Business Information', 25, yPos + 8);
+
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+
+                // Business ID
+                doc.setTextColor(...lightGray);
+                doc.text('Business ID:', 25, yPos + 18);
+                doc.setTextColor(...textColor);
+                doc.setFont('helvetica', 'bold');
+                doc.text(String(businessId), 60, yPos + 18);
+
+                // Status
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...lightGray);
+                doc.text('Status:', 25, yPos + 28);
+                doc.setTextColor(72, 187, 120); // Green color
+                doc.setFont('helvetica', 'bold');
+                doc.text(String(status), 60, yPos + 28);
+
+                // Stage
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...lightGray);
+                doc.text('Stage:', 25, yPos + 38);
+                doc.setTextColor(...textColor);
+                doc.setFont('helvetica', 'bold');
+                doc.text(String(stage), 60, yPos + 38);
+
+                yPos += 55;
+
+                // Payment Details Section
+                doc.setFillColor(248, 249, 250);
+                doc.roundedRect(20, yPos, 170, 50, 3, 3, 'F');
+
+                doc.setTextColor(...textColor);
+                doc.setFontSize(13);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Payment Details', 25, yPos + 8);
+
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+
+                // Setup Fee
+                doc.setTextColor(...lightGray);
+                doc.text('Setup Fee:', 25, yPos + 18);
+                doc.setTextColor(...textColor);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Rs. ' + String(amount), 60, yPos + 18);
+
+                // GST
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...lightGray);
+                doc.text('GST:', 25, yPos + 28);
+                doc.setTextColor(...textColor);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Rs. 0.00', 60, yPos + 28);
+
+                // Total Amount (with border)
+                doc.setDrawColor(...primaryColor);
+                doc.setLineWidth(0.3);
+                doc.line(25, yPos + 33, 185, yPos + 33);
+
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...textColor);
+                doc.text('Total Amount:', 25, yPos + 42);
+                doc.setFontSize(12);
+                doc.text('Rs. ' + String(amount), 60, yPos + 42);
+
+                yPos += 60;
+
+                // Success Badge
+                doc.setFillColor(16, 185, 129); // Green
+                doc.roundedRect(60, yPos, 90, 15, 3, 3, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Payment Successful', 105, yPos + 10, { align: 'center' });
+
+                yPos += 25;
+
+                // Footer
+                doc.setTextColor(...lightGray);
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'normal');
+                doc.text('Generated on: ' + new Date().toLocaleString(), 105, yPos, { align: 'center' });
+
+                doc.setFontSize(8);
+                doc.text('2023 Kirazee. All rights reserved.', 105, 285, { align: 'center' });
+                doc.text('For support, contact: support@kirazee.com', 105, 290, { align: 'center' });
+
+                // Generate filename with timestamp
+                const timestamp = new Date().toISOString().slice(0, 10);
+                const filename = `Kirazee_Business_Setup_${businessId}_${timestamp}.pdf`;
+
+                // Save the PDF
+                doc.save(filename);
+
+                console.log('✅ PDF downloaded successfully:', filename);
+
+            } catch (error) {
+                console.error('❌ PDF generation failed:', error);
+                console.error('Error details:', error.stack);
+                alert('Failed to generate PDF. Please try again or contact support.');
+            }
+        }
+
+        function displayBusinessDetails(businessData) {
+            // Store business data globally for PDF generation
+            window.currentBusinessData = businessData;
+
+            // Hide the payment container and create full page business details
+            document.querySelector('.payment-container').style.display = 'none';
+
+            // Create full page container
+            const fullPageContainer = document.createElement('div');
+            fullPageContainer.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #fff5e6 0%, #ffe0b3 25%, #ffcc80 50%, #f55d00 100%);
+                overflow-y: auto;
+                z-index: 1000;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+            `;
+
+            const isMobile = window.innerWidth <= 768;
+
+            fullPageContainer.innerHTML = `
+                <div style="width: 100%; max-width: 550px; margin: 0 auto; padding: ${isMobile ? '0px' : '40px 20px'};">
+                    <!-- Header -->
+                    <div style="text-align: center; margin-bottom: ${isMobile ? '15px' : '20px'};">
+                        <h1 style="font-size: ${isMobile ? '24px' : '32px'}; font-weight: 700; color: #ff6b35; margin: 0; letter-spacing: -0.5px;">Kirazee</h1>
+                    </div>
+                    
+                    <!-- Main Card -->
+                    <div style="background: white; border-radius: ${isMobile ? '12px' : '16px'}; padding: ${isMobile ? '20px 16px' : '40px 45px'}; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-top: 3px solid #ff6b35;">
+                        
+                        <!-- Title -->
+                        <h2 style="font-size: ${isMobile ? '18px' : '26px'}; font-weight: 700; color: #2d3748; text-align: center; margin: 0 0 6px 0; line-height: 1.3;">Business Setup Complete!</h2>
+                        <p style="text-align: center; color: #718096; font-size: ${isMobile ? '12px' : '14px'}; margin: 0 0 ${isMobile ? '20px' : '30px'} 0; line-height: 1.4;">Thank you for setting up your business. Here are your business details:</p>
+
+                        <!-- Business Details Section - Responsive Grid -->
+                        <div style="display: grid; grid-template-columns: ${isMobile ? '1fr' : '1fr 1fr'}; gap: ${isMobile ? '15px' : '30px'}; margin-bottom: ${isMobile ? '20px' : '30px'};">
+                            
+                            <!-- Left Column - Business Info -->
+                            <div>
+                                <h3 style="font-size: ${isMobile ? '13px' : '15px'}; font-weight: 600; color: #2d3748; margin: 0 0 10px 0;">Business Information</h3>
+                                <div style="background: #f8f9fa; padding: ${isMobile ? '10px 12px' : '14px 18px'}; border-radius: 6px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: ${isMobile ? '5px 0' : '6px 0'}; gap: 8px;">
+                                        <span style="color: #718096; font-size: ${isMobile ? '11px' : '13px'}; white-space: nowrap;">Business ID :</span>
+                                        <span style="color: #2d3748; font-weight: 600; font-size: ${isMobile ? '11px' : '13px'}; text-align: right; word-break: break-all; flex: 1;">${businessData.context?.business_id || 'N/A'}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: ${isMobile ? '5px 0' : '6px 0'};">
+                                        <span style="color: #718096; font-size: ${isMobile ? '11px' : '13px'};">Status :</span>
+                                        <span style="color: #48bb78; font-weight: 600; font-size: ${isMobile ? '11px' : '13px'};">ACTIVE</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: ${isMobile ? '5px 0' : '6px 0'};">
+                                        <span style="color: #718096; font-size: ${isMobile ? '11px' : '13px'};">Stage :</span>
+                                        <span style="color: #2d3748; font-weight: 600; font-size: ${isMobile ? '11px' : '13px'};">COMPLETE</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column - Payment Details -->
+                            <div>
+                                <h3 style="font-size: ${isMobile ? '13px' : '15px'}; font-weight: 600; color: #2d3748; margin: 0 0 10px 0;">Payment Details</h3>
+                                <div style="background: #f8f9fa; padding: ${isMobile ? '10px 12px' : '14px 18px'}; border-radius: 6px;">
+                                    <div style="display: flex; justify-content: space-between; padding: ${isMobile ? '5px 0' : '6px 0'};">
+                                        <span style="color: #718096; font-size: ${isMobile ? '11px' : '13px'};">Setup Fee :</span>
+                                        <span style="color: #2d3748; font-weight: 600; font-size: ${isMobile ? '11px' : '13px'};">₹${businessData.context?.amount || '999.00'}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: ${isMobile ? '5px 0' : '6px 0'};">
+                                        <span style="color: #718096; font-size: ${isMobile ? '11px' : '13px'};">GST :</span>
+                                        <span style="color: #2d3748; font-weight: 600; font-size: ${isMobile ? '11px' : '13px'};">₹0.00</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: ${isMobile ? '6px 0 0 0' : '8px 0 0 0'}; margin-top: ${isMobile ? '4px' : '6px'}; border-top: 1px solid #e5e7eb;">
+                                        <span style="color: #2d3748; font-weight: 700; font-size: ${isMobile ? '12px' : '14px'};">Total Amount :</span>
+                                        <span style="color: #2d3748; font-weight: 700; font-size: ${isMobile ? '12px' : '14px'};">₹${businessData.context?.amount || '999.00'}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: ${isMobile ? '5px 0' : '6px 0'}; margin-top: ${isMobile ? '4px' : '6px'};">
+                                        <span style="color: #718096; font-size: ${isMobile ? '11px' : '13px'};">Transaction ID :</span>
+                                        <span style="color: #2d3748; font-weight: 600; font-size: ${isMobile ? '11px' : '13px'}; text-align: right; word-break: break-all; max-width: 65%;">${window.paymentDetails?.payment_id || 'Not available'}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: ${isMobile ? '5px 0' : '6px 0'};">
+                                        <span style="color: #718096; font-size: ${isMobile ? '11px' : '13px'};">Paid On :</span>
+                                        <span style="color: #2d3748; font-weight: 600; font-size: ${isMobile ? '11px' : '13px'};">${window.paymentDetails?.paid_at ? new Date(window.paymentDetails.paid_at).toLocaleString() : new Date().toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div style="display: flex; gap: ${isMobile ? '10px' : '12px'}; justify-content: center; margin-top: ${isMobile ? '20px' : '25px'};">
+                            <button onclick="downloadBusinessPDF()" style="background: #ff6b35; color: white; border: none; padding: ${isMobile ? '12px 20px' : '14px 40px'}; border-radius: ${isMobile ? '8px' : '10px'}; font-size: ${isMobile ? '14px' : '15px'}; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 3px 10px rgba(255, 107, 53, 0.3); flex: 1; max-width: ${isMobile ? 'none' : '180px'};">
+                                Download
+                            </button>
+                            <button id="backtoProfile" onclick="handleBackToProfile()" style="background: white; color: #ff6b35; border: 2px solid #ff6b35; padding: ${isMobile ? '10px 20px' : '12px 40px'}; border-radius: ${isMobile ? '8px' : '10px'}; font-size: ${isMobile ? '14px' : '15px'}; font-weight: 600; cursor: pointer; transition: all 0.3s; flex: 1; max-width: ${isMobile ? 'none' : '180px'};">
+                                Back to Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Append the full page container to body
+            document.body.appendChild(fullPageContainer);
+        }
+
+        // Enhanced Android Interface Detection
+        (function () {
+            console.log('🔍 Starting Android interface detection...');
+
+            // Signal that we're in Android WebView
+            if (window.androidInterface || window.AndroidInterface || window.PaymentBridge) {
+                console.log('✅ Android interface detected immediately');
+                window.isAndroidApp = true;
+                window.androidInterfaceDetected = true;
+            } else {
+                // Keep checking for interface with shorter intervals and longer timeout
+                let checkCount = 0;
+                const interfaceCheck = setInterval(function () {
+                    checkCount++;
+                    console.log(`🔍 Checking for Android interface... Attempt ${checkCount}`);
+
+                    if (window.androidInterface || window.AndroidInterface || window.PaymentBridge) {
+                        console.log('✅ Android interface detected after ' + checkCount + ' attempts');
+                        window.isAndroidApp = true;
+                        window.androidInterfaceDetected = true;
+                        clearInterval(interfaceCheck);
+
+                        // Immediately trigger payment success notification if payment was successful
+                        if (window.paymentSuccessStatus && window.paymentSuccessStatus.status === 'success') {
+                            console.log('🔔 Triggering delayed Android payment success notification');
+                            notifyAndroidPaymentSuccess(window.paymentSuccessStatus.payment_id || 'success');
+                        }
+                    }
+
+                    // Increase timeout to 120 seconds (240 attempts * 500ms)
+                    if (checkCount > 240) {
+                        console.log('⏹️ Stopped interface detection after 120 seconds');
+                        clearInterval(interfaceCheck);
+                    }
+                }, 500);
+
+                // Also check immediately when DOM is ready
+                document.addEventListener('DOMContentLoaded', function () {
+                    setTimeout(function () {
+                        if (window.androidInterface || window.AndroidInterface || window.PaymentBridge) {
+                            console.log('✅ Android interface detected on DOM ready');
+                            window.isAndroidApp = true;
+                            window.androidInterfaceDetected = true;
+                            clearInterval(interfaceCheck);
+                        }
+                    }, 100);
+                });
+            }
+        })();
+
+        // Global payment status variable for app detection
+        window.paymentSuccessStatus = { status: 'pending' };
+
+        // Expose methods for Android app to call
+        window.getPaymentStatus = function () {
+            return window.paymentSuccessStatus || { status: 'pending' };
+        };
+
+        window.triggerAndroidRedirect = function () {
+            console.log('🔄 Manual Android redirect triggered');
+            if (window.androidInterface && typeof window.androidInterface.onPaymentResult === 'function') {
+                window.androidInterface.onPaymentResult('success', 'dashboard');
+                return true;
+            } else if (window.AndroidInterface && typeof window.AndroidInterface.onPaymentResult === 'function') {
+                window.AndroidInterface.onPaymentResult('success', 'dashboard');
+                return true;
+            } else if (window.PaymentBridge && typeof window.PaymentBridge.onPaymentResult === 'function') {
+                window.PaymentBridge.onPaymentResult('success', 'dashboard');
+                return true;
+            }
+            console.log('❌ No Android interface available for manual redirect');
+            return false;
+        };
+
+
+        // Enhanced WebView detection and communication
+        function detectWebView() {
+            const userAgent = navigator.userAgent;
+            const isAndroid = /Android/i.test(userAgent);
+            const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+            const hasAndroidInterface = window.androidInterface || window.AndroidInterface;
+            const hasIOSInterface = window.webkit?.messageHandlers || window.iOSInterface;
+
+            console.log('Device detection:', {
+                userAgent: userAgent,
+                isAndroid: isAndroid,
+                isIOS: isIOS,
+                hasAndroidInterface: !!hasAndroidInterface,
+                hasIOSInterface: !!hasIOSInterface
+            });
+
+            return {
+                isWebView: hasAndroidInterface || hasIOSInterface,
+                isAndroid: isAndroid,
+                isIOS: isIOS,
+                hasAndroidInterface: !!hasAndroidInterface,
+                hasIOSInterface: !!hasIOSInterface,
+                platform: hasAndroidInterface ? 'android' : (hasIOSInterface ? 'ios' : 'web')
+            };
+        }
+
+        // Test mode simulation function
+        function simulateTestModePayment(params) {
+            console.log('Test mode: Starting payment simulation');
+
+            // Show loading state
+            updateStatus('payment', 'Processing Test Payment', 'Simulating UPI payment flow...');
+
+            // Simulate UPI app selection and processing
+            setTimeout(() => {
+                console.log('Test mode: Simulating UPI app selection');
+                updateStatus('payment', 'UPI App Selected', 'Processing payment in test mode...');
+
+                // Simulate payment processing
+                setTimeout(() => {
+                    console.log('Test mode: Simulating payment success');
+
+                    // Generate mock payment response
+                    const mockResponse = {
+                        razorpay_payment_id: 'pay_test_' + Date.now(),
+                        razorpay_order_id: params.order_id || 'order_test_' + Date.now(),
+                        razorpay_signature: 'test_signature_' + Math.random().toString(36).substring(7)
+                    };
+
+                    // Trigger success
+                    handlePaymentSuccess(mockResponse);
+                }, 1500); // 1.5 seconds for processing
+            }, 1000); // 1 second for app selection
+        }
+
+        // Handle WebView communication for UPI returns
+        function handleWebViewReturn(paymentResult) {
+            const webviewInfo = detectWebView();
+
+            if (webviewInfo.isWebView) {
+                const status = paymentResult.status;
+                const data = paymentResult.data;
+
+                if (webviewInfo.hasAndroidInterface) {
+                    // Android WebView communication
+                    if (window.androidInterface && typeof window.androidInterface.onPaymentResult === 'function') {
+                        console.log('Calling androidInterface.onPaymentResult');
+                        window.androidInterface.onPaymentResult(status, JSON.stringify(data));
+                    } else if (window.AndroidInterface && typeof window.AndroidInterface.onPaymentResult === 'function') {
+                        console.log('Calling AndroidInterface.onPaymentResult');
+                        window.AndroidInterface.onPaymentResult(status, JSON.stringify(data));
+                    } else {
+                        // Fallback to custom URL scheme for Android
+                        const fallbackUrl = `kirazee://payment/${status}?${new URLSearchParams(data).toString()}`;
+                        console.log('Using Android fallback URL:', fallbackUrl);
+                        window.location.href = fallbackUrl;
+                    }
+                } else if (webviewInfo.hasIOSInterface) {
+                    // iOS WebView communication
+                    if (window.webkit?.messageHandlers?.paymentResult) {
+                        console.log('Calling iOS webkit.messageHandlers.paymentResult');
+                        window.webkit.messageHandlers.paymentResult.postMessage({
+                            type: 'payment_result',
+                            status: status,
+                            data: data
+                        });
+                    } else if (window.iOSInterface && typeof window.iOSInterface.onPaymentResult === 'function') {
+                        console.log('Calling iOSInterface.onPaymentResult');
+                        window.iOSInterface.onPaymentResult(status, data);
+                    } else {
+                        // Fallback to custom URL scheme for iOS
+                        const fallbackUrl = `kirazee://payment/${status}?${new URLSearchParams(data).toString()}`;
+                        console.log('Using iOS fallback URL:', fallbackUrl);
+                        window.location.href = fallbackUrl;
+                    }
+                }
+            }
+        }
+
+        // Get URL parameters
+        function getUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                user_id: urlParams.get('userID'),
+                amount: urlParams.get('amount'),
+                business_id: urlParams.get('business_id'),
+                razorpay_mode: urlParams.get('mode') || 'test',
+                order_id: urlParams.get('order_id') || ''
+            };
+        }
+
+        // Send payment result to backend
+        async function sendPaymentResultToBackend(response, status) {
+            try {
+                const params = getUrlParams();
+
+                // Use fetch instead of form submission to avoid redirect
+                const formData = new FormData();
+
+                // Add all required fields
+                const fields = {
+                    user_id: params.user_id,
+                    business_id: params.business_id,
+                    amount: params.amount,
+                    payment_id: response.razorpay_payment_id,
+                    order_id: response.razorpay_order_id,
+                    signature: response.razorpay_signature,
+                    status: status,
+                    payment_method: 'razorpay',
+                    platform: CONFIG.PLATFORM
+                };
+
+                for (const [key, value] of Object.entries(fields)) {
+                    formData.append(key, value);
+                }
+
+                // Add CSRF token
+                formData.append('csrfmiddlewaretoken', getCookie('csrftoken') || 'dummy-token');
+
+                // Submit using fetch to avoid redirect
+                const fetchResponse = await fetch(CONFIG.PAYMENT_SAVE_URL, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin'
+                });
+
+                if (fetchResponse.ok) {
+                    console.log('Payment data saved successfully');
+                    return { success: true, form_submitted: true };
+                } else {
+                    console.error('Failed to save payment data:', fetchResponse.status);
+                    return { success: false, form_submitted: false };
+                }
+
+            } catch (error) {
+                console.error('Error submitting payment data:', error);
+                return { success: false, form_submitted: false };
+            }
+        }
+
+        // Utility function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Handle Back to Profile button click - Only calls Android interface
+        function handleBackToProfile() {
+            console.log('🔘 Back to Profile clicked');
+
+            // Try to call Android interface
+            if (window.androidInterface && typeof window.androidInterface.handleRedirection === 'function') {
+                console.log('✅ Calling androidInterface.handleRedirection(profile)');
+                window.androidInterface.handleRedirection('profile');
+                return;
+            }
+
+            if (window.AndroidInterface && typeof window.AndroidInterface.handleRedirection === 'function') {
+                console.log('✅ Calling AndroidInterface.handleRedirection(profile)');
+                window.AndroidInterface.handleRedirection('profile');
+                return;
+            }
+
+            if (window.PaymentBridge && typeof window.PaymentBridge.handleRedirection === 'function') {
+                console.log('✅ Calling PaymentBridge.handleRedirection(profile)');
+                window.PaymentBridge.handleRedirection('profile');
+                return;
+            }
+
+            console.log('ℹ️ No Android interface found - button does nothing');
+            // Do nothing if no Android interface is available
+        }
+
+        // Handle redirection based on platform
+        function handleRedirection(destination) {
+            const webviewInfo = detectWebView();
+            const params = getUrlParams();
+
+            // Prepare payment status data
+            const paymentData = {
+                destination: destination,
+                status: destination === 'dashboard' ? 'success' : 'cancelled',
+                user_id: params.user_id,
+                business_id: params.business_id,
+                amount: params.amount,
+                timestamp: new Date().toISOString()
+            };
+
+            if (webviewInfo.isWebView) {
+                console.log(`Redirecting to ${webviewInfo.platform} WebView`);
+
+                if (webviewInfo.hasAndroidInterface) {
+                    // Android WebView communication - prefer native handleRedirection
+                    if (window.androidInterface && typeof window.androidInterface.handleRedirection === 'function') {
+                        console.log('Calling androidInterface.handleRedirection');
+                        window.androidInterface.handleRedirection(destination);
+                    } else if (window.AndroidInterface && typeof window.AndroidInterface.handleRedirection === 'function') {
+                        console.log('Calling AndroidInterface.handleRedirection');
+                        window.AndroidInterface.handleRedirection(destination);
+                    } else if (window.androidInterface && typeof window.androidInterface.onPaymentResult === 'function') {
+                        console.log('Fallback: calling androidInterface.onPaymentResult');
+                        window.androidInterface.onPaymentResult(paymentData.status, JSON.stringify(paymentData));
+                    } else if (window.AndroidInterface && typeof window.AndroidInterface.onPaymentResult === 'function') {
+                        console.log('Fallback: calling AndroidInterface.onPaymentResult');
+                        window.AndroidInterface.onPaymentResult(paymentData.status, JSON.stringify(paymentData));
+                    } else {
+                        // Fallback to custom URL scheme for Android
+                        const fallbackUrl = `kirazee://payment/${paymentData.status}?${new URLSearchParams(paymentData).toString()}`;
+                        console.log('Using Android fallback URL:', fallbackUrl);
+                        window.location.href = fallbackUrl;
+                    }
+                } else if (webviewInfo.hasIOSInterface) {
+                    // iOS WebView communication
+                    if (window.webkit?.messageHandlers?.paymentResult) {
+                        console.log('Calling iOS webkit.messageHandlers.paymentResult');
+                        window.webkit.messageHandlers.paymentResult.postMessage({
+                            type: 'payment_result',
+                            status: paymentData.status,
+                            data: paymentData
+                        });
+                    } else if (window.iOSInterface && typeof window.iOSInterface.onPaymentResult === 'function') {
+                        console.log('Calling iOSInterface.onPaymentResult');
+                        window.iOSInterface.onPaymentResult(paymentData.status, paymentData);
+                    } else {
+                        // Fallback to custom URL scheme for iOS
+                        const fallbackUrl = `kirazee://payment/${paymentData.status}?${new URLSearchParams(paymentData).toString()}`;
+                        console.log('Using iOS fallback URL:', fallbackUrl);
+                        window.location.href = fallbackUrl;
+                    }
+                }
+            } else {
+                // For web browsers - just close or go back
+                console.log('Web browser detected - no redirection needed');
+                console.log('User should manually navigate back to the app');
+                // Don't redirect to any URL - let the user stay on the acknowledgement page
+            }
+        }
+
+        // Main Payment Flow - Similar to order_payment.html but for business setup
+        async function initiateBusinessPayment() {
+            try {
+                const params = getUrlParams();
+                const webviewInfo = detectWebView();
+                const IS_LIVE_MODE = params.razorpay_mode === 'live';
+
+                if (!params.user_id || !params.amount || !params.business_id) {
+                    showError('Missing required parameters. Please try again from the business setup page.');
+                    return;
+                }
+
+                updateStatus('payment', 'Connecting to Payment Gateway', 'Setting up your secure payment...');
+
+                // Simulate server processing time for better UX
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // In test mode with WebView, use simulation instead of Razorpay
+                if (webviewInfo.isWebView && !IS_LIVE_MODE) {
+                    console.log('Test mode: Using payment simulation');
+                    simulateTestModePayment(params);
+                    return;
+                }
+
+                updateStatus('payment', 'Opening Payment Gateway', 'Redirecting to secure payment...');
+
+                // Small delay for better UX
+                setTimeout(() => {
+                    openRazorpayCheckout(params);
+                }, 1000);
+
+            } catch (error) {
+                console.error('Payment initiation error:', error);
+                showError('Unable to connect to payment server. Please check your internet connection and try again.');
+            }
+        }
+
+        function openRazorpayCheckout(params) {
+            // Detect mobile devices and force mobile view
+            const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const webviewInfo = detectWebView();
+            const IS_LIVE_MODE = params.razorpay_mode === 'live';
+
+            // Get Razorpay key based on mode
+            const razorpay_key = IS_LIVE_MODE ?
+                '{{ razorpay_key_id|default:"rzp_live_XXXXXXXXXXXX" }}' :
+                'rzp_live_RWVzTgqHj7oJwO';
+
+            // Round amount to whole number (Razorpay expects amount in paise)
+            const roundedAmount = Math.round(parseFloat(params.amount)) * 100;
+
+            const options = {
+                key: razorpay_key,
+                amount: roundedAmount,
+                currency: "INR",
+                name: "Kirazee Business Setup",
+                description: `Business Setup Fee - Business ID: ${params.business_id}`,
+                image: "{{ BASE_URL }}/kirazee/media/default_images/k1.png",
+                order_id: params.order_id || undefined,
+                handler: function (response) {
+                    handlePaymentSuccess(response);
+                },
+                prefill: {
+                    name: "Business Owner",
+                    email: "owner@kirazee.com",
+                    contact: "" // Empty contact to avoid UPI validation issues
+                },
+                theme: {
+                    color: "#f55d00"
+                },
+                modal: {
+                    ondismiss: function () {
+                        handlePaymentDismiss();
+                    },
+                    confirm_close: true,
+                    animation: true
+                },
+                retry: {
+                    enabled: true,
+                    max_count: 3
+                },
+                timeout: 300, // 5 minutes timeout
+                remember_customer: false
+            };
+
+            // For WebView, configure UPI properly
+            if (webviewInfo.isWebView) {
+                // Enable UPI apps in both test and live mode
+                options.external = {
+                    wallets: true,
+                    upi: true,
+                    card: true,
+                    netbanking: true
+                };
+
+                // Configure callback URL for UPI app returns
+                options.callback_url = '{{ callback_url|safe }}';
+                options.redirect = true;
+
+                // In test mode, simulate successful payment for UPI
+                if (!IS_LIVE_MODE) {
+                    console.log('Test mode: Configuring UPI for auto-processing');
+                    // Add test mode specific configuration
+                    options.config = {
+                        display: {
+                            language: 'en'
+                        },
+                        test: {
+                            simulate_upi_success: true,
+                            auto_process_payment: true
+                        }
+                    };
+                }
+            }
+
+            // Force mobile view for mobile devices
+            if (isMobile) {
+                options.config = {
+                    display: {
+                        language: 'en',
+                        hide: [
+                            {
+                                method: 'paylater'
+                            }
+                        ]
+                    }
+                };
+                options.modal = {
+                    ...options.modal,
+                    escape: false,
+                    backdropclose: false
+                };
+            }
+
+            try {
+                const rzp = new Razorpay(options);
+
+                rzp.on('payment.failed', function (response) {
+                    handlePaymentFailure(response);
+                });
+
+                console.log('Opening Razorpay modal...');
+
+                // In test mode with WebView, simulate UPI success after 2 seconds
+                if (webviewInfo.isWebView && !IS_LIVE_MODE) {
+                    console.log('Test mode: Setting up UPI simulation');
+
+                    // Simulate UPI app selection and auto-processing
+                    setTimeout(() => {
+                        console.log('Test mode: Simulating UPI app selection');
+
+                        // Check if Razorpay modal is still open
+                        const razorpayModal = document.querySelector('.razorpay-modal');
+                        if (razorpayModal) {
+                            console.log('Test mode: Razorpay modal detected, simulating payment success');
+
+                            // Simulate successful payment response
+                            const mockResponse = {
+                                razorpay_payment_id: 'pay_test_' + Date.now(),
+                                razorpay_order_id: params.order_id || 'order_test_' + Date.now(),
+                                razorpay_signature: 'test_signature_' + Math.random().toString(36).substring(7)
+                            };
+
+                            // Close the modal and trigger success
+                            try {
+                                rzp.close(); // Close Razorpay modal
+                                setTimeout(() => {
+                                    handlePaymentSuccess(mockResponse);
+                                }, 500);
+                            } catch (e) {
+                                console.log('Test mode: Direct success callback');
+                                handlePaymentSuccess(mockResponse);
+                            }
+                        }
+                    }, 2000); // 2 second delay to simulate UPI app interaction
+                }
+
+                rzp.open();
+            } catch (error) {
+                console.error('Razorpay initialization error:', error);
+                showError('Payment gateway initialization failed. Please try again.');
+            }
+        }
+
+        async function handlePaymentSuccess(response) {
+            console.log('Payment successful:', response);
+
+            // Set global payment status for Android app detection
+            window.paymentSuccessStatus = {
+                status: 'success',
+                timestamp: Date.now(),
+                message: '\ud83c\udf89 Payment Successful! \ud83c\udf89',
+                business_id: getUrlParams().business_id,
+                payment_id: response.razorpay_payment_id
+            };
+
+            // Store payment details globally for acknowledgement screen
+            try {
+                const params = getUrlParams();
+                window.paymentDetails = {
+                    payment_id: response.razorpay_payment_id || null,
+                    order_id: response.razorpay_order_id || null,
+                    amount: params.amount || null,
+                    method: 'Razorpay',
+                    paid_at: new Date().toISOString()
+                };
+            } catch (e) {
+                console.error('Error setting paymentDetails:', e);
+            }
+
+            // Immediately notify Android/iOS WebView interfaces if available
+            try {
+                if (window.androidInterface && typeof window.androidInterface.onPaymentResult === 'function') {
+                    console.log('📱 Notifying androidInterface.onPaymentResult from handlePaymentSuccess');
+                    window.androidInterface.onPaymentResult('success', 'profile');
+                } else if (window.AndroidInterface && typeof window.AndroidInterface.onPaymentResult === 'function') {
+                    console.log('📱 Notifying AndroidInterface.onPaymentResult from handlePaymentSuccess');
+                    window.AndroidInterface.onPaymentResult('success', 'profile');
+                } else if (window.PaymentBridge && typeof window.PaymentBridge.onPaymentResult === 'function') {
+                    console.log('📱 Notifying PaymentBridge.onPaymentResult from handlePaymentSuccess');
+                    window.PaymentBridge.onPaymentResult('success', 'profile');
+                } else {
+                    console.log('📱 No Android/iOS interface available in handlePaymentSuccess');
+                }
+            } catch (err) {
+                console.error('Error calling Android/iOS interface from handlePaymentSuccess:', err);
+            }
+
+            // Show success message
+            showSuccess('Your business setup payment has been successfully processed!');
+
+            // Submit payment data to backend
+            const result = await sendPaymentResultToBackend(response, 'success');
+
+            if (result && result.form_submitted) {
+                console.log('Payment form submitted to backend');
+
+                // Try to notify Android immediately
+                if (isAndroidWebView()) {
+                    console.log('📱 Android interface available - notifying payment success immediately');
+                    notifyAndroidPaymentSuccess(response.razorpay_payment_id);
+                } else {
+                    console.log('📱 Android interface not yet available - will retry after detection');
+                    // The detection mechanism will handle notification when interface becomes available
+                }
+
+                // Don't display user status - keep the success message on payment page
+                // The Android app will handle navigation based on JavaScript interface calls
+                console.log('Keeping success display on payment page for Android detection');
+
+                // Optional: Add a small delay to ensure Android interface is called
+                setTimeout(() => {
+                    console.log('Payment success completed - Android should have detected success');
+                }, 1500);
+            } else {
+                // Fallback if form submission failed
+                console.error('Failed to submit payment form');
+                showError('Payment was successful but there was an error processing the confirmation. Please contact support.');
+            }
+        }
+
+        async function handlePaymentFailure(response) {
+            console.error('Payment failed:', response);
+
+            const errorMsg = response.error?.description || 'Payment failed. Please try again.';
+
+            // Send failure data to backend
+            await sendPaymentResultToBackend({
+                razorpay_payment_id: response.error?.metadata?.payment_id || 'failed',
+                razorpay_order_id: response.error?.metadata?.order_id,
+                error: response.error?.description || 'Payment failed'
+            }, 'failed');
+
+            showError(errorMsg);
+
+            // Notify WebView of failure
+            handleWebViewReturn({
+                status: 'failed',
+                data: {
+                    error: errorMsg,
+                    business_id: getUrlParams().business_id
+                }
+            });
+        }
+
+        async function handlePaymentDismiss() {
+            console.log('Payment modal dismissed');
+
+            showError('Payment was cancelled. You can try again or contact support if you need help.');
+
+            // Notify WebView of cancellation
+            handleWebViewReturn({
+                status: 'cancelled',
+                data: {
+                    business_id: getUrlParams().business_id
+                }
+            });
+        }
+
+        // Initialize payment flow when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if returning from UPI app with payment result
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentId = urlParams.get('razorpay_payment_id');
+            const orderId = urlParams.get('razorpay_order_id');
+            const signature = urlParams.get('razorpay_signature');
+
+            // If returning from successful UPI payment
+            if (paymentId && orderId && signature) {
+                console.log('Detected UPI app return with payment success');
+                handlePaymentSuccess({
+                    razorpay_payment_id: paymentId,
+                    razorpay_order_id: orderId,
+                    razorpay_signature: signature
+                });
+                return;
+            }
+
+            // If returning with error
+            if (urlParams.get('error') || urlParams.get('code')) {
+                console.log('Detected UPI app return with error');
+                const errorMsg = urlParams.get('description') || 'Payment was cancelled or failed';
+                showError(errorMsg);
+                return;
+            }
+
+            // Normal payment flow initialization
+            const params = getUrlParams();
+
+            if (!params.user_id || !params.amount || !params.business_id) {
+                showError('Missing required parameters. Please try again from the business setup page.');
+                return;
+            }
+
+            // Check if there's an error from server (passed from Django template)
+            const serverError = document.querySelector('.error-message');
+            if (serverError) {
+                const errorText = serverError.textContent.replace('Error: ', '');
+                showError(errorText);
+                return;
+            }
+
+            // Start payment flow
+            initiateBusinessPayment();
+        });
+
+        // Handle browser back button
+        window.addEventListener('beforeunload', function (e) {
+            // Only show warning if payment is in progress
+            if (paymentStatus.querySelector('.status-icon')?.classList.contains('loading')) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        // WebView specific handling
+        if (window.ReactNativeWebView) {
+            // Handle messages from React Native
+            window.addEventListener('message', function (event) {
+                if (event.data.type === 'PAYMENT_SUCCESS') {
+                    handlePaymentSuccess(event.data.response);
+                } else if (event.data.type === 'PAYMENT_FAILURE') {
+                    handlePaymentFailure(event.data.response);
+                }
+            });
+        }
+
+        // Callback functionality - Display user status after successful payment
+        function displayUserStatusOnSuccess(userId) {
+            if (!userId) return;
+
+            console.log('Fetching user status in background for user:', userId);
+
+            fetch(`/kirazee/business/user-status/?userID=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('User status response:', data);
+                    showUserStatusResponse(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching user status:', error);
+                    showUserStatusError(error.message);
+                });
+        }
+
+        function showUserStatusResponse(data) {
+            // Create user status display with buttons
+            const statusHtml = `
+                <div class="user-status-display">
+                    <h4>Business Status</h4>
+                    <div class="status-details">
+                        <p><strong>Stage:</strong> <span class="status-value">${data.stage}</span></p>
+                        <p><strong>Status:</strong> <span class="status-value">${data.status}</span></p>
+                        <p><strong>Business ID:</strong> <span class="status-value">${data.context?.business_id || 'N/A'}</span></p>
+                    </div>
+                    <div class="status-indicator ${data.stage.toLowerCase()}">
+                        ${data.stage === 'COMPLETE' ? '✅ Business Ready' : '⏳ Setup in Progress'}
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="button-container">
+                        <button id="backtoProfile" class="btn btn-secondary" onclick="handleRedirection('profile')">
+                            Back to profile"
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Add to payment status container
+            const statusContainer = paymentStatus;
+            const existingStatus = statusContainer.querySelector('.user-status-display');
+
+            if (existingStatus) {
+                existingStatus.remove();
+            }
+
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = statusHtml;
+            const statusElement = tempDiv.firstElementChild;
+            statusContainer.appendChild(statusElement);
+
+
+            // No auto-refresh - one time call only
+            console.log('User status displayed - one time call completed');
+        }
+
+        function showUserStatusError(error) {
+            const errorHtml = `
+                <div class="user-status-error">
+                    <h4>Status Check</h4>
+                    <p class="error-message">Unable to fetch business status</p>
+                    <p class="error-details">${error}</p>
+                </div>
+            `;
+
+            const statusContainer = paymentStatus;
+            const existingError = statusContainer.querySelector('.user-status-error');
+
+            if (existingError) {
+                existingError.remove();
+            }
+
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = errorHtml;
+            const errorElement = tempDiv.firstElementChild;
+            statusContainer.appendChild(errorElement);
+        }
+
+        // Enhanced platform detection for callback
+        function detectWebView() {
+            const userAgent = navigator.userAgent;
+            const isAndroid = /Android/i.test(userAgent);
+            const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+            const hasAndroidInterface = window.androidInterface || window.AndroidInterface;
+            const hasIOSInterface = window.webkit?.messageHandlers || window.iOSInterface;
+
+            return {
+                isWebView: hasAndroidInterface || hasIOSInterface,
+                isAndroid: isAndroid,
+                isIOS: isIOS,
+                hasAndroidInterface: !!hasAndroidInterface,
+                hasIOSInterface: !!hasIOSInterface,
+                platform: hasAndroidInterface ? 'android' : (hasIOSInterface ? 'ios' : 'web')
+            };
+        }
+
+
+        function handleWebRedirection(type) {
+            // Check if we're already on /kirazee/ page
+            const currentPath = window.location.pathname;
+
+            if (currentPath === '/kirazee/' || currentPath === '/') {
+                // We're already on the home page, so just trigger native app navigation
+                console.log(`Already on home page, triggering native navigation to ${type}`);
+                triggerNativeNavigation(type);
+            } else {
+                // Check if in Android WebView and enable redirection
+                if (isAndroidWebView()) {
+                    console.log("✅ Android WebView detected - calling handleRedirection");
+                    handleRedirection(type);
+                } else {
+                    console.log("🌐 Web browser - performing normal redirect");
+                    // For web browser - do normal redirect based on type
+                    if (type === 'profile') {
+                        window.location.href = '/profile';
+                    } else if (type === 'dashboard') {
+                        window.location.href = '/dashboard';
+                    } else {
+                        window.location.href = '/kirazee/';
+                    }
+                }
+            }
+        }
+
+        // Check if running in Android WebView
+        function isAndroidWebView() {
+            return typeof window.androidInterface !== 'undefined' ||
+                typeof window.AndroidInterface !== 'undefined' ||
+                typeof window.PaymentBridge !== 'undefined';
+        }
+
+        // Call Android interface on payment success
+        function notifyAndroidPaymentSuccess(paymentId) {
+            console.log('🔔 Notifying Android of payment success');
+
+            if (window.androidInterface && typeof window.androidInterface.onPaymentSuccess === 'function') {
+                window.androidInterface.onPaymentSuccess(paymentId);
+                return true;
+            }
+
+            if (window.AndroidInterface && typeof window.AndroidInterface.onPaymentSuccess === 'function') {
+                window.AndroidInterface.onPaymentSuccess(paymentId);
+                return true;
+            }
+
+            if (window.PaymentBridge && typeof window.PaymentBridge.onPaymentSuccess === 'function') {
+                window.PaymentBridge.onPaymentSuccess(paymentId);
+                return true;
+            }
+
+            console.log('❌ No Android interface available');
+            return false;
+        }
+
+        // Add event listener for "Go to Business Profile" button
+        document.addEventListener('DOMContentLoaded', function () {
+            const profileBtn = document.getElementById('backtoProfile');
+            if (profileBtn) {
+                profileBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    console.log('🔘 Go to Business Profile clicked');
+
+                    // Check if in Android WebView
+                    if (isAndroidWebView()) {
+                        console.log('📱 Calling Android handleRedirection');
+
+                        if (window.androidInterface && typeof window.androidInterface.handleRedirection === 'function') {
+                            window.androidInterface.handleRedirection('profile');
+                        } else if (window.AndroidInterface && typeof window.AndroidInterface.handleRedirection === 'function') {
+                            window.AndroidInterface.handleRedirection('profile');
+                        } else if (window.PaymentBridge && typeof window.PaymentBridge.handleRedirection === 'function') {
+                            window.PaymentBridge.handleRedirection('profile');
+                        } else {
+                            console.log('❌ No Android handleRedirection method available');
+                            // Fallback to web redirect
+                            window.location.href = '/profile';
+                        }
+                    } else {
+                        // Web browser - do normal redirect
+                        console.log('🌐 Web browser - performing normal redirect');
+                        window.location.href = '/profile';
+                    }
+                });
+            }
+
+            // Add manual Android trigger button if interface not detected after 10 seconds
+            setTimeout(function () {
+                if (!window.androidInterfaceDetected && window.paymentSuccessStatus && window.paymentSuccessStatus.status === 'success') {
+                    console.log('⚠️ Android interface not detected after 10 seconds - adding manual trigger');
+
+                    const successContainer = document.querySelector('.success-container') || document.querySelector('.payment-container');
+                    if (successContainer) {
+                        const manualTrigger = document.createElement('div');
+                        manualTrigger.style.cssText = `
+                            position: fixed;
+                            bottom: 20px;
+                            right: 20px;
+                            background: #f55d00;
+                            color: white;
+                            padding: 12px 20px;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-size: 14px;
+                            font-weight: 600;
+                            box-shadow: 0 4px 12px rgba(245, 93, 0, 0.3);
+                            z-index: 10000;
+                            animation: pulse 2s infinite;
+                        `;
+                        manualTrigger.innerHTML = '📱 Notify Android App';
+                        manualTrigger.onclick = function () {
+                            console.log('🔔 Manual Android trigger clicked');
+
+                            // Try all possible interfaces
+                            if (window.androidInterface && typeof window.androidInterface.onPaymentSuccess === 'function') {
+                                window.androidInterface.onPaymentSuccess(window.paymentSuccessStatus.payment_id || 'success');
+                            } else if (window.AndroidInterface && typeof window.AndroidInterface.onPaymentSuccess === 'function') {
+                                window.AndroidInterface.onPaymentSuccess(window.paymentSuccessStatus.payment_id || 'success');
+                            } else if (window.PaymentBridge && typeof window.PaymentBridge.onPaymentSuccess === 'function') {
+                                window.PaymentBridge.onPaymentSuccess(window.paymentSuccessStatus.payment_id || 'success');
+                            }
+
+                            // Hide the trigger button
+                            manualTrigger.style.display = 'none';
+                        };
+
+                        successContainer.appendChild(manualTrigger);
+                    }
+                }
+            }, 10000);
+        });
+
+        // Function to trigger native app navigation when on home page
+        function triggerNativeNavigation(type) {
+            const webviewInfo = detectWebView();
+
+            if (webviewInfo.isWebView) {
+                try {
+                    // Try Android Interface first
+                    if (webviewInfo.hasAndroidInterface) {
+                        if (window.AndroidInterface && window.AndroidInterface.handleRedirection) {
+                            window.AndroidInterface.handleRedirection(type);
+                            return;
+                        }
+                        if (window.androidInterface && window.androidInterface.handleRedirection) {
+                            window.androidInterface.handleRedirection(type);
+                            return;
+                        }
+                    }
+
+                    // Try WebKit message handler (for iOS/hybrid apps)
+                    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.redirection) {
+                        window.webkit.messageHandlers.redirection.postMessage({
+                            type: type,
+                            data: {}
+                        });
+                        return;
+                    }
+
+                    // Fallback to custom URL scheme
+                    const customUrl = `kirazee://payment/${type}`;
+                    window.location.href = customUrl;
+
+                } catch (error) {
+                    console.error('Native navigation failed:', error);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirazee – Delivery Partner User Flow & Roadmap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .page {
+            background: white;
+            max-width: 210mm; /* A4 Width */
+            margin: 40px auto;
+            padding: 25mm;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        @media print {
+            body { background: white; }
+            .page { margin: 0; padding: 0; box-shadow: none; width: 100%; max-width: none; }
+            .no-print { display: none; }
+            h1 { margin-top: 0; }
+        }
+        .diagram-container {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+        /* Ensure mermaid text is visible */
+        .mermaid { width: 100%; display: flex; justify-content: center; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Print Control -->
+    <div class="no-print fixed top-4 right-4 z-50">
+        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            Save as PDF
+        </button>
+    </div>
+
+    <div class="page">
+        <!-- Header -->
+        <header class="border-b-2 border-gray-800 pb-6 mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Kirazee: Delivery Partner User Flow & Roadmap</h1>
+            <div class="flex justify-between text-sm text-gray-600 mt-4">
+                <p><strong>Platform:</strong> Kirazee Retail Ecosystem</p>
+                <p><strong>Date:</strong> December 30, 2025</p>
+                <p><strong>Target:</strong> Operations & Leadership</p>
+            </div>
+        </header>
+
+        <!-- 1. Overview -->
+        <section class="mb-8">
+            <h2 class="text-xl font-bold text-blue-900 mb-3 border-l-4 border-blue-600 pl-3">1. Executive Overview</h2>
+            <p class="mb-4 leading-relaxed">
+                Kirazee is a Retail Business Platform designed to empower Consumers, Retail Business Owners (RBOs), and Delivery Partners without monopolizing branding or operations. 
+                Unlike centralized marketplaces, Kirazee promotes individual retail brands. RBOs retain full control, choosing to use Kirazee-provided partners or their own internal fleet.
+            </p>
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 text-sm text-blue-800">
+                <strong>Core Philosophy:</strong> Business-centric delivery (hyperlocal model) where the merchant owns the customer relationship.
+            </div>
+        </section>
+
+        <!-- 2. Roles -->
+        <section class="mb-8">
+            <h2 class="text-xl font-bold text-blue-900 mb-3 border-l-4 border-blue-600 pl-3">2. Delivery User Roles</h2>
+            <p class="mb-4">The ecosystem follows a simplified structure with a single delivery-side role. There are no intermediate dispatcher or fleet-manager roles; control resides with the RBO.</p>
+            <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                <li><strong>Delivery Partner (Rider):</strong> Responsible for pickup, fulfillment, payment collection, and customer interaction.</li>
+                <li><strong>Retail Business Owner (RBO):</strong> Acts as the dispatcher, manually assigning orders to riders.</li>
+            </ul>
+        </section>
+
+        <!-- 3. Order Capture & Architecture -->
+        <section class="mb-8 break-inside-avoid">
+            <h2 class="text-xl font-bold text-blue-900 mb-3 border-l-4 border-blue-600 pl-3">3. Order Capture & System Architecture</h2>
+            <p class="mb-2">Orders sync from multiple channels into the centralized RBO Dashboard.</p>
+            
+            <div class="diagram-container">
+<div class="mermaid">
+graph TD
+    subgraph "Capture Channels"
+        A["Consumer App/Web"]
+        B["White-label Sites"]
+        C["POS / WhatsApp"]
+    end
+
+    subgraph "Central Sync"
+        E[RBO Dashboard]
+        E2[Super Admin View]
+    end
+
+    subgraph "Fulfillment"
+        F[Manual Assignment]
+        G[Delivery Partner App]
+    end
+
+    A --> E
+    B --> E
+    C --> E
+    E --> F
+    F --> G
+</div>
+            </div>
+            
+            <div class="mt-4 text-sm bg-gray-50 p-3 rounded">
+                <strong>Mandatory Data Points:</strong> Pickup Lat/Long, Customer Address, Payment Method (COD/Prepaid), Live Location Sharing.
+            </div>
+        </section>
+
+        <!-- 4. Lifecycle Management -->
+        <section class="mb-8 break-inside-avoid">
+            <h2 class="text-xl font-bold text-blue-900 mb-3 border-l-4 border-blue-600 pl-3">4. Order Lifecycle Management</h2>
+            <p class="mb-4">
+                The diagram below illustrates the <strong>State Transitions</strong> of an order from creation to completion.
+                <strong>Assignment Logic:</strong> Purely manual. RBOs select their own rider or a Kirazee partner based on availability.
+            </p>
+            
+            <div class="diagram-container">
+<div class="mermaid">
+stateDiagram-v2
+    direction LR
+    [*] --> Pending: Order Placed
+    Pending --> Confirmed: RBO Confirms
+    Confirmed --> Assigned: Manual Assignment
+    Assigned --> OutForDelivery: Rider Pickup
+    OutForDelivery --> Delivered: OTP Verified
+    Delivered --> [*]
+
+    state "Cancelled / Returned" as Cancel
+    Pending --> Cancel
+    Confirmed --> Cancel
+    OutForDelivery --> Cancel: Failed Delivery
+</div>
+            </div>
+
+            <!-- Sequence Diagram for deeper detail -->
+             <p class="mb-2 mt-4 font-semibold text-sm text-gray-700">Detailed Interaction Flow:</p>
+            <div class="diagram-container">
+<div class="mermaid">
+sequenceDiagram
+    participant Cust as Consumer
+    participant RBO as Retail Owner
+    participant Rider as Delivery Partner
+
+    Cust->>RBO: Place Order
+    RBO->>RBO: Confirm Order
+    RBO->>Rider: Manually Assign
+    Rider->>Rider: Accept (Auto/Mandatory)
+    RBO->>Rider: Order Ready
+    Rider->>RBO: Pickup Package
+    Note over Rider: Status: Out for Delivery
+    Rider->>Cust: Verify OTP
+    alt Cash on Delivery
+        Rider->>Rider: Collect Cash
+    end
+    Rider->>Rider: Mark Delivered
+    Note over RBO: Status: Completed
+</div>
+            </div>
+        </section>
+
+        <!-- 5. Tech & Tools -->
+        <div class="grid grid-cols-2 gap-6 mb-8">
+            <div>
+                <h2 class="text-xl font-bold text-blue-900 mb-3 border-l-4 border-blue-600 pl-3">5. Rider Technology</h2>
+                <ul class="list-disc list-inside text-sm space-y-1">
+                    <li><strong>Platforms:</strong> Mobile App, Web Dashboard.</li>
+                    <li><strong>Notifications:</strong> WhatsApp, Email (No SMS).</li>
+                    <li><strong>Requirements:</strong> Own Smartphone.</li>
+                    <li><strong>Nav:</strong> Google Maps Integration.</li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-blue-900 mb-3 border-l-4 border-blue-600 pl-3">6. Payment & Settlement</h2>
+                <ul class="list-disc list-inside text-sm space-y-1">
+                    <li><strong>Modes:</strong> COD, UPI, Z.Wallet.</li>
+                    <li><strong>Collection:</strong> Direct by Partner.</li>
+                    <li><strong>Settlement:</strong> Monthly cycle.</li>
+                    <li><strong>Fees:</strong> No commission deduction logic yet.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 7. Communication & Tracking -->
+        <section class="mb-8">
+            <h2 class="text-xl font-bold text-blue-900 mb-3 border-l-4 border-blue-600 pl-3">7. Communication & Visibility</h2>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div class="bg-gray-50 p-3 rounded">
+                    <strong>For Consumers:</strong>
+                    <ul class="list-disc list-inside mt-1">
+                        <li>Live Rider Tracking</li>
+                        <li>Unmasked Direct Calling</li>
+                        <li>OTP Verification for Security</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-50 p-3 rounded">
+                    <strong>For Merchants (RBOs):</strong>
+                    <ul class="list-disc list-inside mt-1">
+                        <li>Route Polyline (Actual Path)</li>
+                        <li>Real-time Location</li>
+                        <li>Full Modification Rights</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. SLA & SOPs -->
+        <section class="mb-8">
+            <h2 class="text-xl font-bold text-blue-900 mb-3 border-l-4 border-blue-600 pl-3">8. SLA & Compliance Rules</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-left text-gray-700 border border-gray-200">
+                    <thead class="bg-gray-100 font-semibold">
+                        <tr>
+                            <th class="px-4 py-2">Category</th>
+                            <th class="px-4 py-2">Rule / Policy</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-4 py-2 font-medium">Order Acceptance</td>
+                            <td class="px-4 py-2">Mandatory completion once assigned. No rejection flow.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2 font-medium">Leave Policy</td>
+                            <td class="px-4 py-2">Inform 3-4 days in advance.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2 font-medium">Resignation</td>
+                            <td class="px-4 py-2">Inform 1 week prior via official email.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2 font-medium">Onboarding</td>
+                            <td class="px-4 py-2">Physical verification (KYC + Vehicle) & In-office training.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 9. Expansion Vision -->
+        <section class="mb-8">
+            <h2 class="text-xl font-bold text-blue-900 mb-3 border-l-4 border-blue-600 pl-3">9. Strategic Roadmap & Vision</h2>
+            <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-4">
+                <h3 class="font-bold text-indigo-900">Expansion Vision</h3>
+                <p class="text-sm text-indigo-800">Operations can scale anywhere, anytime, without geographical restrictions, relying on the "Business Hiring" model.</p>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">1</div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-medium text-gray-900">Current Phase: Core Stability</h3>
+                        <p class="text-gray-600 text-sm">Bug fixing stage. Access limited to CTO/COO/Devs. Establishing manual assignment flow and physical onboarding.</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-sm">2</div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-medium text-gray-900">Next Phase: Optimization</h3>
+                        <p class="text-gray-600 text-sm">Defining formal funnels, introducing automated reports, and refining the "white-label" experience for RBOs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'neutral',
+            securityLevel: 'loose'
+        });
+    </script>
+</body>
+</html>

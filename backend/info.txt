@@ -1,0 +1,45 @@
+Based on your clarification and reviewing the model files, here's my understanding of the system architecture:
+
+## Business Categories & Table Structure
+
+### **R01 - Grocery Category:**
+- **Menu Items**: `Groceries_Products` + `Groceries_ProductVariants_1` tables
+- **App/Website Orders**: `orders`, `order_items`, `payments` tables
+- **POS Counter Orders**: `business_counter_orders`, `business_counter_items` tables
+- **Customization**: `Groceries_CustomDesigns` table
+
+### **R02 - Restaurant Category:**
+- **Menu Items**: `menuItems` table
+- **App/Website Orders**: `orders`, `order_items`, `payments` tables
+- **POS Counter Orders**: `business_counter_orders`, `business_counter_items` tables
+
+### **R08 - Fashion Category:**
+- **Menu Items**: `fashion_products` + `fashion_product_variants` tables
+- **App/Website Orders**: `orders`, `order_items`, `payments` tables
+- **POS Counter Orders**: `business_counter_orders`, `business_counter_items` tables
+
+## Supporting Tables
+
+### **Categories & Display:**
+- `Universal_categories` - Master category definitions
+- `categoy_mapping` - Maps categories to business types
+- Respective menu item tables based on business type
+
+### **Operations:**
+- **Purchases**: `purchases`, `purchase_items` tables
+- **Inventory**: `inventory` table (references all menu item types)
+- **Expenses**: `Expenses` table
+- **Staff Salary**: `business_staff_salary_payments` table
+
+### **Marketing:**
+- **Offers**: `promotional_offers`, `promo_usage_limits`, `prom_user_usage` tables
+
+## Key Observations
+
+1. **Unified Order Processing**: All categories use same `orders`/`order_items`/`payments` tables for app orders
+2. **Unified POS**: All categories use same `business_counter_orders`/`business_counter_items` for POS orders
+3. **Business Type Differentiation**: The `businessType` field in businesses table determines which menu item tables to query
+4. **Inventory Flexibility**: Single `inventory` table references different product tables based on `reference_table` field
+5. **Customization**: Currently only grocery category has customization support via `Groceries_CustomDesigns`
+
+This architecture allows for unified order processing while maintaining category-specific product catalogs and features. The Business Sales API correctly handles this by checking `business_type` and querying appropriate tables.

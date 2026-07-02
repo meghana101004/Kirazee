@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Premium Feature - Kirazee</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .payment-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .feature-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: white;
+        }
+        
+        .feature-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feature-description {
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .price-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .price-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .price-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: #667eea;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+        }
+        
+        .price-currency {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+        
+        .feature-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .detail-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .new-badge {
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 10px;
+        }
+        
+        .payment-methods {
+            margin-bottom: 30px;
+        }
+        
+        .method-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .payment-option {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .payment-option.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .payment-option input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        .payment-option-label {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .purchase-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .purchase-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .purchase-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #6c757d;
+            font-size: 12px;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Success view styles (merged from feature_payment_success.html) */
+        .success-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+            margin-top: 20px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .payment-container {
+                max-width: 100%;
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            .feature-title {
+                font-size: 20px;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .new-badge {
+                font-size: 10px;
+                padding: 2px 6px;
+            }
+            
+            .price-amount {
+                font-size: 28px;
+            }
+            
+            .price-section {
+                padding: 20px;
+            }
+            
+            .feature-details {
+                padding: 15px;
+                text-align: center;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                gap: 4px;
+                margin-bottom: 12px;
+            }
+            
+            .detail-label {
+                font-size: 12px;
+            }
+            
+            .detail-value {
+                font-size: 13px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .payment-container {
+                padding: 15px;
+            }
+            
+            .feature-title {
+                font-size: 18px;
+            }
+            
+            .price-amount {
+                font-size: 24px;
+            }
+            
+            .price-section {
+                padding: 15px;
+            }
+            
+            .feature-details {
+                padding: 12px;
+            }
+        }
+    </style>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <div class="payment-container">
+        <div id="purchase-section">
+            <div class="feature-header">
+                <h1 class="feature-title">
+                    <span id="feature-name">Loading...</span>
+                    <span id="new-badge" class="new-badge" style="display: none;">NEW</span>
+                </h1>
+                <p class="feature-description" id="feature-description">Loading feature details...</p>
+            </div>
+            
+            <div class="price-section">
+                <div class="price-label">One-time Payment</div>
+                <div class="price-amount">
+                    <span class="price-currency">₹</span>
+                    <span id="feature-price">0.00</span>
+                </div>
+            </div>
+            
+            <div class="feature-details">
+                <div class="detail-row">
+                    <span class="detail-label">Feature Key:</span>
+                    <span class="detail-value" id="feature-key">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Validity:</span>
+                    <span class="detail-value" id="feature-validity">
+                        {% if expiry_days %}
+                            {{ expiry_days }} days
+                        {% else %}
+                            Lifetime
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Business ID:</span>
+                    <span class="detail-value" id="business-id">-</span>
+                </div>
+            </div>
+            
+            <div id="message-container"></div>
+            
+            <button class="purchase-button" id="purchase-btn" onclick="initiatePurchase()">
+                Complete Purchase
+            </button>
+            
+            <div class="footer">
+                <p>Secure payment powered by <a href="#">Kirazee</a></p>
+                <p>By purchasing, you agree to our <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+
+        <!-- Success view (merged from feature_payment_success.html) -->
+        <div id="success-section" class="success-container" style="display: none;">
+            <div class="success-icon">✓</div>
+            <h1 class="success-title" id="success-page-title">Purchase Successful!</h1>
+            <p class="success-message" id="success-message-text">
+                Your premium feature has been activated successfully.
+            </p>
+            
+            <div class="action-buttons">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Go Back</button>
+                <a href="#" class="btn btn-primary" id="success-dashboard-btn">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Feature data from Django template context
+        const featureData = {
+            business_id: '{{ business_id|safe }}',
+            feature_key: '{{ feature_key|safe }}',
+            user_id: '{{ user_id|safe }}',
+            feature_name: '{{ feature_name|safe }}',
+            price: '{{ price|safe }}',
+            description: '{{ description|safe }}',
+            is_new: '{{ is_new|safe }}' === 'True',
+            expiry_days: '{{ expiry_days|safe }}',
+            razorpay_order_id: '{{ razorpay_order_id|safe }}'  // Valid Razorpay order ID from backend
+        };
+        
+        // Utility functions
+        const Utils = {
+            showLoading: function() {
+                const btn = document.getElementById('purchase-btn');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="loading"></span>Processing...';
+            },
+            
+            hideLoading: function() {
+                const btn = document.getElementById('purchase-btn');
+                btn.disabled = false;
+                btn.innerHTML = 'Complete Purchase';
+            },
+            
+            showMessage: function(message, type = 'error') {
+                const container = document.getElementById('message-container');
+                container.innerHTML = `<div class="${type}-message">${message}</div>`;
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 5000);
+            },
+            
+            validateFeatureData: function() {
+                if (!featureData.business_id || !featureData.feature_key || !featureData.user_id) {
+                    Utils.showMessage('Missing required information. Please refresh the page and try again.', 'error');
+                    return false;
+                }
+                if (!featureData.price || featureData.price === '0.00') {
+                    Utils.showMessage('Invalid price information.', 'error');
+                    return false;
+                }
+                return true;
+            },
+            
+            logError: function(error, context = '') {
+                console.error(`[Payment Error] ${context}:`, error);
+                Utils.showMessage('An error occurred. Please try again.', 'error');
+            }
+        };
+        
+        // Populate form with feature data
+        function populateForm() {
+            try {
+                document.getElementById('feature-name').textContent = featureData.feature_name || 'Premium Feature';
+                document.getElementById('feature-key').textContent = featureData.feature_key || '-';
+                document.getElementById('feature-price').textContent = featureData.price || '0.00';
+                document.getElementById('business-id').textContent = featureData.business_id || '-';
+                document.getElementById('feature-description').textContent = featureData.description || 'Unlock this premium feature to enhance your business experience';
+                
+                if (featureData.is_new) {
+                    document.getElementById('new-badge').style.display = 'inline-block';
+                }
+                
+                const validity = featureData.expiry_days && featureData.expiry_days !== 'None' && featureData.expiry_days !== '' 
+                    ? `${featureData.expiry_days} days` 
+                    : 'Lifetime';
+                document.getElementById('feature-validity').textContent = validity;
+                
+            } catch (error) {
+                Utils.logError(error, 'populateForm');
+            }
+        }
+
+        // Success UI helpers (merged from feature_payment_success.html)
+        const SuccessUI = {
+            show: function(response) {
+                try {
+                    const purchaseSection = document.getElementById('purchase-section');
+                    const successSection = document.getElementById('success-section');
+                    if (purchaseSection) purchaseSection.style.display = 'none';
+                    if (successSection) successSection.style.display = 'block';
+
+                    const featureNameEl = document.getElementById('success-feature-name');
+                    if (featureNameEl) {
+                        featureNameEl.textContent = featureData.feature_name || featureData.feature_key || '-';
+                    }
+
+                    const paymentIdEl = document.getElementById('success-payment-id');
+                    if (paymentIdEl) {
+                        paymentIdEl.textContent = response.razorpay_payment_id || '';
+                    }
+
+                    const amountEl = document.getElementById('success-amount');
+                    if (amountEl) {
+                        amountEl.textContent = featureData.price || '0.00';
+                    }
+
+                    const purchaseDateEl = document.getElementById('success-purchase-date');
+                    if (purchaseDateEl) {
+                        const now = new Date();
+                        purchaseDateEl.textContent = now.toLocaleDateString('en-IN', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                    }
+
+                    const expiryDateEl = document.getElementById('success-expiry-date');
+                    if (expiryDateEl) {
+                        if (featureData.expiry_days && featureData.expiry_days !== 'None' && featureData.expiry_days !== '') {
+                            const days = parseInt(featureData.expiry_days, 10);
+                            if (!isNaN(days)) {
+                                const expiry = new Date();
+                                expiry.setDate(expiry.getDate() + days);
+                                expiryDateEl.textContent = expiry.toLocaleDateString('en-IN', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                });
+                            } else {
+                                expiryDateEl.textContent = 'Lifetime';
+                            }
+                        } else {
+                            expiryDateEl.textContent = 'Lifetime';
+                        }
+                    }
+
+                    const dashboardBtn = document.getElementById('success-dashboard-btn');
+                    if (dashboardBtn && featureData.business_id) {
+                        dashboardBtn.href = `/business-dashboard/?business_id=${featureData.business_id}`;
+                    }
+
+                } catch (error) {
+                    Utils.logError(error, 'SuccessUI.show');
+                }
+            }
+        };
+        
+        // Initialize Razorpay payment
+        function initializeRazorpay() {
+            try {
+                const options = {
+                    key: '{{ razorpay_key_id|safe }}', // Use key from backend settings
+                    amount: parseFloat(featureData.price) * 100, // Convert to paise
+                    currency: 'INR',
+                    name: 'Kirazee',
+                    description: `Purchase ${featureData.feature_name}`,
+                    order_id: featureData.razorpay_order_id, // Use valid order ID from backend
+                    handler: function(response) {
+                        handlePaymentSuccess(response);
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            Utils.hideLoading();
+                            Utils.showMessage('Payment cancelled. You can try again anytime.', 'error');
+                        }
+                    },
+                    prefill: {
+                        email: '', // Can be populated if needed
+                        contact: ''
+                    },
+                    theme: {
+                        color: '#667eea'
+                    }
+                };
+                
+                const rzp = new Razorpay(options);
+                rzp.open();
+                
+            } catch (error) {
+                Utils.logError(error, 'initializeRazorpay');
+                Utils.hideLoading();
+            }
+        }
+        
+        // Handle payment success
+        function handlePaymentSuccess(response) {
+            try {
+                // Call backend callback to activate feature, but stay on this page
+                const callbackUrl = `/kirazee/management/features/payment-callback/?razorpay_payment_id=${response.razorpay_payment_id}&business_id=${featureData.business_id}&userID=${featureData.user_id}&amount=${featureData.price}&order_id=${featureData.razorpay_order_id}&feature_key=${featureData.feature_key}`;
+
+                fetch(callbackUrl, { method: 'GET' })
+                    .then(async (res) => {
+                        if (!res.ok) {
+                            let err;
+                            try {
+                                err = await res.json();
+                            } catch (e) {
+                                err = { message: `Payment verification failed with status ${res.status}` };
+                            }
+                            Utils.showMessage(err.message || 'Payment verification failed. Please contact support.', 'error');
+                            throw new Error(err.message || 'Payment verification failed');
+                        }
+
+                        // Backend callback succeeded; show success UI on this page
+                        SuccessUI.show(response);
+                    })
+                    .catch((error) => {
+                        Utils.logError(error, 'handlePaymentSuccess');
+                    })
+                    .finally(() => {
+                        Utils.hideLoading();
+                    });
+                
+            } catch (error) {
+                Utils.logError(error, 'handlePaymentSuccess');
+                Utils.hideLoading();
+            }
+        }
+        
+        // Main purchase function
+        function initiatePurchase() {
+            try {
+                // Validate data first
+                if (!Utils.validateFeatureData()) {
+                    return;
+                }
+                
+                Utils.showLoading();
+                
+                // Directly initialize Razorpay with valid order ID from backend
+                initializeRazorpay();
+                
+            } catch (error) {
+                Utils.logError(error, 'initiatePurchase');
+                Utils.hideLoading();
+            }
+        }
+        
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                populateForm();
+            } catch (error) {
+                Utils.logError(error, 'DOMContentLoaded');
+            }
+        });
+        
+        // Handle page visibility change
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // Page became visible again
+                Utils.hideLoading();
+            }
+        });
+    </script>
+</body>
+</html>

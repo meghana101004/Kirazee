@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Complete Your Payment - Kirazee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- NOTE: This template is intentionally almost identical to order_payment.html.
+         The only behavioral difference is in the JS payment initiation logic at the bottom,
+         where we handle ICICI redirect responses from the backend instead of opening
+         Razorpay Checkout. -->
+    <style>
+        /* Copy of core styles from order_payment.html for consistent UI */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe0b3 25%, #ffcc80 50%, #f55d00 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .payment-container {
+            background: #ffffff;
+            border-radius: 16px;
+            border-top: 4px solid #f55d00;
+            max-width: 400px;
+            width: 100%;
+            padding: 40px 32px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .payment-container.error-state {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+        }
+
+        .payment-status {
+            margin-bottom: 40px;
+        }
+
+        .status-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+        }
+
+        .status-message {
+            font-size: 16px;
+            color: #334155;
+            line-height: 1.5;
+            font-weight: 400;
+            margin-bottom: 32px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-bar {
+            width: 100%;
+            max-width: 280px;
+            height: 4px;
+            background: #F4F4F8;
+            border-radius: 2px;
+            margin: 24px auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 60%;
+            background: linear-gradient(90deg, #f55d00, #ff8a00);
+            border-radius: 2px;
+            animation: progressMove 2s ease-in-out infinite;
+        }
+
+        @keyframes progressMove {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .progress-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(74, 144, 226, 0.3);
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% {
+                background: rgba(74, 144, 226, 0.3);
+                transform: scale(1);
+            }
+            50% {
+                background: #f55d00;
+                transform: scale(1.2);
+            }
+        }
+
+        .warning-message {
+            background: transparent;
+            color: #475569;
+            padding: 0;
+            border: none;
+            margin: 16px auto 0;
+            font-size: 14px;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .security-info {
+            font-size: 14px;
+            color: #f55d00;
+            margin-top: 24px;
+            padding: 12px 16px;
+            background: rgba(245, 93, 0, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(245, 93, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .payment-options {
+            margin: 24px 0;
+            text-align: left;
+            background: rgba(245, 93, 0, 0.05);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .payment-options h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1e293b;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .payment-option:last-child {
+            border-bottom: none;
+        }
+
+        .payment-option-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .payment-option-details {
+            flex: 1;
+        }
+
+        .payment-option-name {
+            font-weight: 500;
+            color: #1e293b;
+            margin-bottom: 2px;
+        }
+
+        .payment-option-desc {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.05);
+            color: #dc2626;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            border-left: 4px solid #ef4444;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div id="payment-status" class="payment-status">
+            <h2 class="status-title">Setting up Payment</h2>
+            <p class="status-message">Connecting to ICICI payment gateway with multiple payment options...</p>
+
+            <div class="progress-bar"></div>
+
+            <div class="progress-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+
+            <div class="warning-message">
+                Do not close this window or refresh page
+            </div>
+        </div>
+
+        <div class="security-info">
+            Your payment is secured with 256-bit SSL encryption
+        </div>
+    </div>
+
+    <script>
+        // NOTE: This script intentionally reuses the same backend API endpoints
+        // as order_payment.html. The difference is that when the backend
+        // responds with gateway = 'icici' and action = 'REDIRECT', we perform
+        // a browser redirect/POST to the ICICI URL using the provided payload.
+
+        // Platform Detection (copied from Razorpay template)
+        function detectPlatform() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const platformParam = (urlParams.get('platform') || '').toLowerCase();
+
+            if (platformParam === 'android') {
+                return 'android';
+            }
+            if (platformParam === 'ios') {
+                return 'ios';
+            }
+            if (platformParam === 'web') {
+                return 'web';
+            }
+            if (platformParam === 'webview') {
+                return 'android';
+            }
+
+            const userAgent = (navigator.userAgent || '').toLowerCase();
+            const isAndroid = userAgent.includes('android');
+            const isIOS = userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ipod');
+
+            const isWebView = !!window.ReactNativeWebView ||
+                !!window.AndroidInterface ||
+                (window.webkit && window.webkit.messageHandlers !== undefined) ||
+                userAgent.includes('wv') ||
+                (userAgent.includes('version') && userAgent.includes('chrome') && userAgent.includes('mobile'));
+
+            if (isWebView) {
+                if (isIOS) {
+                    return 'ios';
+                }
+                if (isAndroid) {
+                    return 'android';
+                }
+            }
+
+            return 'web';
+        }
+
+        const BASE_URL = window.location.protocol + '//' + window.location.host;
+        const PLATFORM = detectPlatform();
+
+        const CONFIG = {
+            PAYMENT_INITIATE_URL: BASE_URL + '/kirazee/consumer/payment/initiate/',
+            PAYMENT_VERIFY_URL: BASE_URL + '/kirazee/consumer/payment/callback/',
+            PAYMENT_SUCCESS_URL: BASE_URL + '/kirazee/consumer/payment/success/',
+            PAYMENT_FAILURE_URL: BASE_URL + '/kirazee/consumer/payment/failure/',
+            ORDERS_URL: BASE_URL + '/kirazee/consumer/orders/',
+            PLATFORM: PLATFORM
+        };
+
+        const paymentStatus = document.getElementById('payment-status');
+
+        function isInAppWebView() {
+            return !!window.ReactNativeWebView || !!window.AndroidInterface || (window.webkit && window.webkit.messageHandlers);
+        }
+
+        function postToNativeApp(message) {
+            try {
+                const payload = typeof message === 'string' ? message : JSON.stringify(message);
+                
+                // 1) Android Interface
+                if (window.AndroidInterface && typeof window.AndroidInterface.onPaymentComplete === 'function') {
+                    const status = message && message.type === 'PAYMENT_SUCCESS' ? 'success' : 'failure';
+                    window.AndroidInterface.onPaymentComplete(status, payload);
+                }
+
+                // 2) iOS WebKit (hybrid apps)
+                if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.onPaymentComplete) {
+                    window.webkit.messageHandlers.onPaymentComplete.postMessage(message);
+                }
+
+                // 3) React Native WebView
+                if (window.ReactNativeWebView && typeof window.ReactNativeWebView.postMessage === 'function') {
+                    window.ReactNativeWebView.postMessage(payload);
+                }
+
+                // Legacy fallback (if app uses postMessage bridge instead)
+                if (window.AndroidInterface && typeof window.AndroidInterface.postMessage === 'function') {
+                    window.AndroidInterface.postMessage(payload);
+                }
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        // Platform-specific redirection handler
+        function handleRedirection(type, data = {}) {
+            if (CONFIG.PLATFORM === 'android') {
+                // Send a message to the Android JavascriptInterface
+                if (window.AndroidInterface && window.AndroidInterface.onPaymentComplete) {
+                    window.AndroidInterface.onPaymentComplete(type, JSON.stringify(data));
+                    return;
+                }
+                
+                // Fallback: Redirect to a URL that Android can intercept
+                window.location.href = "kirazee://payment/" + type;
+            } else {
+                // For web browser
+                handleWebRedirection(type);
+            }
+        }
+
+        function handleWebRedirection(type) {
+            switch (type) {
+                case 'orders':
+                    window.location.href = CONFIG.ORDERS_URL;
+                    break;
+                case 'success':
+                    window.location.href = CONFIG.PAYMENT_SUCCESS_URL;
+                    break;
+                case 'failure':
+                    window.location.href = CONFIG.PAYMENT_FAILURE_URL;
+                    break;
+                default:
+                    window.location.href = CONFIG.ORDERS_URL;
+            }
+        }
+
+        function updateStatus(title, message, isSuccess = false) {
+            const statusTitle = paymentStatus.querySelector('.status-title');
+            const statusMessage = paymentStatus.querySelector('.status-message');
+            if (statusTitle) statusTitle.textContent = title;
+            if (statusMessage) statusMessage.textContent = message;
+
+            // If payment is successful, show success UI
+            if (isSuccess) {
+                showSuccess('Payment successful! Your order is now placed.');
+            }
+        }
+
+        function showError(message) {
+            paymentStatus.innerHTML = '';
+            document.querySelector('.payment-container').classList.add('error-state');
+
+            const errorContainer = document.createElement('div');
+            errorContainer.className = 'error-container';
+
+            const errorTitle = document.createElement('h2');
+            errorTitle.className = 'status-title';
+            errorTitle.textContent = 'Payment Failed';
+
+            const errorMessage = document.createElement('p');
+            errorMessage.className = 'status-message';
+            errorMessage.textContent = message || 'Payment could not be initiated. Please try again.';
+
+            errorContainer.appendChild(errorTitle);
+            errorContainer.appendChild(errorMessage);
+
+            // Add buttons for retry and back to orders
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.cssText = 'display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap;';
+
+            const retryBtn = document.createElement('button');
+            retryBtn.className = 'success-btn';
+            retryBtn.textContent = 'TRY AGAIN';
+            retryBtn.style.cssText = 'flex: 1; max-width: 150px; padding: 12px 16px; font-size: 13px;';
+            retryBtn.onclick = () => location.reload();
+
+            const backBtn = document.createElement('button');
+            backBtn.className = 'success-btn';
+            backBtn.textContent = 'Back to Orders';
+            backBtn.style.cssText = 'background: #f8fafc; color: #f55d00; border: 2px solid #f55d00; flex: 1; max-width: 150px; padding: 12px 16px; font-size: 13px;';
+            backBtn.onclick = () => handleRedirection('orders');
+
+            buttonContainer.appendChild(retryBtn);
+            buttonContainer.appendChild(backBtn);
+            errorContainer.appendChild(buttonContainer);
+
+            paymentStatus.appendChild(errorContainer);
+
+            postToNativeApp({
+                type: 'PAYMENT_FAILURE',
+                order_id: getOrderIdFromUrl(),
+                message: message || 'Payment failed'
+            });
+        }
+
+        // ICICI Payment Completion Handler
+        function handleIciciPaymentCompletion() {
+            // This function is called when user returns from ICICI/bank redirect
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentStatus = urlParams.get('payment_status') || 'unknown';
+            const orderId = urlParams.get('order_id');
+            const paymentId = urlParams.get('payment_id');
+            
+            console.log('ICICI Payment Completion:', { paymentStatus, orderId, paymentId });
+            
+            if (paymentStatus === 'success' || paymentStatus === 'completed') {
+                // Stay on this page and show acknowledgement + receipt
+                showSuccess('Payment verified successfully!');
+            } else {
+                showError('Payment failed or was cancelled by the user.');
+            }
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function showSuccess(message) {
+            postToNativeApp({
+                type: 'PAYMENT_SUCCESS',
+                order_id: getOrderIdFromUrl(),
+                message: 'Order placed successfully'
+            });
+
+            // Clear the payment status container
+            paymentStatus.innerHTML = '';
+
+            // Create success title with blast icons
+            const successTitle = document.createElement('h2');
+            successTitle.className = 'success-title';
+            successTitle.innerHTML = '🎉 Payment Successful! 🎉';
+
+            // Create success message
+            const successMessage = document.createElement('p');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'Your payment has been successfully processed. Your order is now Placed!';
+
+            // Create countdown message
+            const countdownMessage = document.createElement('p');
+            countdownMessage.className = 'success-message';
+            countdownMessage.style.fontSize = '14px';
+            countdownMessage.style.color = '#64748b';
+            countdownMessage.style.marginTop = '10px';
+
+            // Append all elements
+            paymentStatus.appendChild(successTitle);
+            paymentStatus.appendChild(successMessage);
+            paymentStatus.appendChild(countdownMessage);
+
+            // Start countdown and auto-load order details after 3 seconds
+            let countdown = 3;
+            countdownMessage.textContent = `Loading order details in ${countdown} seconds...`;
+
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    countdownMessage.textContent = `Loading order details in ${countdown} seconds...`;
+                } else {
+                    clearInterval(countdownInterval);
+                    loadOrderDetails();
+                }
+            }, 1000);
+        }
+
+        function getOrderIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('order_id') || 'N/A';
+        }
+
+        async function loadOrderDetails() {
+            const orderId = getOrderIdFromUrl();
+            const userId = 14774; // This should ideally come from user session
+
+            // Clear the payment status and show loading
+            paymentStatus.innerHTML = '';
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'status-message';
+            loadingDiv.textContent = 'Loading order details...';
+            loadingDiv.style.textAlign = 'center';
+            loadingDiv.style.padding = '40px';
+            paymentStatus.appendChild(loadingDiv);
+
+            try {
+                const response = await fetch(`${CONFIG.ORDERS_URL}${orderId}/?user_id=${userId}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayOrderDetails(data.data);
+                } else {
+                    throw new Error('API returned success: false');
+                }
+            } catch (error) {
+                console.error('Error fetching order details:', error);
+                paymentStatus.innerHTML = `
+                <div class="error-message">
+                    <strong>Error:</strong> Failed to load order details. 
+                    <button class="btn" onclick="handleRedirection('orders')" style="margin-top: 15px;">
+                        Go to Orders
+                    </button>
+                </div>
+            `;
+            }
+        }
+
+        function displayOrderDetails(order) {
+            const formatCurrency = (amount) => `₹${parseFloat(amount || 0).toFixed(2)}`;
+            const formatDate = (dateString) => {
+                if (!dateString) return '—';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
+            };
+
+            const hasValue = (v) => v !== null && v !== undefined && v !== '' && v !== 'undefined' && v !== 'null';
+
+            window.__LAST_ORDER_DETAILS__ = order;
+
+            const paymentContainer = document.querySelector('.payment-container');
+            if (paymentContainer) paymentContainer.style.display = 'none';
+
+            const container = document.createElement('div');
+            container.className = 'order-acknowledgement';
+
+            const isDelivery = order.order_type?.toLowerCase() === 'delivery';
+            const items = order.items || [];
+            const user = order.user_details || {};
+            const business = order.business_details || {};
+            const paymentInfo = order.payment_info || order.payment_details || {};
+            const orderDate = order.created_at ? formatDate(order.created_at) : formatDate(new Date().toISOString());
+            const orderTime = order.created_at ? new Date(order.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '';
+            const addr = order.delivery_address_details || {};
+            const addrSnap = order.delivery_address_snapshot || {};
+            const addrParts = [
+                addr.door_no || addrSnap.door_no || addr.address_line_1,
+                addr.street || addrSnap.street || addr.address_line_2,
+                addr.city || addrSnap.city,
+                addr.state || addrSnap.state,
+                addr.pincode || addrSnap.pincode,
+                'India'
+            ].filter(v => hasValue(v));
+            const deliveryInst = order.delivery_instruction || {};
+            const orderInst = order.order_instruction || {};
+            const instrLines = [
+                deliveryInst.text ? `Instruction: ${deliveryInst.text}` : null,
+                deliveryInst.special_notes ? `Notes: ${deliveryInst.special_notes}` : null,
+                deliveryInst.contact_preference ? `Contact: ${deliveryInst.contact_preference}` : null,
+                orderInst.special_request ? `Special Request: ${orderInst.special_request}` : null,
+            ].filter(Boolean);
+
+            container.innerHTML = `
+                <div class="ack-wrap">
+                    <div class="ack-box">
+                        <div class="ack-box-header">
+                            <h2 class="ack-box-title">Order Confirmation${business.business_name ? ' - ' + business.business_name : ''}</h2>
+                        </div>
+                        <div class="ack-confirmed-banner">
+                            <span class="ack-check">✓</span> Your order has been confirmed!
+                        </div>
+                        <div class="ack-section-header">
+                            <span class="ack-check-sm">✓</span> Acknowledgement
+                        </div>
+                        <div class="ack-info-grid">
+                            <div class="ack-info-box">
+                                <div class="ack-info-box-title">Bill To</div>
+                                <div class="ack-info-line">Date : ${orderDate}</div>
+                                ${hasValue(user.first_name || user.last_name) ? `<div class="ack-info-line">${[user.first_name, user.last_name].filter(Boolean).join(' ')}</div>` : ''}
+                                ${hasValue(user.mobile_number) ? `<div class="ack-info-line">${user.mobile_number}</div>` : ''}
+                                ${hasValue(user.email) ? `<div class="ack-info-line">${user.email}</div>` : ''}
+                            </div>
+                            <div class="ack-info-box">
+                                <div class="ack-info-box-title">Delivery Address</div>
+                                <div class="ack-info-line">Order Id : ${order.order_id || '—'}</div>
+                                ${addrParts.length ? `<div class="ack-info-line">${addrParts.join(', ')}</div>` : '<div class="ack-info-line">—</div>'}
+                            </div>
+                            <div class="ack-info-box">
+                                <div class="ack-info-box-title">Payment Info</div>
+                                <div class="ack-info-line">Payment Type : ICICI</div>
+                                <div class="ack-info-line">Status: ${order.payment_status || 'Completed'}</div>
+                                ${orderTime ? `<div class="ack-info-line">Time: ${orderTime}</div>` : ''}
+                            </div>
+                        </div>
+                        ${instrLines.length ? `
+                        <div class="ack-info-grid" style="margin-top:12px;">
+                            <div class="ack-info-box">
+                                <div class="ack-info-box-title">Delivery Instructions</div>
+                                ${instrLines.map(l => `<div class="ack-info-line">${l}</div>`).join('')}
+                            </div>
+                        </div>` : ''}
+                        <div class="ack-section-header" style="margin-top:28px;">
+                            <span class="ack-check-sm">✓</span> Order Items
+                        </div>
+                        <div class="ack-table-wrap">
+                        <table class="ack-table ack-items-desktop">
+                            <thead><tr>
+                                <th class="tbl-left">PRODUCT</th>
+                                <th class="tbl-center">QUANTITY</th>
+                                <th class="tbl-right">PRICE</th>
+                                <th class="tbl-right">TOTAL</th>
+                            </tr></thead>
+                            <tbody>
+                                ${items.map(item => {
+                                    const sp = item.unit_price_snapshot || item.unit_price || 0;
+                                    return `<tr>
+                                        <td class="tbl-left">${item.item_name_snapshot || 'Item'}</td>
+                                        <td class="tbl-center">${item.quantity || 1}</td>
+                                        <td class="tbl-right">${formatCurrency(sp)}</td>
+                                        <td class="tbl-right tbl-amt">${formatCurrency(item.total_price)}</td>
+                                    </tr>`;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                        </div>
+                        <div class="ack-items-mobile">
+                            ${items.map(item => {
+                                const sp = item.unit_price_snapshot || item.unit_price || 0;
+                                return `<div class="ack-item-card">
+                                    <div class="ack-item-card-name">${item.item_name_snapshot || 'Item'}</div>
+                                    <div class="ack-item-card-row"><span class="ack-item-card-label">Qty</span><span>${item.quantity || 1}</span></div>
+                                    <div class="ack-item-card-row"><span class="ack-item-card-label">Price</span><span>${formatCurrency(sp)}</span></div>
+                                    <div class="ack-item-card-row ack-item-card-total"><span>Total</span><span>${formatCurrency(item.total_price)}</span></div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+                        <div class="ack-section-header" style="margin-top:28px;">
+                            <span class="ack-check-sm">✓</span> Order Summary
+                        </div>
+                        <div class="ack-summary-lines">
+                            <div class="ack-sum-row"><span>Delivery Charges</span><span>${formatCurrency(order.delivery_charges)}</span></div>
+                            <div class="ack-sum-row"><span>Parcel Charges</span><span>${formatCurrency(order.parcel_charges)}</span></div>
+                            <div class="ack-sum-row"><span>Subtotal (${items.length} items)</span><span>${formatCurrency(order.items_total)}</span></div>
+                            ${parseFloat(order.total_gst || 0) > 0 ? `<div class="ack-sum-row"><span>GST</span><span>${formatCurrency(order.total_gst)}</span></div>` : ''}
+                            ${parseFloat(order.discount_amount || 0) > 0 ? `<div class="ack-sum-row"><span>Discount</span><span>-${formatCurrency(order.discount_amount)}</span></div>` : ''}
+                        </div>
+                        <div class="ack-total-row">
+                            <span>Total</span><span>${formatCurrency(order.final_amount)}</span>
+                        </div>
+                        <div class="ack-thankyou">
+                            🎉 <strong>Thank you for Ordering!</strong> 🎉
+                            ${hasValue(business.business_number) ? `<div style="margin-top:6px;font-size:13px;color:#64748b;">For any queries, please contact: ${business.business_number}</div>` : ''}
+                        </div>
+                        <div class="ack-actions">
+                            <button class="ack-btn-dl" onclick="downloadOrderReceipt()">Download Receipt</button>
+                            <button class="ack-btn-back" onclick="handleRedirection('orders')">Back to Orders</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const styles = document.createElement('style');
+            styles.textContent = `
+                * { box-sizing: border-box; }
+                .order-acknowledgement { position: fixed; top:0; left:0; right:0; bottom:0; overflow-y:auto; z-index:9999; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; padding:30px 16px 60px; }
+                .ack-wrap { max-width:800px; margin:0 auto; }
+                .ack-box { background:#fff; border-radius:8px; overflow:hidden; }
+                .ack-box-header { padding:20px 24px 16px; border-bottom:1px solid #f55d00; text-align:center; }
+                .ack-box-title { font-size:20px; font-weight:700; color:#1e293b; margin:0; }
+                .ack-confirmed-banner { margin:16px 24px; border-radius:6px; padding:10px 16px; color:#f55d00; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px; }
+                .ack-check { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; background:#f55d00; color:white; border-radius:50%; font-size:11px; font-weight:700; flex-shrink:0; }
+                .ack-section-header { display:flex; align-items:center; gap:8px; padding:0 24px; margin:20px 0 12px; font-size:15px; font-weight:700; color:#1e293b; }
+                .ack-check-sm { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; background:#f55d00; color:white; border-radius:50%; font-size:11px; font-weight:700; flex-shrink:0; }
+                .ack-info-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; padding:0 24px; }
+                .ack-info-box { border:1px solid #f55d00; border-radius:6px; padding:14px; }
+                .ack-info-box-title { font-size:13px; font-weight:700; color:#f55d00; margin-bottom:10px; }
+                .ack-info-line { font-size:13px; color:#334155; line-height:1.6; }
+                .ack-table-wrap { padding:0 24px; }
+                .ack-table { width:100%; border-collapse:collapse; font-size:13px; }
+                .ack-table thead tr { background:#f55d00; }
+                .ack-table th { padding:10px 16px; font-size:12px; font-weight:700; color:#fff; text-align:left; letter-spacing:0.3px; }
+                .tbl-center { text-align:center; } .tbl-right { text-align:right; } .tbl-left { text-align:left; }
+                .ack-table td { padding:12px 16px; color:#334155; border-bottom:1px solid #f1f5f9; font-size:13px; }
+                .ack-table tbody tr:last-child td { border-bottom:none; }
+                .tbl-amt { font-weight:600; color:#f55d00; }
+                .ack-summary-lines { padding:12px 24px 0; border-top:1px solid #e8f0ea; margin-top:4px; }
+                .ack-sum-row { display:flex; justify-content:space-between; font-size:13px; color:#475569; padding:4px 0; }
+                .ack-total-row { display:flex; justify-content:space-between; align-items:center; margin:12px 24px; padding:14px 16px; border:1px solid #f55d00; border-radius:6px; font-size:16px; font-weight:700; color:#1e293b; }
+                .ack-total-row span:last-child { color:#f55d00; }
+                .ack-thankyou { margin:16px 24px; padding:20px; border:1px solid #f55d00; border-radius:6px; text-align:center; font-size:16px; font-weight:600; color:#f55d00; }
+                .ack-actions { display:flex; gap:12px; justify-content:center; padding:0 24px 24px; flex-wrap:wrap; }
+                .ack-btn-dl { background:#f55d00; color:white; border:none; padding:12px 10px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
+                .ack-btn-dl:hover { background:#e04e00; }
+                .ack-btn-back { background:white; color:#f55d00; border:2px solid #f55d00; padding:12px 10px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
+                .ack-btn-back:hover { background:#f55d00; color:white; }
+                .ack-items-mobile { display:none; }
+                .ack-items-desktop { display:table; }
+                .ack-item-card { border:1px solid #f55d00; border-radius:8px; padding:14px; }
+                .ack-item-card-name { font-size:14px; font-weight:700; color:#1e293b; margin-bottom:7px; }
+                .ack-item-card-row { display:flex; justify-content:space-between; font-size:13px; color:#475569; padding:4px 0; }
+                .ack-item-card-label { color:#94a3b8; }
+                .ack-item-card-total { font-weight:700; color:#f55d00; margin-top:6px; padding-top:8px; border-top:1px solid #f55d00; font-size:14px; }
+                @media (max-width:640px) {
+                    .ack-info-grid { grid-template-columns:1fr; }
+                    .ack-box-title { font-size:16px; }
+                    .ack-total-row,.ack-summary-lines,.ack-confirmed-banner,.ack-thankyou,.ack-actions { margin-left:12px; margin-right:12px; padding-left:12px; padding-right:12px; }
+                    .ack-items-desktop { display:none !important; }
+                    .ack-items-mobile { display:flex !important; flex-direction:column; gap:10px; padding:0 12px; }
+                    .ack-actions { flex-direction:row !important; }
+                    .ack-btn-dl,.ack-btn-back { flex:1; }
+                }
+            `;
+
+            document.head.appendChild(styles);
+            document.body.appendChild(container);
+        }
+
+        function downloadOrderReceipt() {
+            try {
+                const orderContent = document.querySelector('.order-acknowledgement')?.outerHTML ||
+                                     document.querySelector('.payment-container')?.outerHTML || '';
+
+                const htmlContent = '<!DOCTYPE html>' +
+                    '<html>' +
+                    '<head>' +
+                    '<meta charset="UTF-8">' +
+                    '<title>Order Receipt - Kirazee</title>' +
+                    '<style>' +
+                    'body { font-family: Arial, sans-serif; margin: 20px; background: #fff; }' +
+                    '.success-btn, button { display: none !important; }' +
+                    '.ack-container { max-width: 800px; margin: 0 auto; }' +
+                    'h1, h2, h3 { color: #f55d00; }' +
+                    '</style>' +
+                    '</head>' +
+                    '<body>' +
+                    orderContent +
+                    '</body>' +
+                    '</html>';
+
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = window.URL.createObjectURL(blob);
+
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'Kirazee_Order_Receipt_' + getOrderIdFromUrl() + '.html';
+                downloadLink.style.display = 'none';
+
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+
+                window.URL.revokeObjectURL(url);
+
+            } catch (error) {
+                console.error('Download failed:', error);
+                alert('Download failed. Please try again.');
+            }
+        }
+
+        // Helper to redirect to ICICI hosted payment page using redirectURI and tranCtx
+        function redirectToIcici(url, tranCtx) {
+            try {
+                if (!url || !tranCtx) {
+                    showError('Payment gateway response is incomplete. Please contact support.');
+                    return;
+                }
+
+                const separator = url.includes('?') ? '&' : '?';
+                const finalUrl = `${url}${separator}tranCtx=${encodeURIComponent(tranCtx)}`;
+                window.location.href = finalUrl;
+            } catch (err) {
+                console.error('ICICI redirect error:', err);
+                showError('Failed to redirect to bank. Please try again.');
+            }
+        }
+
+        async function initiatePaymentOnServer(orderId) {
+            try {
+                updateStatus('Connecting to Payment Gateway', 'Setting up your secure payment...');
+
+                const response = await fetch(CONFIG.PAYMENT_INITIATE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken') || 'dummy-token'
+                    },
+                    body: JSON.stringify({ order_id: parseInt(orderId), platform: CONFIG.PLATFORM })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Server error: ' + response.status);
+                }
+
+                const result = await response.json();
+
+                if (result.status !== 'success') {
+                    showError(result.message || 'Failed to initialize payment');
+                    return;
+                }
+
+                // If backend responded with ICICI redirect metadata, use it
+                if (result.gateway === 'icici' && result.action === 'REDIRECT' && result.data) {
+                    updateStatus('Redirecting...', 'Taking you to your bank to complete the payment...');
+
+                    const url = result.data.url;
+                    const tranCtx = result.data.tranCtx;
+
+                    // Small delay for UX, then redirect/POST to ICICI
+                    setTimeout(() => {
+                        redirectToIcici(url, tranCtx);
+                    }, 800);
+                    return;
+                }
+
+                // Fallback: if gateway is Razorpay, this page can still work like the original
+                if (result.data && result.data.key && result.data.order_id) {
+                    updateStatus('Opening Payment Gateway', 'Redirecting to secure payment...');
+                    // In case someone hits this template with a Razorpay-configured business,
+                    // just bounce them back to the standard Razorpay payment page.
+                    const params = new URLSearchParams(window.location.search);
+                    window.location.href = BASE_URL + '/kirazee/consumer/payment/?' + params.toString();
+                    return;
+                }
+
+                showError('Unsupported payment response from server.');
+            } catch (error) {
+                console.error('Payment initiation error:', error);
+                showError('Unable to connect to payment server. Please check your internet connection and try again.');
+            }
+        }
+
+        // Check if payment was successful (URL parameter)
+        function checkPaymentSuccess() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const success = urlParams.get('success');
+            const paymentId = urlParams.get('payment_id');
+
+            if (success === 'true' && paymentId) {
+                updateStatus(
+                    'Payment Successful!', 
+                    'Your payment has been processed successfully.',
+                    true
+                );
+                if (isInAppWebView()) {
+                    postToNativeApp({ type: 'PAYMENT_SUCCESS', paymentId: paymentId });
+                }
+                return true;
+            }
+            return false;
+        }
+
+        // WebView specific handling (same pattern as Razorpay template)
+        if (isInAppWebView()) {
+            window.addEventListener('message', function (event) {
+                try {
+                    const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                    if (!data || !data.type) {
+                        return;
+                    }
+                    if (data.type === 'PAYMENT_SUCCESS') {
+                        updateStatus('Payment Successful!', 'Your payment has been processed successfully.', true);
+                        return;
+                    }
+                    if (data.type === 'PAYMENT_FAILURE') {
+                        showError(data.message || 'Payment failed. Please try again.');
+                    }
+                } catch (e) {
+                    // ignore
+                }
+            });
+        }
+
+        // React Native WebView specific handling
+        if (window.ReactNativeWebView) {
+            // Handle messages from React Native
+            window.addEventListener('message', function (event) {
+                if (event.data.type === 'PAYMENT_SUCCESS') {
+                    showSuccess('Payment successful! Your order is now placed.');
+                } else if (event.data.type === 'PAYMENT_FAILURE') {
+                    showError(event.data.message || 'Payment failed. Please try again.');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentStatus = urlParams.get('payment_status');
+            const isIciciCallback = paymentStatus || urlParams.get('gateway') === 'icici';
+
+            // Client-side intercept for bank return: stop any auto redirects and switch to receipt mode
+            if (isIciciCallback) {
+                try { window.stop(); } catch (e) { }
+
+                const container = document.querySelector('.payment-container');
+                if (container) {
+                    container.innerHTML = '<div class="payment-status"><h1 class="status-title">Verifying Payment...</h1><p class="status-message">Please wait...</p></div>';
+                }
+
+                handleIciciPaymentCompletion();
+                return;
+            }
+
+            // First check if payment was successful (existing logic)
+            if (checkPaymentSuccess()) {
+                return; // Don't initiate payment again
+            }
+
+            const orderId = urlParams.get('order_id');
+
+            if (!orderId) {
+                showError('Order ID is missing. Please try again from your orders page.');
+                return;
+            }
+
+            initiatePaymentOnServer(orderId);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Kirazee Shipping & Delivery Policy - Delivery coverage, timeframes, charges, cancellations and refunds">
+    <title>Kirazee Shipping & Delivery Policy</title>
+    
+    <style>
+        /* ========== CSS RESET & BASE STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #ff5722;
+            --primary-dark: #e64a19;
+            --primary-light: #ff8a65;
+            --background: #ffffff;
+            --card-background: #fafafa;
+            --text-primary: #2d2d2d;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+            
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-base: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 24px;
+            --font-size-2xl: 32px;
+            
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+        }
+        
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--background);
+            padding-bottom: 60px;
+        }
+        
+        .hero { background: linear-gradient(135deg, #ff5722 0%, #ff8a65 100%); padding: var(--spacing-xl) var(--spacing-md); text-align: center; color: white; }
+        .hero-icon { width: 64px; height: 64px; background: rgba(255,255,255,0.2); border-radius: 50%; display:flex; align-items:center; justify-content:center; margin:0 auto var(--spacing-md); }
+        .hero-icon svg { width:36px; height:36px; fill:white; }
+        .hero h1 { font-size:var(--font-size-2xl); font-weight:700; margin-bottom:var(--spacing-sm); line-height:1.2; }
+        .hero p { font-size:var(--font-size-base); opacity:0.95; margin-bottom:var(--spacing-sm); line-height:1.5; }
+        .hero .last-updated { font-size:var(--font-size-sm); opacity:0.85; }
+        
+        .container { max-width:100%; padding:0 var(--spacing-md); }
+        .accordion { margin-top:var(--spacing-lg); }
+        .accordion-item { background:var(--card-background); border-radius:12px; margin-bottom:var(--spacing-md); overflow:hidden; box-shadow:var(--shadow); transition:box-shadow var(--transition-normal); }
+        .accordion-item.active { box-shadow:var(--shadow-lg); }
+        .accordion-header { display:flex; align-items:center; gap:var(--spacing-sm); padding:var(--spacing-md); cursor:pointer; user-select:none; -webkit-tap-highlight-color:transparent; transition:background-color var(--transition-fast); min-height:72px; }
+        .accordion-icon { width:40px; height:40px; min-width:40px; background:linear-gradient(135deg,#ff5722 0%,#ff8a65 100%); border-radius:8px; display:flex; align-items:center; justify-content:center; }
+        .accordion-icon svg { width:20px; height:20px; fill:white; }
+        .accordion-title { flex:1; font-size:var(--font-size-lg); font-weight:600; color:var(--text-primary); }
+        .accordion-chevron { width:24px; height:24px; min-width:24px; transition:transform var(--transition-normal); }
+        .accordion-chevron svg { width:100%; height:100%; fill:var(--text-secondary); }
+        .accordion-item.active .accordion-chevron { transform:rotate(180deg); }
+        .accordion-content { max-height:0; overflow:hidden; transition:max-height var(--transition-normal); }
+        .accordion-content-inner { padding:0 var(--spacing-md) var(--spacing-md); color:var(--text-primary); line-height:1.7; }
+        .accordion-content p { margin-bottom:var(--spacing-md); }
+        .accordion-content p:last-child { margin-bottom:0; }
+        .accordion-content ul, .accordion-content ol { margin-bottom:var(--spacing-md); padding-left:var(--spacing-lg); }
+        .accordion-content li { margin-bottom:var(--spacing-xs); color:var(--text-primary); }
+        .accordion-content a { color:var(--primary-color); text-decoration:none; font-weight:500; }
+        
+        .back-to-top { position:fixed; bottom:20px; right:20px; width:56px; height:56px; background:linear-gradient(135deg,#ff5722 0%,#ff8a65 100%); border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(255,87,34,0.4); cursor:pointer; opacity:0; visibility:hidden; transition:all var(--transition-normal); border:none; -webkit-tap-highlight-color:transparent; z-index:1000; }
+        .back-to-top.visible { opacity:1; visibility:visible; }
+        .back-to-top svg { width:24px; height:24px; fill:white; }
+        
+        @media (min-width:768px) { .container { max-width:768px; margin:0 auto; padding:0 var(--spacing-lg); } .hero { padding:48px var(--spacing-lg); } .accordion { margin-top:var(--spacing-xl); } .accordion-header { padding:var(--spacing-lg); } .accordion-content-inner { padding:0 var(--spacing-lg) var(--spacing-lg); } }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <p>Fast, reliable delivery from your favorite local restaurants and grocery stores</p>
+        <p class="last-updated">Last Updated: January 2025</p>
+    </div>
+
+    <div class="container">
+        <div class="accordion">
+
+            <!-- Overview -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                    <h2 class="accordion-title">Overview</h2>
+                    <div class="accordion-chevron"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg></div>
+                </div>
+                <div class="accordion-content"><div class="accordion-content-inner"><p>At Kirazee, we partner with trusted local restaurants and grocery stores to deliver fresh meals and essentials quickly, safely, and reliably. Our mission is to make your food and grocery shopping simple, convenient, and enjoyable—right from your phone to your doorstep.</p></div></div>
+            </div>
+
+            <!-- Delivery Coverage -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+                    <h2 class="accordion-title">Delivery Coverage</h2>
+                    <div class="accordion-chevron"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg></div>
+                </div>
+                <div class="accordion-content"><div class="accordion-content-inner"><p>We currently deliver across select areas based on the service range of our partner stores. Delivery availability may vary depending on your pin code and the specific restaurant or grocery partner.</p></div></div>
+            </div>
+
+            <!-- Delivery Timeframes -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                    <h2 class="accordion-title">Delivery Timeframes</h2>
+                    <div class="accordion-chevron"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg></div>
+                </div>
+                <div class="accordion-content"><div class="accordion-content-inner">
+                    <p><strong>Restaurant</strong><br>Restaurant Orders: Delivered within 30–90 minutes, depending on restaurant distance and order volume.</p>
+                    <p><strong>Grocery</strong><br>Grocery Orders: Typically delivered within 2–4 hours from the time your order is placed.</p>
+                    <p><strong>Note:</strong> Delivery times are estimates and may be affected by factors such as traffic, weather, or high order volumes.</p>
+                </div></div>
+            </div>
+
+            <!-- Delivery Charges -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                    <h2 class="accordion-title">Delivery Charges</h2>
+                    <div class="accordion-chevron"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg></div>
+                </div>
+                <div class="accordion-content"><div class="accordion-content-inner">
+                    <ul>
+                        <li>Delivery fees depend on distance, partner store policy, and order value.</li>
+                        <li>Free delivery may be offered for orders above the minimum value set by the store.</li>
+                        <li>Any applicable delivery fee will appear at checkout before confirming your order.</li>
+                    </ul>
+                </div></div>
+            </div>
+
+            <!-- Order Fulfillment -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg></div>
+                    <h2 class="accordion-title">Order Fulfillment</h2>
+                    <div class="accordion-chevron"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg></div>
+                </div>
+                <div class="accordion-content"><div class="accordion-content-inner"><p>Each restaurant or grocery store is responsible for preparing and packaging your items. Our delivery partners ensure proper handling, especially for perishable or temperature-sensitive goods.</p></div></div>
+            </div>
+
+            <!-- Tracking & Notifications -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                    <h2 class="accordion-title">Tracking &amp; Notifications</h2>
+                    <div class="accordion-chevron"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg></div>
+                </div>
+                <div class="accordion-content"><div class="accordion-content-inner"><p>Track your order in real time through the "My Orders" section on our app or website. You'll also receive updates by SMS, email, or in-app notifications at each delivery stage.</p></div></div>
+            </div>
+
+            <!-- Delivery Verification -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                    <h2 class="accordion-title">Delivery Verification</h2>
+                    <div class="accordion-chevron"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg></div>
+                </div>
+                <div class="accordion-content"><div class="accordion-content-inner"><p>To ensure safe and accurate delivery, our riders may request verification using an OTP or a digital signature upon handing over your order.</p></div></div>
+            </div>
+
+            <!-- Cancellation & Refund Policy -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="5" r="3"/></svg></div>
+                    <h2 class="accordion-title">Cancellation &amp; Refund Policy</h2>
+                    <div class="accordion-chevron"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg></div>
+                </div>
+                <div class="accordion-content"><div class="accordion-content-inner">
+                    <h3>Order Cancellation by Customer</h3>
+                    <p><strong>Restaurant</strong><br>Restaurant Orders: Can be cancelled within 2 minutes of placing the order. Once the restaurant begins preparing your food, cancellation is no longer possible.</p>
+                    <p><strong>Grocery</strong><br>Grocery Orders: Can be cancelled before the partner store confirms your order. After confirmation or dispatch, cancellations are not allowed.</p>
+                    <p>To cancel: Go to "My Orders" → select your order → tap "Cancel Order"</p>
+
+                    <h3>Order Cancellation by Store or Platform</h3>
+                    <p>An order may be cancelled by the store or by Kirazee in cases such as:</p>
+                    <ul>
+                        <li>Item unavailability</li>
+                        <li>Incorrect pricing or system error</li>
+                        <li>Delivery address out of coverage</li>
+                        <li>Payment or verification issues</li>
+                    </ul>
+                    <p>If payment has been made, the refund will be issued to your original payment method within 5–7 business days.</p>
+
+                    <h3>Failed Deliveries</h3>
+                    <p>If our delivery partner is unable to reach you after multiple attempts or if the address is incorrect, the order will be marked as "Failed Delivery."</p>
+                    <p><strong>Food</strong><br>Food Orders: Non-refundable once prepared.</p>
+                    <p><strong>Grocery</strong><br>Grocery Orders: Partial refunds may apply depending on item condition and store policy.</p>
+
+                    <h3>Refund Timelines</h3>
+                    <p>Refunds are processed within 5–7 business days after order cancellation or return confirmation. Timelines may vary depending on your bank or payment provider.</p>
+                </div></div>
+            </div>
+
+            <!-- Contact & Support -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg></div>
+                    <h2 class="accordion-title">Contact &amp; Support</h2>
+                    <div class="accordion-chevron"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg></div>
+                </div>
+                <div class="accordion-content"><div class="accordion-content-inner">
+                    <p>For help with your orders, delivery, or cancellations, please reach out to our support team:</p>
+                    <p>Email: <a href="mailto:kirazeeofficial@gmail.com">kirazeeofficial@gmail.com</a></p>
+                    <p>Phone: +91 8712479794</p>
+                    <p>7 days a week | 8 AM – 10 PM</p>
+                </div></div>
+            </div>
+
+        </div>
+    </div>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></button>
+
+    <script>
+        (function(){
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function(){
+                    const accordionItem = this.closest('.accordion-item');
+                    const accordionContent = accordionItem.querySelector('.accordion-content');
+                    const isActive = accordionItem.classList.contains('active');
+
+                    // Close all other accordion items
+                    accordionHeaders.forEach(otherHeader => {
+                        if(otherHeader !== this) {
+                            const otherItem = otherHeader.closest('.accordion-item');
+                            const otherContent = otherItem.querySelector('.accordion-content');
+                            otherItem.classList.remove('active');
+                            otherContent.style.maxHeight = null;
+                            otherHeader.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+
+                    if(isActive){
+                        accordionItem.classList.remove('active');
+                        accordionContent.style.maxHeight = null;
+                        this.setAttribute('aria-expanded','false');
+                    } else {
+                        accordionItem.classList.add('active');
+                        accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px';
+                        this.setAttribute('aria-expanded','true');
+                    }
+                });
+
+                header.addEventListener('keydown', function(e){
+                    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); this.click(); }
+                });
+            });
+        })();
+
+        (function(){
+            const backToTopBtn = document.getElementById('backToTop');
+            window.addEventListener('scroll', function(){
+                if(window.pageYOffset > 300){ backToTopBtn.classList.add('visible'); } else { backToTopBtn.classList.remove('visible'); }
+            });
+            backToTopBtn.addEventListener('click', function(){ window.scrollTo({ top:0, behavior:'smooth' }); });
+        })();
+
+        (function(){ let resizeTimer; window.addEventListener('resize', function(){ clearTimeout(resizeTimer); resizeTimer = setTimeout(function(){ const activeAccordions = document.querySelectorAll('.accordion-item.active .accordion-content'); activeAccordions.forEach(content => { content.style.maxHeight = content.scrollHeight + 'px'; }); }, 250); }); })();
+    </script>
+</body>
+</html>

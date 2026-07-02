@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequently Asked Questions - Kirazee</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        button, div, svg {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #F4F4F8;
+            color: #2A2C41;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 414px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(42, 44, 65, 0.1);
+            position: relative;
+        }
+
+
+        .app-header {
+            background: linear-gradient(135deg, #F55D00 0%, #F9BF50 100%);
+            padding: 16px 20px 24px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            width: 24px;
+            height: 24px;
+            margin-right: 16px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .header-content h1 {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header-content p {
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+        }
+
+        .faq-list {
+            padding: 0;
+            background: white;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #F4F4F8;
+            background: white;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            position: relative;
+            outline: none;
+            border: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .faq-question:active {
+            background: #ffffff;
+        }
+
+        .faq-question:focus {
+            outline: none;
+            background: #F4F4F8;
+        }
+
+        .faq-question:focus-visible {
+            outline: 2px solid #F55D00;
+            outline-offset: 2px;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2A2C41;
+            flex: 1;
+            padding-right: 16px;
+            line-height: 1.4;
+        }
+
+        .chevron {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+            color: #F55D00;
+            outline: none;
+            border: none;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: none;
+        }
+
+        .chevron:focus {
+            outline: none;
+        }
+
+        .faq-question.active .chevron {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #F4F4F8;
+        }
+
+        .faq-answer.active {
+            max-height: 1000px;
+        }
+
+        .answer-content {
+            padding: 20px;
+            border-top: 1px solid #F9BF50;
+        }
+
+        .answer-content p {
+            color: #2A2C41;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .answer-content ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+
+        .answer-content li {
+            color: #2A2C41;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .answer-content strong {
+            color: #F55D00;
+            font-weight: 600;
+        }
+
+
+        .section-divider {
+            height: 8px;
+            background: #F4F4F8;
+        }
+
+        @media (max-width: 414px) {
+            .app-container {
+                max-width: 100%;
+                box-shadow: none;
+            }
+        }
+
+        @media (min-width: 415px) {
+            .app-container {
+                border-radius: 20px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                overflow: hidden;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- App Header -->
+        <div class="app-header">
+           
+            <div class="header-content">
+                <h1>FAQs</h1>
+                <p>Get quick answers to common questions</p>
+            </div>
+        </div>
+
+        <!-- FAQ List -->
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="question-text">What types of businesses can use Kirazee?</div>
+                    <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer">
+                    <div class="answer-content">
+                        <p>Kirazee supports multiple business types including restaurants, grocery stores, food courts, pharmacies, and other retail businesses. Each business type gets customized features and templates suited to their industry.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="question-text">How does the onboarding process work for businesses?</div>
+                    <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer">
+                    <div class="answer-content">
+                        <p>Businesses go through a multi-step onboarding flow:</p>
+                        <ul>
+                            <li>Basic information (business name, type, features)</li>
+                            <li>Address & location details (with Google Maps integration)</li>
+                            <li>Financial details (bank account, GST)</li>
+                            <li>Template selection</li>
+                            <li>Verification and payment (₹999) After approval, businesses can start managing their operations.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="question-text">Can I manage multiple businesses with one account?</div>
+                    <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer">
+                    <div class="answer-content">
+                        <p>Yes, Kirazee supports master business accounts where you can manage multiple business locations or franchises from a single dashboard with consolidated reporting.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="question-text">How does the payment system work?</div>
+                    <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer">
+                    <div class="answer-content">
+                        <p>The platform integrates with a hosted payment gateway for business onboarding fees and consumer orders. It supports order creation with payment tracking, and includes features for wallet management and vouchers. The payment flow redirects to a secure payment page and returns users to the app after completion.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="question-text">Can I manage multiple business locations or branches?</div>
+                    <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer">
+                    <div class="answer-content">
+                        <p>Yes, Kirazee supports master business accounts where you can manage multiple locations from one dashboard, view consolidated reports across all branches, include/exclude branch data in reports, assign staff to specific locations, and each branch can have its own inventory, suppliers, and menu while maintaining centralized oversight. The system automatically detects if you're a master business and provides appropriate multi-location features.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // FAQ Toggle Functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const isActive = answer.classList.contains('active');
+                
+                // Close all other FAQs
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.classList.remove('active');
+                });
+                document.querySelectorAll('.faq-question').forEach(q => {
+                    q.classList.remove('active');
+                });
+                
+                // Toggle current FAQ
+                if (!isActive) {
+                    answer.classList.add('active');
+                    question.classList.add('active');
+                }
+            });
+        });
+
+
+
+        // Add haptic feedback simulation for mobile
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('touchstart', () => {
+                // Add slight vibration effect on supported devices
+                if (navigator.vibrate) {
+                    navigator.vibrate(10);
+                }
+            });
+        });
+
+        // Back button functionality
+        document.querySelector('.back-btn').addEventListener('click', () => {
+            // In a real app, this would navigate back
+            window.history.back();
+        });
+    </script>
+</body>
+</html>

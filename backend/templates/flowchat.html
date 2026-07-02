@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirazee Platform Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        
+        /* Typography adjustments for readability */
+        h1, h2, h3 { color: #1e293b; }
+        h2 { margin-top: 3rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1.5rem; scroll-margin-top: 6rem; } /* Adjusted scroll margin for sticky headers */
+        h3 { margin-top: 1.5rem; font-weight: 600; color: #334155; }
+        
+        /* Responsive Tables & Code */
+        .table-container { overflow-x: auto; margin-bottom: 1.5rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; min-width: 600px; /* Ensure table doesn't squish too much */ }
+        th { background-color: #f8fafc; text-align: left; padding: 0.75rem; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569; }
+        td { padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #334155; }
+        tr:last-child td { border-bottom: none; }
+        
+        code { color: #ec4899; background: #fdf2f8; padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-size: 0.875em; word-break: break-word; }
+        pre code { color: inherit; background: transparent; padding: 0; }
+        
+        /* Sitemap Styles */
+        .tree-node-row { transition: background-color 0.2s; }
+        .tree-node-row:hover { background-color: #f1f5f9; }
+        .tree-active { color: #2563eb; font-weight: 600; }
+        
+        /* Mermaid Diagram Responsive Wrapper */
+        .mermaid { display: flex; justify-content: center; background: #f8fafc; padding: 1rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; margin-bottom: 1rem; overflow-x: auto; }
+        
+        /* Custom Scrollbar for sidebar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased 2xl:text-lg">
+
+    <!-- Mobile Header (Visible on Small Screens) -->
+    <header class="lg:hidden fixed top-0 left-0 right-0 h-16 bg-slate-900 z-50 flex items-center justify-between px-4 shadow-md">
+        <div class="font-bold text-white text-xl tracking-tight">Kirazee<span class="text-blue-500">Docs</span></div>
+        <button id="menu-btn" class="text-white p-2 focus:outline-none hover:bg-slate-800 rounded transition-colors" aria-label="Toggle Menu">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </header>
+
+    <!-- Mobile Backdrop Overlay -->
+    <div id="backdrop" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity opacity-0" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar Navigation (Responsive: Off-canvas on mobile, Fixed on Desktop) -->
+    <nav id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-slate-900 text-slate-300 shadow-2xl transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col h-full border-r border-slate-800">
+        
+        <!-- Desktop Logo Header -->
+        <div class="p-6 hidden lg:block border-b border-slate-800">
+            <h1 class="text-2xl font-bold text-white tracking-tight">Kirazee<span class="text-blue-500">Docs</span></h1>
+            <p class="text-xs text-slate-500 mt-1">v1.1 Technical Spec</p>
+        </div>
+
+        <!-- Mobile Menu Header -->
+        <div class="p-6 lg:hidden flex justify-between items-center border-b border-slate-800 bg-slate-900">
+            <h1 class="text-2xl font-bold text-white tracking-tight">Kirazee<span class="text-blue-500">Docs</span></h1>
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
+            <ul class="space-y-1 text-sm">
+                <li><a href="#overview" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-slate-600 mr-2"></span>Overview</a></li>
+                
+                <li class="pt-4 pb-1"><span class="text-xs font-bold text-slate-500 uppercase tracking-wider px-3">Architecture</span></li>
+                <li><a href="#delivery-roadmap" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition text-green-400 font-semibold bg-slate-800/50 border border-slate-700/50">Delivery Roadmap</a></li>
+                <li><a href="#sitemap" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition text-blue-400 font-semibold bg-slate-800/50 border border-slate-700/50 mt-1">Interactive Sitemap</a></li>
+                
+                <li class="pt-4 pb-1"><span class="text-xs font-bold text-slate-500 uppercase tracking-wider px-3">Backend</span></li>
+                <li><a href="#database-schema" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition">Database Schema</a></li>
+                <li><a href="#user-management" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition ml-3 border-l-2 border-slate-700 pl-3 text-slate-400 hover:border-slate-500">User Management</a></li>
+                <li><a href="#business-setup" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition ml-3 border-l-2 border-slate-700 pl-3 text-slate-400 hover:border-slate-500">Business Setup</a></li>
+                <li><a href="#products-inventory" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition ml-3 border-l-2 border-slate-700 pl-3 text-slate-400 hover:border-slate-500">Inventory</a></li>
+                <li><a href="#operations-logs" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition ml-3 border-l-2 border-slate-700 pl-3 text-slate-400 hover:border-slate-500">Ops & Logs</a></li>
+                
+                <li class="pt-4 pb-1"><span class="text-xs font-bold text-slate-500 uppercase tracking-wider px-3">Services</span></li>
+                <li><a href="#api-services" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition">API Services</a></li>
+                <li><a href="#service-flows" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition">Operational Flows</a></li>
+                
+                <li class="pt-4 pb-1"><span class="text-xs font-bold text-slate-500 uppercase tracking-wider px-3">Frontend</span></li>
+                <li><a href="#frontend-structure" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition">Folder Structure</a></li>
+                <li><a href="#todo" class="block py-2.5 px-3 rounded hover:bg-slate-800 hover:text-white transition">Pending Tasks</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="lg:ml-72 min-h-screen p-2 pt-20 lg:p-10 lg:pt-10 transition-all duration-300">
+        
+        <!-- Max Width Container for Large Screens (TV/Projector) -->
+        <div class="max-w-screen-2xl mx-auto">
+
+            <!-- Overview Section -->
+            <section id="overview" class="mb-12">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-slate-900 tracking-tight">Kirazee Platform Overview</h1>
+                <p class="text-lg md:text-xl leading-relaxed text-slate-600 mb-8 max-w-4xl">
+                    Kirazee is an integrated retail business platform empowering Retail Business Owners (RBOs) to manage inventory, sales, expenses, and staff, while offering consumers a seamless way to order from local businesses (Restaurants, Grocery, Pharmacy, etc.).
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:border-blue-300 transition-colors">
+                        <h3 class="text-blue-600 text-lg !mt-0 mb-3 flex items-center">
+                            <span class="bg-blue-100 p-1 rounded mr-2">🛒</span> For Consumers
+                        </h3>
+                        <ul class="list-disc list-inside text-sm md:text-base space-y-2 text-slate-600">
+                            <li>Local business discovery based on location.</li>
+                            <li>Real-time product catalog & menu browsing.</li>
+                            <li>Multiple fulfillment: Delivery, Takeaway, Dine-in.</li>
+                            <li>Order tracking & history.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 transition-colors">
+                        <h3 class="text-indigo-600 text-lg !mt-0 mb-3 flex items-center">
+                            <span class="bg-indigo-100 p-1 rounded mr-2">💼</span> For Business Owners
+                        </h3>
+                        <ul class="list-disc list-inside text-sm md:text-base space-y-2 text-slate-600">
+                            <li>Inventory & Purchase Management.</li>
+                            <li>Staff Roles & Payroll.</li>
+                            <li>Unified Order Dashboard (Online + Counter).</li>
+                            <li>Comprehensive Sales & Financial Reports.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Delivery Partner Roadmap -->
+            <section id="delivery-roadmap" class="mb-16 scroll-mt-24">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 text-slate-800">Delivery Partner User Flow & Roadmap</h2>
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-slate-200">
+                    
+                    <!-- 1. Executive Overview -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">1. Executive Overview</h3>
+                        <p class="text-slate-600 mb-4 leading-relaxed">
+                            Kirazee is a Retail Business Platform designed to empower Consumers, Retail Business Owners (RBOs), and Delivery Partners without monopolizing branding or operations. Unlike centralized marketplaces, Kirazee promotes individual retail brands. RBOs retain full control, choosing to use Kirazee-provided partners or their own internal fleet.
+                        </p>
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 text-sm md:text-base text-blue-800 rounded-r">
+                            <strong>Core Philosophy:</strong> Business-centric delivery (hyperlocal model) where the merchant owns the customer relationship.
+                        </div>
+                    </div>
+
+                    <!-- 2. Delivery User Roles -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">2. Delivery User Roles</h3>
+                        <p class="text-sm md:text-base text-slate-600 mb-2">The ecosystem follows a simplified structure with a single delivery-side role. Control resides with the RBO.</p>
+                        <ul class="list-disc list-inside text-sm md:text-base text-slate-700 space-y-2 ml-2">
+                            <li><strong>Delivery Partner (Rider):</strong> Responsible for pickup, fulfillment, payment collection, and customer interaction.</li>
+                            <li><strong>Retail Business Owner (RBO):</strong> Acts as the dispatcher, manually assigning orders to riders.</li>
+                        </ul>
+                    </div>
+
+                    <!-- 3. Order Capture -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">3. Order Capture & Architecture</h3>
+                        <div class="mermaid">
+                        graph TD
+                            subgraph "Capture Channels"
+                                A[Consumer App/Web]
+                                B[White-label Sites]
+                                C[POS / WhatsApp]
+                            end
+                            subgraph "Central Sync"
+                                D[RBO Dashboard]
+                                E[Super Admin View]
+                            end
+                            subgraph "Fulfillment"
+                                F[Manual Assignment]
+                                G[Delivery Partner App]
+                            end
+                            A --> D
+                            B --> D
+                            C --> D
+                            D --> F
+                            F --> G
+                        </div>
+                        <p class="text-xs md:text-sm text-slate-500 mt-2 bg-slate-50 p-2 rounded border border-slate-100">
+                            <strong>Mandatory Data Points:</strong> Pickup Lat/Long, Customer Address, Payment Method (COD/Prepaid), Live Location Sharing.
+                        </p>
+                    </div>
+
+                    <!-- 4. Lifecycle -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">4. Order Lifecycle Management</h3>
+                        <p class="text-sm md:text-base text-slate-600 mb-4"><strong>Assignment Logic:</strong> Purely manual. RBOs select their own rider or a Kirazee partner based on availability.</p>
+                        
+                        <div class="mermaid">
+                        stateDiagram-v2
+                            direction LR
+                            [*] --> Pending: Order Placed
+                            Pending --> Confirmed: RBO Confirms
+                            Confirmed --> Assigned: Manual Assignment
+                            Assigned --> OutForDelivery: Rider Pickup
+                            OutForDelivery --> Delivered: OTP Verified
+                            Delivered --> [*]
+                            
+                            state "Cancelled / Returned" as Cancel
+                            Pending --> Cancel
+                            Confirmed --> Cancel
+                            OutForDelivery --> Cancel
+                        </div>
+
+                        <h4 class="font-bold text-sm md:text-base mt-8 mb-4 text-slate-700">Detailed Interaction Flow</h4>
+                        <div class="mermaid">
+                        sequenceDiagram
+                            participant Cust as Consumer
+                            participant RBO as Retail Owner
+                            participant Rider as Delivery Partner
+                            Cust->>RBO: Place Order
+                            RBO->>RBO: Confirm Order
+                            RBO->>Rider: Manually Assign
+                            Rider->>Rider: Accept (Mandatory)
+                            RBO->>Rider: Order Ready
+                            Rider->>RBO: Pickup Package
+                            Note over Rider: Status: Out for Delivery
+                            Rider->>Cust: Verify OTP
+                            alt Cash on Delivery
+                                Rider->>Rider: Collect Cash
+                            end
+                            Rider->>Rider: Mark Delivered
+                            Note over RBO: Status: Completed
+                        </div>
+                    </div>
+
+                    <!-- 5, 6, 7 Details Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">5. Rider Technology</h3>
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                                <li><strong>Platforms:</strong> Mobile App, Web Dashboard.</li>
+                                <li><strong>Notifications:</strong> WhatsApp, Email (No SMS).</li>
+                                <li><strong>Requirements:</strong> Own Smartphone.</li>
+                                <li><strong>Nav:</strong> Google Maps Integration.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">6. Payment & Settlement</h3>
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                                <li><strong>Modes:</strong> COD, UPI, Z.Wallet.</li>
+                                <li><strong>Collection:</strong> Direct by Partner.</li>
+                                <li><strong>Settlement:</strong> Monthly cycle.</li>
+                                <li><strong>Fees:</strong> No commission deduction logic yet.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">7. Communication</h3>
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                                <li><strong>Consumer:</strong> Live Tracking, Direct Calling, OTP.</li>
+                                <li><strong>Merchant:</strong> Route Polyline, Modification Rights.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">8. SLA & Compliance</h3>
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                                <li><strong>Acceptance:</strong> Mandatory completion once assigned.</li>
+                                <li><strong>Leave:</strong> Inform 3-4 days in advance.</li>
+                                <li><strong>Onboarding:</strong> Physical KYC & In-office training.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 9. Roadmap -->
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">9. Strategic Roadmap</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start p-3 hover:bg-slate-50 rounded transition-colors">
+                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm shadow-sm">1</div>
+                                <div class="ml-4">
+                                    <h4 class="text-base font-bold text-slate-900">Current Phase: Core Stability</h4>
+                                    <p class="text-sm text-slate-600 mt-1">Bug fixing stage. Access limited to CTO/COO/Devs. Establishing manual assignment flow and physical onboarding.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start p-3 hover:bg-slate-50 rounded transition-colors">
+                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm shadow-sm">2</div>
+                                <div class="ml-4">
+                                    <h4 class="text-base font-bold text-slate-900">Next Phase: Optimization</h4>
+                                    <p class="text-sm text-slate-600 mt-1">Defining formal funnels, introducing automated reports, and refining the "white-label" experience for RBOs.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start p-3 hover:bg-slate-50 rounded transition-colors">
+                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-sm shadow-sm">vis</div>
+                                <div class="ml-4">
+                                    <h4 class="text-base font-bold text-slate-900">Expansion Vision</h4>
+                                    <p class="text-sm text-slate-600 mt-1">Operations can scale anywhere, anytime, without geographical restrictions, relying on the "Business Hiring" model.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Interactive Sitemap -->
+            <section id="sitemap" class="mb-16 scroll-mt-24">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 text-slate-900">System Architecture Map</h2>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    <!-- Tree View -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-[600px] overflow-y-auto custom-scrollbar">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 sticky top-0 bg-white z-10 py-2 border-b">Structure Browser</h3>
+                        <div id="tree-container" class="text-sm md:text-base"></div>
+                    </div>
+                    
+                    <!-- Details View -->
+                    <div class="relative">
+                        <div id="details-panel" class="sticky top-20 bg-slate-800 text-white p-6 md:p-8 rounded-xl shadow-xl border border-slate-700">
+                            <h3 id="detail-title" class="text-2xl font-bold text-blue-400 mb-4 border-b border-slate-700 pb-3">Select a Node</h3>
+                            <div id="detail-body" class="text-slate-300 leading-loose text-sm md:text-base whitespace-pre-line min-h-[200px]">
+                                Click any item in the tree to view technical specifications, module details, and feature breakdowns.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Database Schema -->
+            <section id="database-schema" class="mb-16 scroll-mt-24">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 text-slate-900">Database Design</h2>
+                
+                <div id="user-management" class="mb-12 scroll-mt-28">
+                    <h3 class="text-xl font-bold mb-4 text-slate-800 flex items-center">
+                        <span class="w-2 h-8 bg-blue-500 rounded-full mr-3"></span>
+                        1. User Management Module
+                    </h3>
+                    <div class="table-container bg-white shadow-sm">
+                        <table>
+                            <thead><tr><th>Table Name</th><th>Description</th><th>Key Columns</th></tr></thead>
+                            <tbody>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">registrations</td><td>Core user profile data.</td><td>user_id (PK), mobileNumber, emailID, is_verified, tokenID</td></tr>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">otps</td><td>Logs for OTP generation and verification.</td><td>code, status, mobileNumber, tokenID</td></tr>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">user_address</td><td>Stores multiple addresses per user (Home, Work, etc.).</td><td>address_type, address (JSON), user_id (FK)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="business-setup" class="mb-12 scroll-mt-28">
+                    <h3 class="text-xl font-bold mb-4 text-slate-800 flex items-center">
+                        <span class="w-2 h-8 bg-blue-500 rounded-full mr-3"></span>
+                        2. Business Setup Module
+                    </h3>
+                    <div class="table-container bg-white shadow-sm">
+                        <table>
+                            <thead><tr><th>Table Name</th><th>Description</th><th>Key Columns</th></tr></thead>
+                            <tbody>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">business_types</td><td>Categorization of businesses (R01 Retail, R02 Food, etc.).</td><td>code (PK), type, categories (JSON)</td></tr>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">businesses</td><td>Main business entity details.</td><td>business_id (PK), businessName, businessType, opening_hrs</td></tr>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">business_mapping</td><td>Links Users (RBOs) to Businesses.</td><td>user_id, business_id</td></tr>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">business_role_management</td><td>Staff roles and permissions within a business.</td><td>role (Staff/Manager/Chef), permissions (JSON)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="products-inventory" class="mb-12 scroll-mt-28">
+                    <h3 class="text-xl font-bold mb-4 text-slate-800 flex items-center">
+                        <span class="w-2 h-8 bg-blue-500 rounded-full mr-3"></span>
+                        3. Products, Inventory & Purchases
+                    </h3>
+                    <div class="table-container bg-white shadow-sm">
+                        <table>
+                            <thead><tr><th>Table Name</th><th>Description</th><th>Key Columns</th></tr></thead>
+                            <tbody>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">products</td><td>Catalog of sellable items.</td><td>item_id, selling_price, item_type, availability_timings (JSON)</td></tr>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">inventory</td><td>Current stock levels tracking.</td><td>sku, total_quantity, total_value, status</td></tr>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">bill_of_materials</td><td>Ingredients required for menu items (Restaurants).</td><td>product_id, ingredients, quantity, cost</td></tr>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">purchases</td><td>Records of goods bought from suppliers.</td><td>purchase_id, supplier_name, payment_status, invoice_ref</td></tr>
+                                <tr class="hover:bg-slate-50 transition-colors"><td class="font-mono text-blue-600 font-semibold">purchase_requisition</td><td>Internal requests for stock (e.g., Chef to Manager).</td><td>requisition_number, product_id, quantity, purpose</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="operations-logs" class="mb-12 scroll-mt-28">
+                    <h3 class="text-xl font-bold mb-4 text-slate-800 flex items-center">
+                        <span class="w-2 h-8 bg-blue-500 rounded-full mr-3"></span>
+                        4. Operations & System Logs
+                    </h3>
+                    <p class="text-sm md:text-base text-gray-600 mb-4 p-4 bg-yellow-50 rounded border border-yellow-100">
+                        <span class="font-bold text-yellow-700">Architecture Note:</span> Every critical table has a corresponding <code>_log</code> table that tracks INSERT, UPDATE, and DELETE actions using MySQL Triggers. These logs store the full snapshot of <code>old_data</code> and <code>new_data</code> in JSON format.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                            <h4 class="font-bold text-base mb-3 text-slate-700 border-b pb-2">Operational Tables</h4>
+                            <ul class="list-disc list-inside text-sm md:text-base text-gray-600 space-y-2">
+                                <li><strong>orders:</strong> Core order data, status, amounts.</li>
+                                <li><strong>cart:</strong> Temporary user cart items.</li>
+                                <li><strong>payments:</strong> Transaction logs (Razorpay).</li>
+                                <li><strong>rating:</strong> User reviews and ratings.</li>
+                                <li><strong>expenses:</strong> Operational costs (Rent, bills).</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                            <h4 class="font-bold text-base mb-3 text-slate-700 border-b pb-2">Log Tables (Trigger Based)</h4>
+                            <ul class="list-disc list-inside text-sm md:text-base text-gray-600 space-y-2">
+                                <li>orders_log</li>
+                                <li>inventory_log</li>
+                                <li>expenses_log</li>
+                                <li>purchases_log</li>
+                                <li>bill_of_materials_log</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API Services -->
+            <section id="api-services" class="mb-16 scroll-mt-24">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 text-slate-900">API & Service Specifications</h2>
+
+                <div class="space-y-8">
+                    <!-- Auth Flow -->
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="text-xl font-bold text-indigo-700 !mt-0">Authentication & Registration</h3>
+                        <p class="text-sm text-gray-600 mt-2 mb-6">Handles User Registration, OTP verification, and Login logic.</p>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-bold text-sm uppercase tracking-wide text-slate-500 mb-3">Registration Logic</h4>
+                                <ul class="list-decimal list-inside text-sm md:text-base text-gray-700 mt-2 space-y-2 bg-slate-50 p-4 rounded-lg">
+                                    <li>Check if Mobile/Email exists.</li>
+                                    <li>If existing & verified: <span class="font-mono text-red-500 text-xs bg-red-50 px-1 py-0.5 rounded">Return Conflict (409)</span>.</li>
+                                    <li>If existing & unverified: Update record & resend OTP.</li>
+                                    <li>If new: Create record (verified=0) & send OTP.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm uppercase tracking-wide text-slate-500 mb-3">OTP Handling</h4>
+                                <ul class="list-disc list-inside text-sm md:text-base text-gray-700 mt-2 space-y-2 bg-slate-50 p-4 rounded-lg">
+                                    <li>Valid for 3 minutes.</li>
+                                    <li><strong>Login:</strong> Checks latest unused OTP.</li>
+                                    <li><strong>Verification:</strong> Updates <code>is_verified=1</code> on success.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Business Creation -->
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="text-xl font-bold text-indigo-700 !mt-0 mb-4">Business Creation Flow</h3>
+                        <p class="text-sm text-gray-600 mb-6">A 3-step workflow for onboarding RBOs.</p>
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex-1 border-l-4 border-blue-500 pl-4 py-3 bg-blue-50 rounded-r-lg">
+                                <h4 class="font-bold text-sm text-blue-900">Section 1: Basic Info</h4>
+                                <p class="text-xs md:text-sm mt-1 text-blue-800">Name, Category, Level (Master/Sub), Contact Info.</p>
+                            </div>
+                            <div class="flex-1 border-l-4 border-blue-500 pl-4 py-3 bg-blue-50 rounded-r-lg">
+                                <h4 class="font-bold text-sm text-blue-900">Section 2: Location</h4>
+                                <p class="text-xs md:text-sm mt-1 text-blue-800">Address, Geo-coords, Features list.</p>
+                            </div>
+                            <div class="flex-1 border-l-4 border-blue-500 pl-4 py-3 bg-blue-50 rounded-r-lg">
+                                <h4 class="font-bold text-sm text-blue-900">Section 3: Financials</h4>
+                                <p class="text-xs md:text-sm mt-1 text-blue-800">Razorpay credentials, Tax info, Payment setup.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- API Endpoints Summary -->
+                    <div class="overflow-hidden border rounded-lg shadow-sm">
+                        <table class="min-w-full bg-white">
+                            <thead class="bg-slate-100">
+                                <tr>
+                                    <th class="text-xs uppercase tracking-wider">Role</th>
+                                    <th class="text-xs uppercase tracking-wider">Method</th>
+                                    <th class="text-xs uppercase tracking-wider">Endpoint</th>
+                                    <th class="text-xs uppercase tracking-wider">Purpose</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td>Consumer</td>
+                                    <td><span class="inline-block bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold">POST</span></td>
+                                    <td class="font-mono text-slate-700">/consumer/orders/create/</td>
+                                    <td>Create new order with cart items.</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td>Consumer</td>
+                                    <td><span class="inline-block bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-bold">GET</span></td>
+                                    <td class="font-mono text-slate-700">/consumer/wallet/{id}/</td>
+                                    <td>Get wallet balance and points.</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td>Business</td>
+                                    <td><span class="inline-block bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold">POST</span></td>
+                                    <td class="font-mono text-slate-700">/business/create-coupon/</td>
+                                    <td>Create discount coupons.</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td>System</td>
+                                    <td><span class="inline-block bg-purple-100 text-purple-700 px-2 py-0.5 rounded text-xs font-bold">POST</span></td>
+                                    <td class="font-mono text-slate-700">/business/save-payment-data/</td>
+                                    <td>Webhook handler for payment success.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Service Flows -->
+            <section id="service-flows" class="mb-16 scroll-mt-24">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 text-slate-900">Operational Flows</h2>
+                
+                <h3 class="text-xl font-bold mb-4 text-slate-800">Consumer Order & Payment Flow</h3>
+                <div class="bg-slate-900 rounded-lg p-6 md:p-8 text-slate-300 font-mono text-xs md:text-sm overflow-x-auto shadow-2xl">
+<pre class="leading-relaxed">
+1. User Browses -> Adds Items to Cart (Cart Total: ₹800)
+       |
+2. Create Order API (POST /orders/create) -> Status: <span class="text-yellow-400">PENDING_PAYMENT</span>
+       |
+3. Initiate Payment (POST /payment/initiate) -> Get Razorpay Key & Order ID
+       |
+4. User Pays on Frontend (Razorpay Modal)
+       |
+5. Success -> Webhook Triggered (POST /payment/webhook/)
+       |
+6. Server Verifies Signature -> Updates Payment Table -> Updates Order Status: <span class="text-green-400">CONFIRMED</span>
+       |
+7. RBO Receives Order -> Status: <span class="text-blue-400">PREPARING</span> -> <span class="text-blue-400">READY</span> -> <span class="text-green-400">DELIVERED</span>
+</pre>
+                </div>
+            </section>
+
+            <!-- Frontend Structure -->
+            <section id="frontend-structure" class="mb-16 scroll-mt-24">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 text-slate-900">Frontend Architecture</h2>
+                <div class="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+                    <pre class="text-sm text-gray-700 font-mono leading-relaxed">
+Frontend React/
+├── dist/
+├── node_modules/
+├── src/
+│   ├── assets/       <span class="text-gray-400">// Images, SVGs, Icons, Logos</span>
+│   ├── components/   <span class="text-gray-400">// Reusable UI components</span>
+│   ├── css/          <span class="text-gray-400">// Global stylesheets</span>
+│   ├── data/         <span class="text-gray-400">// Static data/JSON</span>
+│   ├── forms/        <span class="text-gray-400">// Form schemas & validation logic</span>
+│   ├── pages/        <span class="text-gray-400">// Route components (Views)</span>
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── styles.css
+├── .gitignore
+├── eslint.config.js
+├── package.json
+└── vite.config.js
+                    </pre>
+                </div>
+            </section>
+
+            <!-- ToDo -->
+            <section id="todo" class="mb-24 scroll-mt-24">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 text-slate-900">Pending Tasks</h2>
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-lg shadow-sm">
+                    <ul class="list-disc list-inside text-sm md:text-base text-yellow-900 space-y-3">
+                        <li>Create service to display categories for all types of items (Grocery & Menu).</li>
+                        <li><strong>WhatsApp Integration:</strong> Implement WhatsApp-based Login and Registration OTP.</li>
+                        <li><strong>Delivery Partner Module:</strong> Full implementation pending (Current status: Idea phase).</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <footer class="text-center text-slate-400 text-sm pb-10">
+                &copy; 2025 Kirazee Platform. Internal Documentation.
+            </footer>
+            
+        </div> <!-- End Max Width Container -->
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+        
+        // --- MOBILE MENU LOGIC ---
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('backdrop');
+            const body = document.body;
+            
+            // Toggle classes for transition
+            if (sidebar.classList.contains('-translate-x-full')) {
+                // Open
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+                // Small delay to allow display:block to apply before opacity transition
+                requestAnimationFrame(() => {
+                    backdrop.classList.remove('opacity-0');
+                });
+                body.style.overflow = 'hidden'; // Prevent scrolling
+            } else {
+                // Close
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('opacity-0');
+                body.style.overflow = ''; // Restore scrolling
+                
+                // Wait for opacity transition to finish before hiding
+                setTimeout(() => {
+                    backdrop.classList.add('hidden');
+                }, 300);
+            }
+        }
+        
+        document.getElementById('menu-btn').addEventListener('click', toggleSidebar);
+        
+        // Close sidebar when clicking links on mobile
+        document.querySelectorAll('#sidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) { // Tailwind lg breakpoint
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // --- SITEMAP DATA & LOGIC ---
+        const siteMap = [
+            {
+                id: "home",
+                title: "Kirazee Platform",
+                info: "Integrated Retail Ecosystem connecting Consumers, Business Owners (RBOs), and Delivery Partners.\n\nCore Modules:\n• User Management (Auth/OTP)\n• Business Operations (Inventory/POS)\n• Logistics (Delivery/Tracking)",
+                children: [
+                    {
+                        id: "website",
+                        title: "Web Portals",
+                        info: "Browser-based access points for Consumers and Business administration.",
+                        children: [
+                            {
+                                id: "consumer-web",
+                                title: "Consumer Website",
+                                info: "Public marketplace for local discovery and ordering.",
+                                children: [
+                                    { id: "cw-home", title: "Landing Page", info: "Location-based store discovery and promotional banners." },
+                                    { id: "cw-browse", title: "Store Directory", info: "List of onboarded businesses filtered by proximity." },
+                                    { id: "cw-categories", title: "Categories", info: "Grocery, Restaurants, Pharmacy." },
+                                    { id: "cw-store", title: "Store Front", info: "Digital catalog/menu with dynamic availability timings." },
+                                    { id: "cw-cart", title: "Cart & Checkout", info: "Order aggregation and Razorpay/UPI payment integration." },
+                                ],
+                            },
+                            {
+                                id: "business-portal",
+                                title: "Business Admin Portal",
+                                info: "Comprehensive ERP suite for Retail Business Owners (RBOs).",
+                                children: [
+                                    { id: "bp-dashboard", title: "Dashboard", info: "KPIs: Total Sales, Active Orders, Top Items." },
+                                    { id: "bp-products", title: "Catalog", info: "CRUD operations for Products, Prices, and Stock." },
+                                    { id: "bp-orders", title: "Order Mgmt", info: "Pending → Confirmed → Ready → Completed." },
+                                    { id: "bp-staff", title: "Staff Roles", info: "Role-based access (Manager, Chef, Cashier)." },
+                                    { id: "bp-reports", title: "Reports", info: "GST, P&L, Sales export." },
+                                ],
+                            },
+                            {
+                                id: "delivery-ops",
+                                title: "Delivery Console",
+                                info: "Command center for logistics.",
+                                children: [
+                                    { id: "do-assign", title: "Manual Assign", info: "Dispatcher tool to allocate orders." },
+                                    { id: "do-live", title: "Fleet Map", info: "Real-time GPS visualization." },
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        id: "app",
+                        title: "Mobile Apps",
+                        info: "Native Android/iOS applications.",
+                        children: [
+                            {
+                                id: "consumer-app",
+                                title: "Consumer App",
+                                info: "Native shopping experience.",
+                                children: [
+                                    { id: "ca-onboard", title: "Auth Flow", info: "OTP login." },
+                                    { id: "ca-orders", title: "My Orders", info: "Push notifications." },
+                                ],
+                            },
+                            {
+                                id: "business-app",
+                                title: "Business Lite",
+                                info: "On-the-go operations tool.",
+                                children: [
+                                    { id: "ba-orders", title: "Order Queue", info: "Quick Accept/Reject." },
+                                    { id: "ba-menu", title: "Quick Menu", info: "Instant stock toggle." },
+                                ],
+                            },
+                            {
+                                id: "driver-app",
+                                title: "Delivery Partner",
+                                info: "Fulfillment tool.",
+                                children: [
+                                    { id: "da-onboard", title: "Onboarding", info: "KYC & Vehicle docs." },
+                                    { id: "da-assignments", title: "Job Card", info: "New delivery alerts." },
+                                    { id: "da-status", title: "Proof of Delivery", info: "OTP verification." },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
+
+        const nodeDetails = {};
+        function buildDetails(nodes) {
+            for (const n of nodes) {
+                nodeDetails[n.id] = { title: n.title, body: n.info || "" };
+                if (n.children) buildDetails(n.children);
+            }
+        }
+        buildDetails(siteMap);
+
+        let selectedId = "home";
+        const treeContainer = document.getElementById('tree-container');
+        const detailTitle = document.getElementById('detail-title');
+        const detailBody = document.getElementById('detail-body');
+
+        function updateDetailsPanel(id) {
+            const detail = nodeDetails[id];
+            if (!detail) return;
+            detailTitle.textContent = detail.title;
+            detailBody.textContent = detail.body;
+        }
+
+        function updateSelectedNodeUI(newId) {
+            const oldSelected = document.querySelector('.tree-active');
+            if (oldSelected) oldSelected.classList.remove('tree-active');
+            const newSelected = document.querySelector(`[data-id="${newId}"]`);
+            if (newSelected) newSelected.classList.add('tree-active');
+        }
+
+        function handleNodeClick(id) {
+            selectedId = id;
+            updateDetailsPanel(id);
+            updateSelectedNodeUI(id);
+        }
+
+        function createTreeNode(node, depth = 0) {
+            const hasChildren = Array.isArray(node.children) && node.children.length > 0;
+            const isOpen = depth < 2;
+
+            const wrapper = document.createElement('div');
+            
+            // Row
+            const row = document.createElement('div');
+            row.className = 'tree-node-row flex items-center py-2 md:py-1 rounded cursor-pointer'; // Taller touch target on mobile
+            row.style.paddingLeft = `${depth * 1}rem`;
+            
+            // Toggle
+            if (hasChildren) {
+                const toggle = document.createElement('span');
+                toggle.textContent = isOpen ? '▼' : '▶';
+                toggle.className = 'text-xs text-gray-400 mr-2 w-6 text-center p-1'; // Wider touch target
+                toggle.onclick = (e) => {
+                    e.stopPropagation();
+                    const container = wrapper.querySelector('.children-container');
+                    const isHidden = container.classList.contains('hidden');
+                    container.classList.toggle('hidden');
+                    toggle.textContent = isHidden ? '▼' : '▶';
+                };
+                row.appendChild(toggle);
+            } else {
+                const spacer = document.createElement('span');
+                spacer.className = 'w-6 mr-2';
+                row.appendChild(spacer);
+            }
+
+            // Title
+            const title = document.createElement('span');
+            title.textContent = node.title;
+            title.dataset.id = node.id;
+            title.className = `flex-1 ${selectedId === node.id ? 'tree-active' : ''} p-1`; // Padding for touch
+            title.onclick = () => handleNodeClick(node.id);
+            row.appendChild(title);
+
+            wrapper.appendChild(row);
+
+            // Children
+            if (hasChildren) {
+                const childrenContainer = document.createElement('div');
+                childrenContainer.className = `children-container ml-2 border-l border-gray-200 ${isOpen ? '' : 'hidden'}`;
+                node.children.forEach(child => {
+                    childrenContainer.appendChild(createTreeNode(child, depth + 1));
+                });
+                wrapper.appendChild(childrenContainer);
+            }
+
+            return wrapper;
+        }
+
+        function renderTree() {
+            treeContainer.innerHTML = '';
+            siteMap.forEach(node => treeContainer.appendChild(createTreeNode(node)));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTree();
+            updateDetailsPanel(selectedId);
+        });
+    </script>
+</body>
+</html>

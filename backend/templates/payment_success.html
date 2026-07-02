@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe0b3 25%, #ffcc80 50%, #f55d00 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .success-container {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            width: 100%;
+            max-width: 520px;
+            padding: 28px;
+            text-align: center;
+            border-top: 4px solid #f55d00;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f55d00, #ff8a00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+        }
+        
+        .success-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        
+        .success-message {
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+        
+        .section {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 12px;
+            letter-spacing: -0.2px;
+        }
+
+        .kv {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .k {
+            color: #64748b;
+            min-width: 120px;
+        }
+
+        .v {
+            color: #0f172a;
+            font-weight: 600;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .item-top {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .item-img {
+            width: 54px;
+            height: 54px;
+            border-radius: 10px;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            overflow: hidden;
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9a3412;
+            font-weight: 700;
+        }
+
+        .item-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .item-sub {
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        .pill-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .pill {
+            font-size: 11px;
+            font-weight: 700;
+            color: #9a3412;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            padding: 6px 8px;
+            border-radius: 999px;
+        }
+
+        .muted {
+            color: #64748b;
+            font-size: 12px;
+        }
+        
+        .continue-button {
+            background: linear-gradient(135deg, #f55d00, #ff8a00);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .continue-button:hover {
+            filter: brightness(0.98);
+        }
+
+        .secondary-button {
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #0f172a;
+        }
+
+        .secondary-button:hover {
+            background: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        
+        <h1 class="success-title">Order Confirmed</h1>
+        <p class="success-message">Payment successful. Your order details are below.</p>
+
+        <div id="loading" class="section">
+            <div class="section-title">Loading order details</div>
+            <div class="muted">Please wait...</div>
+        </div>
+
+        <div id="order" style="display:none;">
+            <div class="section">
+                <div class="section-title">Order Summary</div>
+                <div class="kv"><div class="k">Order ID</div><div class="v" id="order-id"></div></div>
+                <div class="kv"><div class="k">Order Number</div><div class="v" id="order-number"></div></div>
+                <div class="kv"><div class="k">Status</div><div class="v" id="order-status"></div></div>
+                <div class="kv"><div class="k">Payment</div><div class="v" id="payment-status"></div></div>
+                <div class="kv"><div class="k">Total</div><div class="v" id="order-total"></div></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Delivery & Instructions</div>
+                <div class="kv"><div class="k">Delivery</div><div class="v" id="delivery-address"></div></div>
+                <div class="kv"><div class="k">Delivery Note</div><div class="v" id="delivery-note"></div></div>
+                <div class="kv"><div class="k">Order Note</div><div class="v" id="order-note"></div></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Items</div>
+                <div id="items" class="items"></div>
+            </div>
+        </div>
+
+        <div id="error" class="section" style="display:none; border-color:#fecaca; background:#fef2f2;">
+            <div class="section-title" style="color:#991b1b;">Unable to load order details</div>
+            <div class="muted" id="error-msg" style="color:#991b1b;"></div>
+        </div>
+
+        <button class="continue-button" onclick="handleContinue()">Continue</button>
+        <button class="secondary-button" onclick="openOrders()">View Orders</button>
+    </div>
+
+    <script>
+        // Platform Detection
+        function detectPlatform() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const platformParam = urlParams.get('platform');
+
+            // Check URL parameter first
+            if (platformParam === 'android' || platformParam === 'webview') {
+                return 'android';
+            }
+
+            // Check User Agent for WebView indicators
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isAndroidWebView = userAgent.includes('wv') ||
+                userAgent.includes('version') && userAgent.includes('chrome') && userAgent.includes('mobile') ||
+                window.AndroidInterface !== undefined ||
+                window.webkit?.messageHandlers !== undefined;
+
+            return isAndroidWebView ? 'android' : 'web';
+        }
+
+        // Configuration
+        const BASE_URL = window.location.protocol + '//' + window.location.host;
+        const PLATFORM = detectPlatform();
+
+        const CONFIG = {
+            PAYMENT_SUCCESS_URL: BASE_URL + '/kirazee/consumer/payment/success/',
+            PAYMENT_FAILURE_URL: BASE_URL + '/kirazee/consumer/payment/failure/',
+            ORDERS_URL: BASE_URL + '/kirazee/consumer/orders/',
+            PLATFORM: PLATFORM
+        };
+
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function _money(v) {
+            try {
+                if (v === null || v === undefined || v === '') return '₹0.00';
+                const n = Number(v);
+                if (Number.isNaN(n)) return String(v);
+                return '₹' + n.toFixed(2);
+            } catch (e) {
+                return String(v);
+            }
+        }
+
+        const orderId = getUrlParameter('order_id') || '{{ order_id|default:"" }}';
+        const userId = getUrlParameter('user_id');
+        const paymentId = getUrlParameter('razorpay_payment_id') || getUrlParameter('payment_id') || '{{ payment_id|default:"" }}';
+
+        function openOrders() {
+            try {
+                const base = window.location.protocol + '//' + window.location.host;
+                // If user_id available, open specific order details for convenience
+                if (orderId && userId) {
+                    window.location.href = `${base}/kirazee/consumer/orders/${orderId}/?user_id=${encodeURIComponent(userId)}`;
+                    return;
+                }
+                window.location.href = `${base}/kirazee/consumer/orders/user/`;
+            } catch (e) {
+                window.location.href = '/';
+            }
+        }
+
+        // Platform-specific redirection handler
+        function handleRedirection(type, data = {}) {
+            if (CONFIG.PLATFORM === 'android') {
+                // For Android WebView - use custom schemes or postMessage
+                try {
+                    // Try Android Interface first
+                    if (window.AndroidInterface && window.AndroidInterface.handleRedirection) {
+                        window.AndroidInterface.handleRedirection(type, JSON.stringify(data));
+                        return;
+                    }
+
+                    // Try WebKit message handler (for hybrid apps)
+                    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.redirection) {
+                        window.webkit.messageHandlers.redirection.postMessage({
+                            type: type,
+                            data: data
+                        });
+                        return;
+                    }
+
+                    // Fallback to custom URL scheme
+                    const customUrl = `kirazee://payment/${type}?${new URLSearchParams(data).toString()}`;
+                    window.location.href = customUrl;
+
+                } catch (error) {
+                    console.error('Android redirection failed:', error);
+                    // Fallback to web redirection
+                    handleWebRedirection(type);
+                }
+            } else {
+                // For web browser
+                handleWebRedirection(type);
+            }
+        }
+
+        function handleWebRedirection(type) {
+            switch (type) {
+                case 'orders':
+                    window.location.href = CONFIG.ORDERS_URL;
+                    break;
+                case 'success':
+                    window.location.href = CONFIG.PAYMENT_SUCCESS_URL;
+                    break;
+                case 'failure':
+                    window.location.href = CONFIG.PAYMENT_FAILURE_URL;
+                    break;
+                default:
+                    window.location.href = CONFIG.ORDERS_URL;
+            }
+        }
+
+        async function loadOrderDetails() {
+            const loadingEl = document.getElementById('loading');
+            const orderEl = document.getElementById('order');
+            const errorEl = document.getElementById('error');
+            const errorMsgEl = document.getElementById('error-msg');
+
+            if (!orderId) {
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'block';
+                errorMsgEl.textContent = 'Order ID is missing.';
+                return;
+            }
+
+            if (!userId) {
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'block';
+                errorMsgEl.textContent = 'User ID is missing. Please reopen the success link from the app.';
+                return;
+            }
+
+            try {
+                const base = window.location.protocol + '//' + window.location.host;
+                const url = `${base}/kirazee/consumer/orders/${orderId}/?user_id=${encodeURIComponent(userId)}`;
+                const res = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
+                const data = await res.json();
+                if (!res.ok || !data || data.success !== true) {
+                    throw new Error((data && data.error) ? String(data.error) : 'Failed to fetch order details');
+                }
+
+                const o = data.data || {};
+
+                document.getElementById('order-id').textContent = String(o.order_id || orderId);
+                document.getElementById('order-number').textContent = String(o.order_number || '');
+                document.getElementById('order-status').textContent = String(o.status || '');
+                document.getElementById('payment-status').textContent = String(o.payment_status || '') + (paymentId ? ` (${paymentId})` : '');
+                document.getElementById('order-total').textContent = _money(o.final_amount || o.calculated_final_amount || 0);
+
+                const addr = o.delivery_address_details || o.delivery_address_snapshot || {};
+                const addrParts = [];
+                if (addr.door_no) addrParts.push(String(addr.door_no));
+                if (addr.street) addrParts.push(String(addr.street));
+                if (addr.city) addrParts.push(String(addr.city));
+                if (addr.state) addrParts.push(String(addr.state));
+                if (addr.pincode) addrParts.push(String(addr.pincode));
+                document.getElementById('delivery-address').textContent = addrParts.length ? addrParts.join(', ') : '—';
+
+                const di = o.delivery_instruction || {};
+                document.getElementById('delivery-note').textContent = di.text || '—';
+                const oi = o.order_instruction || {};
+                document.getElementById('order-note').textContent = (oi.customizations || oi.special_request) ? `${oi.customizations || ''} ${oi.special_request || ''}`.trim() : '—';
+
+                const itemsEl = document.getElementById('items');
+                itemsEl.innerHTML = '';
+                const items = Array.isArray(o.items) ? o.items : [];
+                for (const it of items) {
+                    const details = it.enhanced_product_details || {};
+                    const displayName = it.name || it.item_name_snapshot || details.product_name || 'Item';
+                    const img = it.image_url || details.image_url || null;
+                    const vid = it.variant_id;
+                    const pid = it.product_id;
+                    const unit = it.unit_price_snapshot || it.unit_price || 0;
+                    const taxAmt = it.tax_amount;
+                    const gstPct = it.gst;
+
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.innerHTML = `
+                        <div class="item-top">
+                            <div class="item-img">${img ? `<img src="${img}" alt=""/>` : 'K'}</div>
+                            <div style="flex:1;">
+                                <div class="item-name">${String(displayName)}</div>
+                                <div class="item-sub">Qty: ${String(it.quantity || 1)} · Unit: ${_money(unit)} · Total: ${_money(it.total_price || it.total_price_snapshot || 0)}</div>
+                                <div class="item-sub">Product ID: ${pid ?? '—'} · Variant ID: ${vid ?? '—'}</div>
+                                <div class="pill-row">
+                                    ${(details.size ? `<span class="pill">Size: ${details.size}</span>` : '')}
+                                    ${(details.color ? `<span class="pill">Color: ${details.color}</span>` : '')}
+                                    ${(details.selling_price ? `<span class="pill">SP: ${_money(details.selling_price)}</span>` : '')}
+                                    ${(gstPct ? `<span class="pill">GST: ${gstPct}%</span>` : '')}
+                                    ${(taxAmt ? `<span class="pill">Tax: ${_money(taxAmt)}</span>` : '')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    itemsEl.appendChild(div);
+                }
+
+                loadingEl.style.display = 'none';
+                orderEl.style.display = 'block';
+                errorEl.style.display = 'none';
+            } catch (e) {
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'block';
+                errorMsgEl.textContent = e && e.message ? e.message : 'Unknown error';
+            }
+        }
+        
+        // Android callback
+        function handleContinue() {
+            console.log('Continue button clicked');
+            
+            // Use the comprehensive redirection handler
+            handleRedirection('success', {
+                order_id: orderId,
+                payment_id: paymentId,
+                user_id: userId,
+                status: 'success'
+            });
+        }
+        
+        // Auto-trigger callback after a short delay for WebView
+        setTimeout(() => {
+            if (window.androidInterface || window.AndroidInterface || window.webkit) {
+                handleContinue();
+            }
+        }, 2000);
+        
+        // WebView specific handling
+        if (window.ReactNativeWebView) {
+            // Handle messages from React Native
+            window.addEventListener('message', function (event) {
+                if (event.data.type === 'PAYMENT_SUCCESS') {
+                    handleContinue();
+                }
+            });
+        }
+        
+        // Log for debugging
+        console.log('Payment success page loaded');
+        console.log('Order ID:', orderId);
+        console.log('Payment ID:', paymentId);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadOrderDetails();
+        });
+    </script>
+</body>
+</html>

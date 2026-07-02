@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Kirazee Privacy Policy - Learn how we collect, use, and protect your personal information">
+    <title>Kirazee Privacy Policy</title>
+    
+    <style>
+        /* ========== CSS RESET & BASE STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* COLORS - Swiggy-inspired orange theme */
+            --primary-color: #ff5722;
+            --primary-dark: #e64a19;
+            --primary-light: #ff8a65;
+            --background: #ffffff;
+            --card-background: #fafafa;
+            --text-primary: #2d2d2d;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+            
+            /* SPACING */
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            
+            /* TYPOGRAPHY */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-base: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 24px;
+            --font-size-2xl: 32px;
+            
+            /* TRANSITIONS */
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--background);
+            padding-bottom: 60px;
+        }
+        
+        /* ========== HERO SECTION ========== */
+        .hero {
+            background: linear-gradient(135deg, #ff5722 0%, #ff8a65 100%);
+            padding: var(--spacing-xl) var(--spacing-md);
+            text-align: center;
+            color: white;
+        }
+        
+        .hero-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-md);
+        }
+        
+        .hero-icon svg {
+            width: 36px;
+            height: 36px;
+            fill: white;
+        }
+        
+        .hero h1 {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: var(--font-size-base);
+            opacity: 0.95;
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.5;
+        }
+        
+        .hero .last-updated {
+            font-size: var(--font-size-sm);
+            opacity: 0.85;
+        }
+        
+        /* ========== CONTAINER ========== */
+        .container {
+            max-width: 100%;
+            padding: 0 var(--spacing-md);
+        }
+        
+        /* ========== ACCORDION SECTIONS ========== */
+        .accordion {
+            margin-top: var(--spacing-lg);
+        }
+        
+        .accordion-item {
+            background: var(--card-background);
+            border-radius: 12px;
+            margin-bottom: var(--spacing-md);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: box-shadow var(--transition-normal);
+        }
+        
+        .accordion-item.active {
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color var(--transition-fast);
+            min-height: 72px;
+        }
+        
+        .accordion-header:active {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .accordion-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            background: linear-gradient(135deg, #ff5722 0%, #ff8a65 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .accordion-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+        
+        .accordion-title {
+            flex: 1;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .accordion-chevron {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            transition: transform var(--transition-normal);
+        }
+        
+        .accordion-chevron svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--text-secondary);
+        }
+        
+        .accordion-item.active .accordion-chevron {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-normal);
+        }
+        
+        .accordion-content-inner {
+            padding: 0 var(--spacing-md) var(--spacing-md);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+        
+        .accordion-content p {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .accordion-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .accordion-content ul,
+        .accordion-content ol {
+            margin-bottom: var(--spacing-md);
+            padding-left: var(--spacing-lg);
+        }
+        
+        .accordion-content li {
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-primary);
+        }
+        
+        .accordion-content strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .accordion-content a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .accordion-content a:active {
+            color: var(--primary-dark);
+        }
+        
+        /* ========== BACK TO TOP BUTTON ========== */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #ff5722 0%, #ff8a65 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 87, 34, 0.4);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+            border: none;
+            -webkit-tap-highlight-color: transparent;
+            z-index: 1000;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:active {
+            transform: scale(0.95);
+        }
+        
+        .back-to-top svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        /* ========== RESPONSIVE ADJUSTMENTS ========== */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 768px;
+                margin: 0 auto;
+                padding: 0 var(--spacing-lg);
+            }
+            
+            .hero {
+                padding: 48px var(--spacing-lg);
+            }
+            
+            .accordion {
+                margin-top: var(--spacing-xl);
+            }
+            
+            .accordion-header {
+                padding: var(--spacing-lg);
+            }
+            
+            .accordion-content-inner {
+                padding: 0 var(--spacing-lg) var(--spacing-lg);
+            }
+        }
+        
+        /* ========== TOUCH IMPROVEMENTS ========== */
+        @media (hover: none) {
+            .accordion-header:hover {
+                background-color: transparent;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HERO SECTION -->
+    <div class="hero">
+        <div class="hero-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+        </div>
+        
+        <p>This Privacy Policy describes how Kirazee Limited collects, uses, and protects your information when you use our website at kirazee.com or mobile applications.</p>
+        <p class="last-updated">Last Updated: January 2025</p>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="accordion">
+            
+            <!-- SECTION 1: About This Policy -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">About This Policy</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>This Privacy Policy describes how Kirazee Limited ("Kirazee", "we", "us", "our") collects, uses, and protects your information when you use our website at kirazee.com or mobile applications. By using our platform, you agree to this policy.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 2: Your Consent -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Your Consent</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>By using Kirazee services, you consent to the collection and use of your information as described in this policy. If you don't agree, please don't use our platform.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 3: Information We Collect -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Information We Collect</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p><strong>Account Information:</strong> Name, email, phone number, address, password, and profile picture.</p>
+                        
+                        <p><strong>Device Information:</strong> Device type, operating system, app version, and device identifiers to improve your experience.</p>
+                        
+                        <p><strong>Usage Information:</strong> How you use our services, search terms, preferences, and interaction data.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 4: Order & Transaction Data -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Order & Transaction Data</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>We collect information about your orders, payments, delivery addresses, restaurant preferences, ratings, reviews, and transaction history to process orders and improve our services.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 5: Location Information -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Location Information</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>We collect your location data (with your permission) to show nearby restaurants, estimate delivery times, and provide location-based services.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 6: How We Use Your Data -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">How We Use Your Data</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>We use your information to process orders, provide customer support, improve our services, send notifications, prevent fraud, and comply with legal requirements.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 7: Data Sharing -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="18" cy="5" r="3"/>
+                            <circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Data Sharing</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>We share your data only with restaurant partners (for order fulfillment), payment processors (for transactions), delivery partners (for delivery), and service providers (for app functionality). We never sell your personal data.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 8: Data Security -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Data Security</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>We protect your data using SSL encryption, secure servers, access controls, and regular security audits. However, no system is 100% secure, so we can't guarantee absolute security.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 9: Cookies & Analytics -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="1"/>
+                            <circle cx="8" cy="8" r="1"/>
+                            <circle cx="16" cy="8" r="1"/>
+                            <circle cx="8" cy="16" r="1"/>
+                            <circle cx="16" cy="16" r="1"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Cookies & Analytics</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>We use cookies to remember your preferences, keep you logged in, and analyze usage patterns. You can control cookie settings in your browser.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 10: Your Rights -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <polyline points="17 11 19 13 23 9"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Your Rights</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>You can access, update, or delete your account data anytime. You can also opt-out of marketing communications and request data portability. Contact us for assistance.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 11: Data Retention -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Data Retention</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>We keep your account data until you delete your account, order history for 7 years (for legal compliance), and support communications for 3 years.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 12: Policy Updates -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Policy Updates</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>We may update this policy occasionally. Significant changes will be communicated via email or app notifications. Continued use means you accept the updated policy.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 13: Third-Party Links -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Third-Party Links</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>Our platform may contain links to other websites. We're not responsible for their privacy practices. Please read their privacy policies before sharing information.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 14: Children's Privacy -->
+            <div class="accordion-item">
+                <div class="accordion-header" role="button" aria-expanded="false" tabindex="0">
+                    <div class="accordion-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <h2 class="accordion-title">Children's Privacy</h2>
+                    <div class="accordion-chevron">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>Our services are not intended for children under 13. We don't knowingly collect personal information from children. If we discover such data, we'll delete it promptly.</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- BACK TO TOP BUTTON -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+        </svg>
+    </button>
+    
+    <script>
+        // ========== ACCORDION FUNCTIONALITY ==========
+        (function() {
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const accordionItem = this.closest('.accordion-item');
+                    const accordionContent = accordionItem.querySelector('.accordion-content');
+                    const isActive = accordionItem.classList.contains('active');
+                    
+                    // Close all other accordion items
+                    document.querySelectorAll('.accordion-item.active').forEach(item => {
+                        if (item !== accordionItem) {
+                            item.classList.remove('active');
+                            item.querySelector('.accordion-content').style.maxHeight = null;
+                            item.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                    
+                    // Toggle active state
+                    if (isActive) {
+                        accordionItem.classList.remove('active');
+                        accordionContent.style.maxHeight = null;
+                        this.setAttribute('aria-expanded', 'false');
+                    } else {
+                        accordionItem.classList.add('active');
+                        accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px';
+                        this.setAttribute('aria-expanded', 'true');
+                    }
+                });
+                
+                // Keyboard support
+                header.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+        })();
+        
+        // ========== BACK TO TOP BUTTON ==========
+        (function() {
+            const backToTopBtn = document.getElementById('backToTop');
+            
+            // Show/hide button based on scroll position
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            });
+            
+            // Scroll to top when clicked
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        })();
+        
+        // ========== RESIZE HANDLER FOR ACCORDION ==========
+        // Adjust max-height when window is resized
+        (function() {
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    const activeAccordions = document.querySelectorAll('.accordion-item.active .accordion-content');
+                    activeAccordions.forEach(content => {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    });
+                }, 250);
+            });
+        })();
+    </script>
+</body>
+</html>

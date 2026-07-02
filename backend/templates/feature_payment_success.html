@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Purchase Successful - Kirazee</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .success-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .success-message {
+            color: #28a745;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .feature-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .detail-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+        }
+        
+        .footer a {
+            color: #28a745;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">✓</div>
+        <h1 class="success-title" id="page-title">Purchase Successful!</h1>
+        <p class="success-message" id="success-message">
+            Your premium feature has been activated successfully.
+        </p>
+        
+        <div class="action-buttons">
+            <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+            <a href="#" class="btn btn-primary" id="dashboard-btn">Go to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        // Utility functions
+        const Utils = {
+            formatDate: function(dateString) {
+                if (!dateString) return 'N/A';
+                try {
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                } catch (error) {
+                    console.error('Date formatting error:', error);
+                    return dateString;
+                }
+            },
+            
+            getQueryParams: function() {
+                const params = new URLSearchParams(window.location.search);
+                return {
+                    feature_name: params.get('feature_name') || '',
+                    business_id: params.get('business_id') || '',
+                    user_id: params.get('user_id') || '',
+                    razorpay_payment_id: params.get('razorpay_payment_id') || '',
+                    payment_id: params.get('payment_id') || '',
+                    feature_key: params.get('feature_key') || '',
+                    amount: params.get('amount') || '',
+                    purchased_at: params.get('purchased_at') || '',
+                    expires_at: params.get('expires_at') || '',
+                    status: params.get('status') || 'success'
+                };
+            },
+            
+            updatePageContent: function() {
+                try {
+                    const params = Utils.getQueryParams();
+                    
+                    // Update page title
+                    const title = params.is_purchased === 'True' 
+                        ? 'Feature Already Purchased' 
+                        : 'Purchase Successful!';
+                    document.getElementById('page-title').textContent = title;
+                    
+                    // Update success message
+                    const message = params.is_purchased === 'True'
+                        ? `You already have access to ${params.feature_name}.`
+                        : `Your premium feature ${params.feature_name} has been activated successfully.`;
+                    document.getElementById('success-message').textContent = message;
+                    
+                    // Update feature details
+                    if (params.feature_name) {
+                        document.getElementById('feature-name').textContent = params.feature_name;
+                    }
+                    
+                    if (params.purchased_at) {
+                        document.getElementById('purchase-date').textContent = Utils.formatDate(params.purchased_at);
+                    }
+                    
+                    if (params.expires_at) {
+                        document.getElementById('expiry-date').textContent = Utils.formatDate(params.expires_at);
+                    } else {
+                        document.getElementById('expiry-date').textContent = 'Lifetime';
+                    }
+                    
+                    if (params.razorpay_payment_id) {
+                        document.getElementById('payment-id').textContent = params.razorpay_payment_id;
+                    } else if (params.payment_id) {
+                        document.getElementById('payment-id').textContent = params.payment_id;
+                    }
+                    
+                    // Update dashboard button
+                    const dashboardBtn = document.getElementById('dashboard-btn');
+                    if (params.business_id) {
+                        dashboardBtn.href = `/business-dashboard/?business_id=${params.business_id}`;
+                    }
+                    
+                } catch (error) {
+                    console.error('Error updating page content:', error);
+                }
+            },
+            
+            logError: function(error, context = '') {
+                console.error(`[Success Page Error] ${context}:`, error);
+            }
+        };
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                Utils.updatePageContent();
+            } catch (error) {
+                Utils.logError(error, 'DOMContentLoaded');
+            }
+        });
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                try {
+                    Utils.updatePageContent();
+                } catch (error) {
+                    Utils.logError(error, 'visibilitychange');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

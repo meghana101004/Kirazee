@@ -1,0 +1,960 @@
+{
+  "info": {
+    "name": "Kirazee Cart API Collection",
+    "description": "Complete API documentation for Kirazee Cart System - Refactored Universal Endpoints with Service Layer Pattern. All endpoints (add-to-cart, viewcart, update-cart-quantity) maintain backward compatibility while using optimized service layer internally.",
+    "version": "2.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://dev-kirazee.zdotapps.in/kirazee",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "14818",
+      "type": "string"
+    },
+    {
+      "key": "businessId",
+      "value": "KIR1489320251101174639",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Legacy Cart Endpoints (Backward Compatible)",
+      "description": "Original cart endpoints that have been refactored to use service layer",
+      "item": [
+        {
+          "name": "Add to Cart - Restaurant (R02)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consumer/res/add-to-cart?user_id={{userId}}&business_id={{businessId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["consumer", "res", "add-to-cart"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}",
+                  "description": "Required: User ID (integer)"
+                },
+                {
+                  "key": "business_id",
+                  "value": "{{businessId}}",
+                  "description": "Required: Business ID (string)"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"item_id\": 156960,\n  \"quantity\": 2,\n  \"customizations\": [\n    {\n      \"option\": \"extra cheese\",\n      \"price\": 10\n    },\n    {\n      \"option\": \"no onions\",\n      \"price\": 0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Add restaurant menu item to cart using legacy endpoint"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/res/add-to-cart?user_id={{userId}}&business_id={{businessId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "res", "add-to-cart"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    },
+                    {
+                      "key": "business_id",
+                      "value": "{{businessId}}"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Menu added to cart successfully\",\n  \"item_details\": {\n    \"item_id\": 156960,\n    \"item_name\": \"Bamboo Baskets\",\n    \"description\": \"Eco-friendly bamboo baskets\",\n    \"selling_price\": \"100.00\",\n    \"quantity\": 2\n  },\n  \"menu_details\": [\n    {\n      \"cart_id\": 1234,\n      \"item_id\": 156960,\n      \"quantity\": 2,\n      \"item_name\": \"Bamboo Baskets\",\n      \"description\": \"Eco-friendly bamboo baskets\",\n      \"selling_price\": \"100.00\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "Error - Item Not Found",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/res/add-to-cart?user_id={{userId}}&business_id={{businessId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "res", "add-to-cart"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    },
+                    {
+                      "key": "business_id",
+                      "value": "{{businessId}}"
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Menu item not found or inactive\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Add to Cart - Grocery (R01)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consumer/grocery/add-to-cart?user_id={{userId}}&business_id={{businessId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["consumer", "grocery", "add-to-cart"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}",
+                  "description": "Required: User ID (integer)"
+                },
+                {
+                  "key": "business_id",
+                  "value": "{{businessId}}",
+                  "description": "Required: Business ID (string)"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"item_id\": 156823,\n  \"quantity\": 1,\n  \"customizations\": [\n    {\n      \"option\": \"gift wrapping\",\n      \"price\": 20\n    },\n    {\n      \"option\": \"express delivery\",\n      \"price\": 15\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Add grocery product to cart using legacy endpoint"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/grocery/add-to-cart?user_id={{userId}}&business_id={{businessId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "grocery", "add-to-cart"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    },
+                    {
+                      "key": "business_id",
+                      "value": "{{businessId}}"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Grocery item added to cart successfully\",\n  \"item_details\": {\n    \"item_id\": 156823,\n    \"item_name\": \"Bamboo cotton Ear Buds\",\n    \"description\": \"eco friendly\",\n    \"selling_price\": \"100.00\",\n    \"quantity\": 1\n  },\n  \"menu_details\": [\n    {\n      \"cart_id\": 1235,\n      \"item_id\": 156823,\n      \"quantity\": 1,\n      \"item_name\": \"Bamboo cotton Ear Buds\",\n      \"description\": \"eco friendly\",\n      \"selling_price\": \"100.00\"\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Optimized Cart Endpoints (Service Layer)",
+      "description": "New optimized endpoints using service layer pattern",
+      "item": [
+        {
+          "name": "Add to Cart - Optimized (All Business Types)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consumer/cart/add?user_id={{userId}}&business_id={{businessId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["consumer", "cart", "add"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}",
+                  "description": "Required: User ID (integer)"
+                },
+                {
+                  "key": "business_id",
+                  "value": "{{businessId}}",
+                  "description": "Required: Business ID (string) - System auto-detects business type"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"item_id\": 156960,\n  \"quantity\": 2,\n  \"customizations\": [\n    {\n      \"option\": \"extra cheese\",\n      \"price\": 10\n    },\n    {\n      \"option\": \"no onions\",\n      \"price\": 0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Universal add to cart endpoint that works for all business types (R01, R02, R08). Automatically detects business type from business_id."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/add?user_id={{userId}}&business_id={{businessId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "add"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    },
+                    {
+                      "key": "business_id",
+                      "value": "{{businessId}}"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Item added to cart\",\n  \"item_details\": {\n    \"item_id\": 156960,\n    \"item_name\": \"Bamboo Baskets\",\n    \"description\": \"Eco-friendly bamboo baskets\",\n    \"selling_price\": \"100.00\",\n    \"quantity\": 2\n  },\n  \"cart_details\": [\n    {\n      \"business_name\": \"Eco Store\",\n      \"items\": [\n        {\n          \"cart_id\": 1234,\n          \"item_id\": 156960,\n          \"quantity\": 2,\n          \"item_name\": \"Bamboo Baskets\",\n          \"description\": \"Eco-friendly bamboo baskets\",\n          \"selling_price\": \"100.00\",\n          \"image\": \"https://dev-kirazee.zdotapps.in/kirazee/media/groceries_images/Bamboo_Baskets.jpg\",\n          \"customizations\": [\n            {\n              \"option\": \"extra cheese\",\n              \"price\": 10\n            },\n            {\n              \"option\": \"no onions\",\n              \"price\": 0\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
+            },
+            {
+              "name": "Error - Missing Parameters",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/add",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "add"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Missing required parameters: user_id, business_id, item_id\"\n}"
+            },
+            {
+              "name": "Error - Business Not Found",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/add?user_id={{userId}}&business_id=INVALID_ID",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "add"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    },
+                    {
+                      "key": "business_id",
+                      "value": "INVALID_ID"
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Business not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Add to Cart - Fashion (R08) with Customizations",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consumer/cart/add?user_id={{userId}}&business_id={{businessId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["consumer", "cart", "add"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}",
+                  "description": "Required: User ID (integer)"
+                },
+                {
+                  "key": "business_id",
+                  "value": "{{businessId}}",
+                  "description": "Required: Fashion Business ID (string)"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"item_id\": 157045,\n  \"quantity\": 1,\n  \"customizations\": [\n    {\n      \"option\": \"size: M\",\n      \"price\": 0\n    },\n    {\n      \"option\": \"color: blue\",\n      \"price\": 0\n    },\n    {\n      \"option\": \"monogram\",\n      \"price\": 50\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Add fashion variant to cart with size, color, and monogram customizations"
+          },
+          "response": [
+            {
+              "name": "Success Response - Fashion",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/add?user_id={{userId}}&business_id={{businessId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "add"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    },
+                    {
+                      "key": "business_id",
+                      "value": "{{businessId}}"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Item added to cart\",\n  \"item_details\": {\n    \"item_id\": 157045,\n    \"item_name\": \"Designer T-Shirt\",\n    \"description\": \"Premium cotton t-shirt with custom design\",\n    \"selling_price\": \"299.00\",\n    \"quantity\": 1\n  },\n  \"cart_details\": [\n    {\n      \"business_name\": \"Fashion Boutique\",\n      \"items\": [\n        {\n          \"cart_id\": 1237,\n          \"item_id\": 157045,\n          \"quantity\": 1,\n          \"item_name\": \"Designer T-Shirt\",\n          \"description\": \"Premium cotton t-shirt with custom design\",\n          \"selling_price\": \"299.00\",\n          \"image\": \"https://dev-kirazee.zdotapps.in/kirazee/media/fashion_images/tshirt_blue.jpg\",\n          \"customizations\": [\n            {\n              \"option\": \"size: M\",\n              \"price\": 0\n            },\n            {\n              \"option\": \"color: blue\",\n              \"price\": 0\n            },\n            {\n              \"option\": \"monogram\",\n              \"price\": 50\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "View Cart - Optimized",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/consumer/cart/view?user_id={{userId}}&type=R01",
+              "host": ["{{baseUrl}}"],
+              "path": ["consumer", "cart", "view"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}",
+                  "description": "Required: User ID (integer)"
+                },
+                {
+                  "key": "type",
+                  "value": "R01",
+                  "description": "Optional: Business type filter (R01, R02, R08). If not provided, returns all cart items across all types."
+                }
+              ]
+            },
+            "description": "View cart items for a user. Can filter by specific business type or get all items."
+          },
+          "response": [
+            {
+              "name": "Success Response - All Types",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/view?user_id={{userId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "view"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"cart_details\": [\n    {\n      \"business_name\": \"Eco Store\",\n      \"items\": [\n        {\n          \"cart_id\": 1234,\n          \"item_id\": 156960,\n          \"quantity\": 2,\n          \"item_name\": \"Bamboo Baskets\",\n          \"description\": \"Eco-friendly bamboo baskets\",\n          \"selling_price\": \"100.00\",\n          \"image\": \"https://dev-kirazee.zdotapps.in/kirazee/media/groceries_images/Bamboo_Baskets.jpg\",\n          \"customizations\": []\n        },\n        {\n          \"cart_id\": 1235,\n          \"item_id\": 156823,\n          \"quantity\": 1,\n          \"item_name\": \"Bamboo cotton Ear Buds\",\n          \"description\": \"eco friendly\",\n          \"selling_price\": \"100.00\",\n          \"image\": \"https://dev-kirazee.zdotapps.in/kirazee/media/groceries_images/Ear_Buds_1.png\",\n          \"customizations\": []\n        }\n      ]\n    },\n    {\n      \"business_name\": \"Food Court\",\n      \"items\": [\n        {\n          \"cart_id\": 1236,\n          \"item_id\": 157001,\n          \"quantity\": 1,\n          \"item_name\": \"Pasta\",\n          \"description\": \"Italian pasta with tomato sauce\",\n          \"selling_price\": \"150.00\",\n          \"image\": \"https://dev-kirazee.zdotapps.in/kirazee/media/menuItems/pasta.jpg\",\n          \"customizations\": []\n        }\n      ]\n    }\n  ]\n}"
+            },
+            {
+              "name": "Success Response - Specific Type",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/view?user_id={{userId}}&type=R01",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "view"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    },
+                    {
+                      "key": "type",
+                      "value": "R01"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"cart_details\": [\n    {\n      \"business_name\": \"Eco Store\",\n      \"items\": [\n        {\n          \"cart_id\": 1234,\n          \"item_id\": 156960,\n          \"quantity\": 2,\n          \"item_name\": \"Bamboo Baskets\",\n          \"description\": \"Eco-friendly bamboo baskets\",\n          \"selling_price\": \"100.00\",\n          \"image\": \"https://dev-kirazee.zdotapps.in/kirazee/media/groceries_images/Bamboo_Baskets.jpg\",\n          \"customizations\": []\n        }\n      ]\n    }\n  ]\n}"
+            },
+            {
+              "name": "Empty Cart",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/view?user_id=999",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "view"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "999"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"cart_details\": []\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update/Delete Cart - Optimized",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consumer/cart/update?user_id={{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["consumer", "cart", "update"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}",
+                  "description": "Required: User ID (integer)"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"item_id\": 156960,\n  \"type\": \"R01\",\n  \"action\": \"inc\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Update cart quantity or delete items. Supports multiple operations: increase, decrease, set specific quantity, or delete."
+          },
+          "response": [
+            {
+              "name": "Increase Quantity",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/update?user_id={{userId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "update"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Quantity increased\",\n  \"quantity\": 3\n}"
+            },
+            {
+              "name": "Decrease Quantity",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/update?user_id={{userId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "update"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"item_id\": 156960,\n  \"type\": \"R01\",\n  \"action\": \"dec\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Quantity decreased\",\n  \"quantity\": 2\n}"
+            },
+            {
+              "name": "Set Specific Quantity",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/update?user_id={{userId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "update"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"item_id\": 156960,\n  \"type\": \"R01\",\n  \"quantity\": 5\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Quantity updated\",\n  \"quantity\": 5\n}"
+            },
+            {
+              "name": "Delete Specific Item",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/update?user_id={{userId}}&cart_id=1234&type=R01",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "update"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    },
+                    {
+                      "key": "cart_id",
+                      "value": "1234",
+                      "description": "Required for DELETE: Cart item ID to delete"
+                    },
+                    {
+                      "key": "type",
+                      "value": "R01",
+                      "description": "Required for DELETE: Business type"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Item removed from cart\"\n}"
+            },
+            {
+              "name": "Delete Entire Cart",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/cart/update?user_id={{userId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "cart", "update"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Removed 5 items from cart\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Universal Cart Endpoint (Original)",
+      "description": "Original universal cart endpoint that handles all business types",
+      "item": [
+        {
+          "name": "Add to Cart - Universal (Business ID Based)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consumer/add-to-cart?user_id={{userId}}&business_id={{businessId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["consumer", "add-to-cart"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}",
+                  "description": "Required: User ID (integer)"
+                },
+                {
+                  "key": "business_id",
+                  "value": "{{businessId}}",
+                  "description": "Required: Business ID (string)"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"item_id\": 156960,\n  \"quantity\": 1,\n  \"customizations\": [\n    {\n      \"option\": \"extra cheese\",\n      \"price\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Original universal add to cart endpoint. Automatically detects business type and routes to appropriate cart table."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/add-to-cart?user_id={{userId}}&business_id={{businessId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "add-to-cart"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    },
+                    {
+                      "key": "business_id",
+                      "value": "{{businessId}}"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Grocery item added to cart successfully\",\n  \"item_details\": {\n    \"item_id\": 156960,\n    \"item_name\": \"Bamboo Baskets\",\n    \"description\": \"Eco-friendly bamboo baskets\",\n    \"selling_price\": \"100.00\",\n    \"quantity\": 1\n  },\n  \"grocery_details\": [\n    {\n      \"cart_id\": 1234,\n      \"item_id\": 156960,\n      \"quantity\": 1,\n      \"item_name\": \"Bamboo Baskets\",\n      \"description\": \"Eco-friendly bamboo baskets\",\n      \"selling_price\": \"100.00\",\n      \"image\": \"https://dev-kirazee.zdotapps.in/kirazee/media/groceries_images/Bamboo_Baskets.jpg\",\n      \"customizations\": [\n        {\n          \"option\": \"extra cheese\",\n          \"price\": 10\n        }\n      ]\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "View Cart - Universal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/consumer/viewcart?user_id={{userId}}&type=R01",
+              "host": ["{{baseUrl}}"],
+              "path": ["consumer", "viewcart"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}",
+                  "description": "Required: User ID (integer)"
+                },
+                {
+                  "key": "type",
+                  "value": "R01",
+                  "description": "Optional: Business type (R01, R02, R08). If not provided, returns all cart items."
+                }
+              ]
+            },
+            "description": "View cart items using original universal endpoint"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/consumer/viewcart?user_id={{userId}}&type=R01",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["consumer", "viewcart"],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "{{userId}}"
+                    },
+                    {
+                      "key": "type",
+                      "value": "R01"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"cart_details\": [\n    {\n      \"cart_id\": 1234,\n      \"item_id\": 156960,\n      \"quantity\": 1,\n      \"item_name\": \"Bamboo Baskets\",\n      \"description\": \"Eco-friendly bamboo baskets\",\n      \"selling_price\": \"100.00\",\n      \"image\": \"https://dev-kirazee.zdotapps.in/kirazee/media/groceries_images/Bamboo_Baskets.jpg\",\n      \"customizations\": []\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Pre-request script to set current timestamp",
+          "pm.globals.set(\"timestamp\", Date.now());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Test script to validate responses",
+          "if (pm.response.code === 200) {",
+          "    pm.test(\"Status code is 200\", function () {",
+          "        pm.response.to.have.status(200);",
+          "    });",
+          "    ",
+          "    pm.test(\"Response has valid JSON\", function () {",
+          "        pm.response.to.be.json;",
+          "    });",
+          "    ",
+          "    const jsonData = pm.response.json();",
+          "    if (jsonData.message) {",
+          "        pm.test(\"Response has message\", function () {",
+          "            pm.expect(jsonData.message).to.be.a('string');",
+          "        });",
+          "    }",
+          "} else if (pm.response.code >= 400) {",
+          "    pm.test(`Error status code: ${pm.response.code}`, function () {",
+          "        pm.response.to.have.status(pm.response.code);",
+          "    });",
+          "    ",
+          "    const jsonData = pm.response.json();",
+          "    if (jsonData.error) {",
+          "        pm.test(\"Error response has error message\", function () {",
+          "            pm.expect(jsonData.error).to.be.a('string');",
+          "        });",
+          "    }",
+          "}"
+        ]
+      }
+    }
+  ]
+}
